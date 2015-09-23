@@ -37,11 +37,12 @@ public class Time implements ITime {
         if (h < 0 || h > 23) {
             throw new IllegalArgumentException("hours must be within 0..23");
         }
-        if (m < 0 || m > 59) {
+        // bug fix: m -> min
+        if (min < 0 || min > 59) {
             throw new IllegalArgumentException("minutes must be within 0..59");
         }
         
-        gc = new GregorianCalendar(y, m , d, h, min);
+        gc = new GregorianCalendar(y, m /* bug fix: - 1 added*/ - 1, d, h, min);
     }
 
     Time(Time t) {

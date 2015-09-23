@@ -79,12 +79,12 @@ public class TimeTest {
 
     @Test
     public void getDayInWeekTest() {
-        assertEquals("de dag in de week wordt niet goed opgehaald", this.year, this.time.getDayInWeek());
+        assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.WED, this.time.getDayInWeek());
     }
 
     @Test
     public void plusTest() {
-        this.time.plus(40);
+        this.time = this.time.plus(40);
         assertEquals("het toevoegen van minuten is niet goed geïmplementeerd", this.minutes + 40, this.time.getMinutes());
     }
 
