@@ -10,7 +10,7 @@ package fontys.time;
  * @author Joris
  */
 public class TimeSpan2 implements ITimeSpan {
-
+    
     private ITime beginTime;
     private long timeSpan;
 

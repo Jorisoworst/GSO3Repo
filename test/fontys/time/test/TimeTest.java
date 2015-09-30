@@ -21,7 +21,8 @@ public class TimeTest {
                 "day must be within 1..31",
                 "hours must be within 0..23",
                 "minutes must be within 0..59",
-                "de dag in de week wordt niet goed opgehaald"
+                "de dag in de week wordt niet goed opgehaald",
+                "het berekenen van het verschil tussen twee tijden is niet goed geïmplementeerd"
             };
 
     private ITime time;
@@ -152,12 +153,12 @@ public class TimeTest {
     @Test
     public void differenceTest() {
         ITime time = new Time(this.year, this.month, this.day, this.hours, this.minutes);
-        assertEquals(0, time.difference(this.time));
+        assertEquals(this.failMessages[5], 0, time.difference(this.time));
     }
 
     @Test
     public void compareToTest() {
         ITime time = new Time(this.year, this.month, this.day, this.hours, this.minutes);
-        assertEquals(0, time.compareTo(this.time));
+        assertEquals(this.failMessages[5], 0, time.compareTo(this.time));
     }
 }
