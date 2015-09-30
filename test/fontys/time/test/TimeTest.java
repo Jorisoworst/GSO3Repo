@@ -20,7 +20,8 @@ public class TimeTest {
                 "month must be within 1..12",
                 "day must be within 1..31",
                 "hours must be within 0..23",
-                "minutes must be within 0..59"
+                "minutes must be within 0..59",
+                "de dag in de week wordt niet goed opgehaald"
             };
 
     private ITime time;
@@ -58,52 +59,52 @@ public class TimeTest {
         // Maanden testcases
         try {
             time = new Time(this.year, 0, this.day, this.hours, this.minutes);
-            fail(failMessages[0]);
+            fail(this.failMessages[0]);
         } catch (IllegalArgumentException iae) {
         }
 
         try {
             time = new Time(this.year, 13, this.day, this.hours, this.minutes);
-            fail(failMessages[0]);
+            fail(this.failMessages[0]);
         } catch (IllegalArgumentException iae) {
         }
 
         // Dagen testcases
         try {
             time = new Time(this.year, this.month, 0, this.hours, this.minutes);
-            fail(failMessages[1]);
+            fail(this.failMessages[1]);
         } catch (IllegalArgumentException iae) {
         }
 
         try {
             time = new Time(this.year, this.month, 32, this.hours, this.minutes);
-            fail(failMessages[1]);
+            fail(this.failMessages[1]);
         } catch (IllegalArgumentException iae) {
         }
 
         // Uren testcases
         try {
             time = new Time(this.year, this.month, this.day, -1, this.minutes);
-            fail(failMessages[2]);
+            fail(this.failMessages[2]);
         } catch (IllegalArgumentException iae) {
         }
 
         try {
             time = new Time(this.year, this.month, this.day, 24, this.minutes);
-            fail(failMessages[2]);
+            fail(this.failMessages[2]);
         } catch (IllegalArgumentException iae) {
         }
 
         // Minuten testcases
         try {
             time = new Time(this.year, this.month, this.day, this.hours, -1);
-            fail(failMessages[2]);
+            fail(this.failMessages[3]);
         } catch (IllegalArgumentException iae) {
         }
 
         try {
             time = new Time(this.year, this.month, this.day, this.hours, 60);
-            fail(failMessages[2]);
+            fail(this.failMessages[3]);
         } catch (IllegalArgumentException iae) {
         }
     }
@@ -120,7 +121,7 @@ public class TimeTest {
 
     @Test
     public void getDayTest() {
-        assertEquals("de dag wordt niet goed bijgehouden", this.day, this.time.getDay());
+        assertEquals(this.failMessages[4], this.day, this.time.getDay());
     }
 
     @Test
@@ -137,8 +138,8 @@ public class TimeTest {
     public void getDayInWeekTest() {
         for (int i = 6; i < 13; i++) {
             ITime time = new Time(this.year, this.month, i, this.hours, this.minutes);
-            assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.values()[i - 6], time.getDayInWeek());
-            assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.valueOf(time.getDayInWeek().toString()), time.getDayInWeek());
+            assertEquals(this.failMessages[4], DayInWeek.values()[i - 6], time.getDayInWeek());
+            assertEquals(this.failMessages[4], DayInWeek.valueOf(time.getDayInWeek().toString()), time.getDayInWeek());
         }
     }
 
