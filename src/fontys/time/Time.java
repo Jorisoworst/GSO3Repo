@@ -9,9 +9,9 @@ import java.util.GregorianCalendar;
 /**
  *
  * @author Frank Peeters, Nico Kuijpers
- * 
+ *
  * LET OP: De klasse Time bevat enkele fouten.
- * 
+ *
  */
 public class Time implements ITime {
 
@@ -19,9 +19,10 @@ public class Time implements ITime {
 
     /**
      * creation of a time-object with year y, month m, day d, hours h and
-     * minutes m; if the combination of y-m-d refers to a non-existing date 
-     * the value of this Time-object will be not guaranteed 
-     * @param y 
+     * minutes m; if the combination of y-m-d refers to a non-existing date the
+     * value of this Time-object will be not guaranteed
+     *
+     * @param y
      * @param m 1≤m≤12
      * @param d 1≤d≤31
      * @param h 0≤h≤23
@@ -41,7 +42,7 @@ public class Time implements ITime {
         if (min < 0 || min > 59) {
             throw new IllegalArgumentException("minutes must be within 0..59");
         }
-        
+
         gc = new GregorianCalendar(y, m /* bug fix: - 1 added*/ - 1, d, h, min);
     }
 
@@ -65,10 +66,12 @@ public class Time implements ITime {
                 return DayInWeek.THU;
             case GregorianCalendar.FRIDAY:
                 return DayInWeek.FRI;
-            case GregorianCalendar.SATURDAY:
-                return DayInWeek.SAT;
+            // bugfix: default value changed
+            // case GregorianCalendar.SATURDAY:
             default:
-                return null;
+                return DayInWeek.SAT;
+            // default:
+            // return null;
         }
     }
 

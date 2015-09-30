@@ -15,6 +15,14 @@ import static org.junit.Assert.*;
  */
 public class TimeTest {
 
+    private String[] failMessages
+            = {
+                "month must be within 1..12",
+                "day must be within 1..31",
+                "hours must be within 0..23",
+                "minutes must be within 0..59"
+            };
+
     private ITime time;
     private int year;
     private int month;
@@ -31,25 +39,73 @@ public class TimeTest {
         this.minutes = 12;
         this.time = new Time(this.year, this.month, this.day, this.hours, this.minutes);
     }
-    
+
     @Test
-    (expected=IllegalArgumentException.class)
-    public void constructorTest()
-    {
+    public void constructorTest() {
         /**
          * creation of a time-object with year y, month m, day d, hours h and
-         * minutes m; if the combination of y-m-d refers to a non-existing date 
-         * the value of this Time-object will be not guaranteed 
-         * @param y 
+         * minutes m; if the combination of y-m-d refers to a non-existing date
+         * the value of this Time-object will be not guaranteed
+         *
+         * @param y
          * @param m 1≤m≤12
          * @param d 1≤d≤31
          * @param h 0≤h≤23
          * @param min 0≤m≤59
          */
         ITime time;
-        
-        time = new Time(1991, 13, 32, 24, 60);       
-        time = new Time(1991, 0, 0, -1, -1);
+
+        // Maanden testcases
+        try {
+            time = new Time(this.year, 0, this.day, this.hours, this.minutes);
+            fail(failMessages[0]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        try {
+            time = new Time(this.year, 13, this.day, this.hours, this.minutes);
+            fail(failMessages[0]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        // Dagen testcases
+        try {
+            time = new Time(this.year, this.month, 0, this.hours, this.minutes);
+            fail(failMessages[1]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        try {
+            time = new Time(this.year, this.month, 32, this.hours, this.minutes);
+            fail(failMessages[1]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        // Uren testcases
+        try {
+            time = new Time(this.year, this.month, this.day, -1, this.minutes);
+            fail(failMessages[2]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        try {
+            time = new Time(this.year, this.month, this.day, 24, this.minutes);
+            fail(failMessages[2]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        // Minuten testcases
+        try {
+            time = new Time(this.year, this.month, this.day, this.hours, -1);
+            fail(failMessages[2]);
+        } catch (IllegalArgumentException iae) {
+        }
+
+        try {
+            time = new Time(this.year, this.month, this.day, this.hours, 60);
+            fail(failMessages[2]);
+        } catch (IllegalArgumentException iae) {
+        }
     }
 
     @Test
@@ -79,7 +135,11 @@ public class TimeTest {
 
     @Test
     public void getDayInWeekTest() {
-        assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.WED, this.time.getDayInWeek());
+        for (int i = 6; i < 13; i++) {
+            ITime time = new Time(this.year, this.month, i, this.hours, this.minutes);
+            assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.values()[i - 6], time.getDayInWeek());
+            assertEquals("de dag in de week wordt niet goed opgehaald", DayInWeek.valueOf(time.getDayInWeek().toString()), time.getDayInWeek());
+        }
     }
 
     @Test
@@ -91,5 +151,12 @@ public class TimeTest {
     @Test
     public void differenceTest() {
         ITime time = new Time(this.year, this.month, this.day, this.hours, this.minutes);
+        assertEquals(0, time.difference(this.time));
+    }
+
+    @Test
+    public void compareToTest() {
+        ITime time = new Time(this.year, this.month, this.day, this.hours, this.minutes);
+        assertEquals(0, time.compareTo(this.time));
     }
 }
