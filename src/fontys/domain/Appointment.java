@@ -44,4 +44,14 @@ public class Appointment {
     public ArrayList<Contact> getInvitees() {
         return (ArrayList<Contact>) Collections.unmodifiableList(this.invitees);
     }
+    
+    /**
+     * checked of het Contact bestaat
+     *
+     * @param c Contact die je wilt checken of die er in staat
+     * @return true als Contact bestaat, false als niet bestaat
+     */
+    public boolean getContact(Contact c) {
+        return this.invitees.contains(c);
+    }
 }

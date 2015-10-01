@@ -15,8 +15,8 @@ import static org.junit.Assert.*;
  */
 public class TimeSpanTest {
 
-    private TimeSpan ts;
-    private TimeSpan ts2;
+    private ITimeSpan ts;
+    private ITimeSpan ts2;
 
     public TimeSpanTest() {
     }

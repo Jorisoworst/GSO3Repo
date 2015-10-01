@@ -80,10 +80,10 @@ public class ContactTest {
         this.ap = new Appointment(this.subject, this.ts);
         
         this.ct.addAppointment((this.ap));
-        assertTrue(this.ct.GetAppointment(ap));
+        assertTrue(this.ct.getAppointment(ap));
         
         this.ct.removeAppointment(this.ap);
-        assertFalse(this.ct.GetAppointment(ap));
+        assertFalse(this.ct.getAppointment(ap));
     }
     
     /**
