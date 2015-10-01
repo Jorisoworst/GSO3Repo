@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Contact.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;UnittestenTime&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">fontys.domain</a> &gt; <span class="el_source">Contact.java</span></div><h1>Contact.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fontys.domain;
+
+import java.util.*;
+
+/**
+ *
+ * @author Joris
+ */
+public class Contact {
+
+    private String name;
+    private ArrayList&lt;Appointment&gt; agenda;
+
+<span class="fc" id="L19">    public Contact(String name) {</span>
+<span class="fc" id="L20">        this.name = name;</span>
+<span class="fc" id="L21">        this.agenda = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L22">    }</span>
+
+    public String getName() {
+<span class="fc" id="L25">        return this.name;</span>
+    }
+
+    public boolean addAppointment(Appointment a) {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (!this.agenda.contains(a)) {</span>
+<span class="fc" id="L30">            this.agenda.add(a);</span>
+<span class="fc" id="L31">            return true;</span>
+        }
+
+<span class="fc" id="L34">        return false;</span>
+    }
+
+    public void removeAppointment(Appointment a) {
+<span class="fc" id="L38">        this.agenda.remove(a);</span>
+<span class="fc" id="L39">    }</span>
+
+    //test werkt nog niet! 
+    //geeft error &quot;Collections$UnmodifiableRandomAccessList cannot be cast to java.util.ArrayList&quot;
+    public ArrayList&lt;Appointment&gt; appointments() {
+<span class="nc" id="L44">        return (ArrayList&lt;Appointment&gt;) Collections.unmodifiableList(this.agenda);</span>
+    }
+
+    /**
+     * checked of de Appointment bestaat
+     *
+     * @param a Appointment die je wilt checken of die er in staat
+     * @return true als Appointment bestaat, false als niet bestaat
+     */
+    public boolean GetAppointment(Appointment a) {
+<span class="fc" id="L54">        return this.agenda.contains(a);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

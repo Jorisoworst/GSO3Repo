@@ -10,14 +10,14 @@ package fontys.time;
  * @author Joris
  */
 public class TimeSpan2 implements ITimeSpan {
-    
-    private ITime beginTime;
-    private long timeSpan;
 
-    public TimeSpan2(ITime bt, long ts) {
-        if (bt != null && ts >= 0) {
-            this.beginTime = bt;
-            this.timeSpan = ts;
+    private ITime beginTime;
+    private long length;
+
+    public TimeSpan2(ITime beginTime, long length) {
+        if (beginTime != null && length <= 0) {
+            this.beginTime = beginTime;
+            this.length = length;
         }
     }
 
@@ -28,8 +28,8 @@ public class TimeSpan2 implements ITimeSpan {
 
     @Override
     public ITime getEndTime() {
-        if (this.beginTime != null && this.timeSpan >= Integer.MIN_VALUE && this.timeSpan <= Integer.MAX_VALUE) {
-            return this.beginTime.plus((int) this.timeSpan);
+        if (this.beginTime != null && this.length >= Integer.MIN_VALUE && this.length <= Integer.MAX_VALUE) {
+            return this.beginTime.plus((int) this.length);
         }
 
         return this.beginTime;
@@ -37,8 +37,8 @@ public class TimeSpan2 implements ITimeSpan {
 
     @Override
     public int length() {
-        if (this.timeSpan >= Integer.MIN_VALUE && this.timeSpan <= Integer.MAX_VALUE) {
-            return (int) this.timeSpan;
+        if (this.length >= Integer.MIN_VALUE && this.length <= Integer.MAX_VALUE) {
+            return (int) this.length;
         }
 
         return 0;
@@ -54,23 +54,23 @@ public class TimeSpan2 implements ITimeSpan {
     @Override
     public void setEndTime(ITime endTime) {
         if (endTime != null) {
-            this.timeSpan = endTime.difference(this.beginTime);
+            this.length = endTime.difference(this.beginTime);
         }
     }
 
     @Override
     public void move(int minutes) {
-        if (minutes >= 0 && this.beginTime != null) {
-            this.beginTime.plus(minutes);
-            this.timeSpan += minutes;
-        }
+        this.beginTime.plus(minutes);
+        this.length += minutes;
     }
 
     @Override
     public void changeLengthWith(int minutes) {
-        if (minutes >= 0) {
-            this.timeSpan = minutes;
+        if (minutes <= 0) {
+            throw new IllegalArgumentException("length of period must be positive");
         }
+
+        this.length = minutes;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TimeSpan2 implements ITimeSpan {
                 || this.getEndTime().compareTo(timeSpan.getBeginTime()) < 0) {
             return null;
         }
-        
+
         ITime begintime, endtime;
         if (this.getBeginTime().compareTo(timeSpan.getBeginTime()) < 0) {
             begintime = this.getBeginTime();
