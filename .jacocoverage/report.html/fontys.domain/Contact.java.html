@@ -40,8 +40,8 @@ public class Contact {
 
     //test werkt nog niet! 
     //geeft error &quot;Collections$UnmodifiableRandomAccessList cannot be cast to java.util.ArrayList&quot;
-    public ArrayList&lt;Appointment&gt; appointments() {
-<span class="nc" id="L44">        return (ArrayList&lt;Appointment&gt;) Collections.unmodifiableList(this.agenda);</span>
+    public List&lt;Appointment&gt; appointments() {
+<span class="fc" id="L44">        return (List&lt;Appointment&gt;) Collections.unmodifiableList(this.agenda);</span>
     }
 
     /**
@@ -50,7 +50,7 @@ public class Contact {
      * @param a Appointment die je wilt checken of die er in staat
      * @return true als Appointment bestaat, false als niet bestaat
      */
-    public boolean GetAppointment(Appointment a) {
+    public boolean getAppointment(Appointment a) {
 <span class="fc" id="L54">        return this.agenda.contains(a);</span>
     }
 }

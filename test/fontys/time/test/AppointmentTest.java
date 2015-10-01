@@ -93,8 +93,13 @@ public class AppointmentTest {
     public void getInvitees_Test() {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ap = new Appointment(this.subject, this.ts);
+        this.ct = new Contact(this.TestName);
+        this.ap.addContact(this.ct);
+        this.Testinvitees.add(this.ct);
                
         assertEquals("Deze lijsten zijn niet gelijk aan elkaar", 
-                this.Testinvitees, this.ap.getInvitees());
+                this.Testinvitees.size(), this.ap.getInvitees().size());
+        assertEquals("Deze lijsten zijn niet gelijk aan elkaar", 
+                this.Testinvitees.get(0), this.ap.getInvitees().get(0));
     }
 }

@@ -41,8 +41,8 @@ public class Appointment {
         this.invitees.remove(c);
     }
 
-    public ArrayList<Contact> getInvitees() {
-        return (ArrayList<Contact>) Collections.unmodifiableList(this.invitees);
+    public List<Contact> getInvitees() {
+        return (List<Contact>) Collections.unmodifiableList(this.invitees);
     }
     
     /**

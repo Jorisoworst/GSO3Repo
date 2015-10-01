@@ -94,8 +94,12 @@ public class ContactTest {
         this.ct = new Contact(this.TestName);
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ap = new Appointment(this.subject, this.ts);
+        this.ct.addAppointment(this.ap);
+        this.Testagenda.add(this.ap);
                
         assertEquals("Deze lijsten zijn niet gelijk aan elkaar", 
-                this.Testagenda, this.ct.appointments());
+                this.Testagenda.size(), this.ct.appointments().size());
+        assertEquals("Deze lijsten zijn niet gelijk aan elkaar", 
+                this.Testagenda.get(0), this.ct.appointments().get(0));
     }
 }

@@ -40,8 +40,8 @@ public class Contact {
 
     //test werkt nog niet! 
     //geeft error "Collections$UnmodifiableRandomAccessList cannot be cast to java.util.ArrayList"
-    public ArrayList<Appointment> appointments() {
-        return (ArrayList<Appointment>) Collections.unmodifiableList(this.agenda);
+    public List<Appointment> appointments() {
+        return (List<Appointment>) Collections.unmodifiableList(this.agenda);
     }
 
     /**
