@@ -25,20 +25,32 @@ public class Contact {
         return this.name;
     }
 
-    boolean addAppointment(Appointment a) {
+    public boolean addAppointment(Appointment a) {
         if (!this.agenda.contains(a)) {
             this.agenda.add(a);
             return true;
         }
-        
+
         return false;
     }
 
-    void removeAppointment(Appointment a) {
+    public void removeAppointment(Appointment a) {
         this.agenda.remove(a);
     }
 
+    //test werkt nog niet! 
+    //geeft error "Collections$UnmodifiableRandomAccessList cannot be cast to java.util.ArrayList"
     public ArrayList<Appointment> appointments() {
         return (ArrayList<Appointment>) Collections.unmodifiableList(this.agenda);
+    }
+
+    /**
+     * checked of de Appointment bestaat
+     *
+     * @param a Appointment die je wilt checken of die er in staat
+     * @return true als Appointment bestaat, false als niet bestaat
+     */
+    public boolean GetAppointment(Appointment a) {
+        return this.agenda.contains(a);
     }
 }
