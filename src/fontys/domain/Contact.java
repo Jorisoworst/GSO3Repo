@@ -50,7 +50,7 @@ public class Contact {
      * @param a Appointment die je wilt checken of die er in staat
      * @return true als Appointment bestaat, false als niet bestaat
      */
-    public boolean GetAppointment(Appointment a) {
+    public boolean getAppointment(Appointment a) {
         return this.agenda.contains(a);
     }
 }
