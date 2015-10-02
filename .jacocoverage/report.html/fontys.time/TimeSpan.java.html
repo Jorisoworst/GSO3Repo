@@ -132,11 +132,7 @@ public class TimeSpan implements ITimeSpan {
 <span class="fc" id="L132">            endtime = timeSpan.getEndTime();</span>
         }
 
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (begintime.compareTo(endtime) &lt;= 0) {</span>
-<span class="nc" id="L136">            return null;</span>
-        }
-
-<span class="fc" id="L139">        return new TimeSpan(begintime, endtime);</span>
+<span class="fc" id="L135">        return new TimeSpan(begintime, endtime);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

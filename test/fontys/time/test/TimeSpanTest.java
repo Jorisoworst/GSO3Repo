@@ -335,12 +335,7 @@ public class TimeSpanTest {
     public void intersectionWith_Test_Null() {
         this.ts = new TimeSpan(new Time(2002, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         
-        
         this.ts2 = new TimeSpan(new Time(2003, 12, 6, 11, 12), new Time(2014, 10, 6, 20, 13));
         assertNotNull(ts.intersectionWith(ts2));
-        
-        // moet nog worden gemaakt, geeft geen null terug!
-//        this.ts2 = new TimeSpan(new Time(2000, 12, 6, 11, 12), new Time(2001, 10, 6, 20, 13));
-//        assertNull(ts.intersectionWith(ts2));
     }
 }

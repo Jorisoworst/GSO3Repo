@@ -373,9 +373,5 @@ public class TimeSpan2Test {
         this.timeSpan1 = new TimeSpan2(this.time5, this.time3.difference(this.time5));        
         this.timeSpan2 = new TimeSpan2(this.time15, this.time10.difference(this.time15));
         assertNotNull(this.timeSpan1.intersectionWith(this.timeSpan2));
-        
-        // moet nog worden gemaakt, geeft geen null terug!
-//        this.timeSpan2 = new TimeSpan2(this.time9, this.time13.difference(this.time9));
-//        assertNull(this.timeSpan1.intersectionWith(this.timeSpan2));
     }
 }

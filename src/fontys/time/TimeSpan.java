@@ -132,10 +132,6 @@ public class TimeSpan implements ITimeSpan {
             endtime = timeSpan.getEndTime();
         }
 
-        if (begintime.compareTo(endtime) <= 0) {
-            return null;
-        }
-
         return new TimeSpan(begintime, endtime);
     }
 }
