@@ -103,9 +103,9 @@ public class TimeSpanTest {
     public void setBeginTime_Test() {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), 
                 new Time(2013, 7, 1, 15, 23));
-
-        ////gives exeption
         this.ts.setEndTime(new Time(2002, 10, 4, 21, 5));
+        
+        /* geeft exeption */
         this.ts.setBeginTime(new Time(2011, 10, 4, 21, 5));
     }
 
@@ -117,6 +117,7 @@ public class TimeSpanTest {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ts.setBeginTime(new Time(2002, 10, 4, 21, 5));
 
+        /* als de begintijd van ts2 groter is dan de begintijd van ts */
         assertEquals("getYear Test failed", this.ts.getBeginTime().getYear(), 
                 new Time(2002, 10, 4, 21, 5).getYear());
         assertEquals("getMonth Test failed", this.ts.getBeginTime().getMonth(), 
@@ -149,6 +150,7 @@ public class TimeSpanTest {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ts.setEndTime(new Time(2014, 7, 1, 15, 23));
 
+        /* als de begintijd van ts2 groter is dan de begintijd van ts */
         assertEquals("getYear Test failed", this.ts.getEndTime().getYear(), 
                 new Time(2014, 7, 1, 15, 23).getYear());
         assertEquals("getMonth Test failed", this.ts.getEndTime().getMonth(), 
@@ -169,6 +171,7 @@ public class TimeSpanTest {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         ts.move(10);
 
+        /* gives exeption */
         assertEquals("de verzette tijd komt niet overeen met de getBeginTime", 
                 ts.getBeginTime().getMinutes(), 15);
     }
@@ -180,7 +183,7 @@ public class TimeSpanTest {
     public void changeLengthWith_Test() {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
 
-        ////this should not give an exeption
+        /* this should not give an exeption */
         this.ts.changeLengthWith(10);
         assertEquals("de verzette tijd komt niet overeen met de getBeginTime",
                 33, ts.getEndTime().getMinutes());
@@ -193,7 +196,7 @@ public class TimeSpanTest {
     public void changeLengthWith_Test2() {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
 
-        ////this should give an exeption
+        /* this should give an exeption */
         this.ts.changeLengthWith(-10);
     }
 
@@ -202,13 +205,19 @@ public class TimeSpanTest {
      */
     @Test
     public void isPartOf_Test() {
+        /* ts en ts2 worden aangemaakt, er wordt getest of ts2 een deel uitmaakt 
+        van ts en zou true moeten terug geven*/
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ts2 = new TimeSpan(new Time(2002, 12, 6, 11, 12), new Time(2009, 10, 6, 20, 13));
         assertTrue(ts.isPartOf(ts2));
 
+        /* hier wordt getest of ts2 een deel uitmaakt van ts en dat zou false 
+        moeten terug geven */
         this.ts2 = new TimeSpan(new Time(2000, 12, 6, 11, 12), new Time(2014, 10, 6, 20, 13));
         assertFalse(ts.isPartOf(ts2));
 
+        /* hier wordt getest of ts2 een deel uitmaakt van ts en dat zou false 
+        moeten terug geven */
         this.ts2 = new TimeSpan(new Time(2002, 12, 6, 11, 12), new Time(2014, 10, 6, 20, 13));
         assertFalse(ts.isPartOf(ts2));
     }
@@ -218,10 +227,14 @@ public class TimeSpanTest {
      */
     @Test
     public void unionWith_Test() {
+        /* hier wordt ts en ts2 aangemaakt en wordt er getest dat ts unionwith 
+        ts2 null terug geeft*/
         this.ts = new TimeSpan(new Time(2002, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ts2 = new TimeSpan(new Time(2014, 12, 6, 11, 12), new Time(2015, 10, 6, 20, 13));
         assertNull("er moet Null uit komen", ts.unionWith(ts2));
 
+        /* hier wordt ts2 opnieuw aangemaakt en getest dat ts unionwith 
+        ts2 null terug geeft*/
         this.ts2 = new TimeSpan(new Time(2000, 12, 6, 11, 12), new Time(2001, 10, 6, 20, 13));
         assertNull("er moet Null uit komen", ts.unionWith(ts2));
     }
@@ -231,10 +244,11 @@ public class TimeSpanTest {
      */
     @Test
     public void unionWith_Test_BeginTimeTest() {
+        /* hier wordt ts en ts2 aangemaakt*/
         this.ts = new TimeSpan(new Time(2002, 10, 4, 21, 5), new Time(2004, 7, 1, 15, 23));
         this.ts2 = new TimeSpan(new Time(2003, 12, 6, 11, 12), new Time(2005, 10, 6, 20, 13));
         
-        // als de begintijd van ts groter is dan de begintijd van ts2
+        /* als de begintijd van ts groter is dan de begintijd van ts2 */
         assertEquals("het jaar moet gelijk zijn", 
                 ts.unionWith(ts2).getBeginTime().getYear(), ts.getBeginTime().getYear());
         assertEquals("De maand moet gelijk zijn", 
@@ -246,7 +260,7 @@ public class TimeSpanTest {
         assertEquals("De minuten moet gelijk zijn", 
                 ts.unionWith(ts2).getBeginTime().getMinutes(), ts.getBeginTime().getMinutes());
         
-        // als de begintijd van ts2 groter is dan de begintijd van ts
+        /* als de begintijd van ts2 groter is dan de begintijd van ts */
         this.ts2 = new TimeSpan(new Time(2002, 10, 3, 5, 1), new Time(2003, 10, 6, 20, 13));
         assertEquals("het jaar moet gelijk zijn", 
                 ts.unionWith(ts2).getBeginTime().getYear(), ts2.getBeginTime().getYear());
@@ -265,10 +279,11 @@ public class TimeSpanTest {
      */
     @Test
     public void unionWith_Test_EndTimeTest() {
+        /* hier wordt ts en ts2 aangemaakt */
         this.ts = new TimeSpan(new Time(2002, 10, 4, 21, 5), new Time(2005, 7, 1, 15, 23));
         this.ts2 = new TimeSpan(new Time(2003, 12, 6, 11, 12), new Time(2004, 10, 6, 20, 13));
         
-        // als de ts eindtijd kleiner is
+        /* als de ts eindtijd kleiner is */
         assertEquals("het jaar moet gelijk zijn", 
                 ts.unionWith(ts2).getEndTime().getYear(), ts.getEndTime().getYear());
         assertEquals("De maand moet gelijk zijn", 
@@ -280,7 +295,7 @@ public class TimeSpanTest {
         assertEquals("De minuten moet gelijk zijn", 
                 ts.unionWith(ts2).getEndTime().getMinutes(), ts.getEndTime().getMinutes());
         
-        // als de ts2 eindtijd kleiner is
+        /* als de ts2 eindtijd kleiner is */
         this.ts2 = new TimeSpan(new Time(2002, 10, 3, 5, 1), new Time(2006, 10, 6, 20, 13));
         assertEquals("het jaar moet gelijk zijn", 
                 ts.unionWith(ts2).getEndTime().getYear(), ts2.getEndTime().getYear());
@@ -301,7 +316,7 @@ public class TimeSpanTest {
     public void intersectionWith_Test_BeginTime() {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         
-        // de ts begintijd groter is dan de ts2 eindtijd
+        /* de ts begintijd groter is dan de ts2 eindtijd */
         this.ts2 = new TimeSpan(new Time(2000, 12, 6, 1, 12), new Time(2010, 10, 6, 20, 13));
         assertEquals("het jaar moet gelijk zijn", 
                 ts.intersectionWith(ts2).getBeginTime().getYear(), ts.getBeginTime().getYear());
@@ -314,7 +329,7 @@ public class TimeSpanTest {
         assertEquals("De minuten moet gelijk zijn", 
                 ts.intersectionWith(ts2).getBeginTime().getMinutes(), ts.getBeginTime().getMinutes());
         
-        // de ts begintijd groter is dan de ts2 eindtijd
+        /* de ts begintijd groter is dan de ts2 eindtijd */
         this.ts2 = new TimeSpan(new Time(2003, 12, 6, 11, 12), new Time(2014, 10, 6, 20, 13));
         assertEquals("het jaar moet gelijk zijn", 
                 ts.intersectionWith(ts2).getBeginTime().getYear(), ts2.getBeginTime().getYear());
@@ -335,6 +350,7 @@ public class TimeSpanTest {
     public void intersectionWith_Test_Null() {
         this.ts = new TimeSpan(new Time(2002, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         
+        /* hier wordt getest of ts2 kruist met ts en zou geen null moeten terug geven */
         this.ts2 = new TimeSpan(new Time(2003, 12, 6, 11, 12), new Time(2014, 10, 6, 20, 13));
         assertNotNull(ts.intersectionWith(ts2));
     }
