@@ -46,6 +46,7 @@ public class TimeSpan2 implements ITimeSpan {
                     + beginTime + " must be earlier than end time " + this.getEndTime());
         }
 
+        this.length += this.beginTime.difference(beginTime);
         this.beginTime = beginTime;
     }
 

@@ -112,9 +112,10 @@ public class TimeSpan2Test {
     public void setBeginTime_Test() {
         this.timeSpan1 = new TimeSpan2(this.time1, this.time3.difference(this.time1));
 
-        ////gives exeption
+        // geeft exception
         this.timeSpan1.setEndTime(this.time5);
-        this.timeSpan1.setBeginTime(this.time4); //set begin time moet worden getest als begin time aangepast wordt dat de duration ook aangepast wordt (eindtijd)
+        this.timeSpan1.setBeginTime(this.time4);
+        // set begin time moet worden getest als begin time aangepast wordt dat de duration ook aangepast wordt (eindtijd)
     }
 
     /**
@@ -187,7 +188,7 @@ public class TimeSpan2Test {
     public void changeLengthWith_Test() {
         this.timeSpan1 = new TimeSpan2(this.time1, this.time3.difference(this.time1));
 
-        ////this should not give an exeption
+        // dit zou geen exeption moeten geven
         this.timeSpan1.changeLengthWith(10);
         assertEquals("de verzette tijd komt niet overeen met de getBeginTime",
                 33, this.timeSpan1.getEndTime().getMinutes());
@@ -200,7 +201,7 @@ public class TimeSpan2Test {
     public void changeLengthWith_Test2() {
         this.timeSpan1 = new TimeSpan2(this.time1, this.time3.difference(this.time1));
 
-        ////this should give an exeption
+        // geeft exception
         this.timeSpan1.changeLengthWith(-10);
     }
 
@@ -241,7 +242,7 @@ public class TimeSpan2Test {
         this.timeSpan1 = new TimeSpan2(this.time5, this.time14.difference(this.time5));
         this.timeSpan2 = new TimeSpan2(this.time15, this.time16.difference(this.time15));
         
-        // als de begintijd van ts groter is dan de begintijd van ts2
+        // als de begintijd van timeSpan1 groter is dan de begintijd van timeSpan2
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.unionWith(this.timeSpan2).getBeginTime().getYear(),
                 this.timeSpan1.getBeginTime().getYear());
@@ -258,7 +259,7 @@ public class TimeSpan2Test {
                 this.timeSpan1.unionWith(this.timeSpan2).getBeginTime().getMinutes(),
                 this.timeSpan1.getBeginTime().getMinutes());
         
-        // als de begintijd van ts2 groter is dan de begintijd van ts
+        // als de begintijd van timeSpan2 groter is dan de begintijd van timeSpan1
         this.timeSpan2 = new TimeSpan2(this.time17, this.time18.difference(this.time17));
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.unionWith(this.timeSpan2).getBeginTime().getYear(),
@@ -285,7 +286,7 @@ public class TimeSpan2Test {
         this.timeSpan1 = new TimeSpan2(this.time5, this.time19.difference(this.time5));
         this.timeSpan2 = new TimeSpan2(this.time15, this.time20.difference(this.time15));
         
-        // als de ts eindtijd kleiner is
+        // als de timeSpan1 eindtijd kleiner is
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.unionWith(this.timeSpan2).getEndTime().getYear(),
                 this.timeSpan1.getEndTime().getYear());
@@ -302,7 +303,7 @@ public class TimeSpan2Test {
                 this.timeSpan1.unionWith(this.timeSpan2).getEndTime().getMinutes(),
                 this.timeSpan1.getEndTime().getMinutes());
         
-        // als de ts2 eindtijd kleiner is
+        // als de timeSpan2 eindtijd kleiner is
         this.timeSpan2 = new TimeSpan2(this.time17, this.time21.difference(this.time17));
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.unionWith(this.timeSpan2).getEndTime().getYear(),
@@ -328,7 +329,7 @@ public class TimeSpan2Test {
     public void intersectionWith_Test_BeginTime() {
         this.timeSpan1 = new TimeSpan2(this.time1, this.time3.difference(this.time1));
         
-        // de ts begintijd groter is dan de ts2 eindtijd
+        // de timeSpan1 begintijd groter is dan de timeSpan2 eindtijd
         this.timeSpan2 = new TimeSpan2(this.time22, this.time23.difference(this.time22));
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.intersectionWith(this.timeSpan2).getBeginTime().getYear(),
@@ -346,7 +347,7 @@ public class TimeSpan2Test {
                 this.timeSpan1.intersectionWith(this.timeSpan2).getBeginTime().getMinutes(),
                 this.timeSpan1.getBeginTime().getMinutes());
         
-        // de ts begintijd groter is dan de ts2 eindtijd
+        // de timeSpan1 begintijd groter is dan de timeSpan2 eindtijd
         this.timeSpan2 = new TimeSpan2(this.time15, this.time10.difference(this.time15));
         assertEquals("het jaar moet gelijk zijn", 
                 this.timeSpan1.intersectionWith(this.timeSpan2).getBeginTime().getYear(),
