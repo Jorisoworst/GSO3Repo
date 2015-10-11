@@ -114,7 +114,7 @@ public class TimeSpan2Test {
 
         ////gives exeption
         this.timeSpan1.setEndTime(this.time5);
-        this.timeSpan1.setBeginTime(this.time4);
+        this.timeSpan1.setBeginTime(this.time4); //set begin time moet worden getest als begin time aangepast wordt dat de duration ook aangepast wordt (eindtijd)
     }
 
     /**

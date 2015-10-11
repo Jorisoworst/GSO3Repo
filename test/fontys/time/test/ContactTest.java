@@ -64,7 +64,7 @@ public class ContactTest {
         this.ts = new TimeSpan(new Time(2001, 10, 4, 21, 5), new Time(2013, 7, 1, 15, 23));
         this.ap = new Appointment(this.subject, this.ts);
         
-        assertTrue(this.ct.addAppointment(this.ap));
+        assertTrue(this.ct.addAppointment(this.ap)); //cometaar er bij
         
         this.ct.addAppointment((this.ap));
         assertFalse(this.ct.addAppointment(this.ap));
@@ -80,7 +80,7 @@ public class ContactTest {
         this.ap = new Appointment(this.subject, this.ts);
         
         this.ct.addAppointment((this.ap));
-        assertTrue(this.ct.getAppointment(ap));
+        assertTrue(this.ct.getAppointment(ap)); //cometaar er bij
         
         this.ct.removeAppointment(this.ap);
         assertFalse(this.ct.getAppointment(ap));

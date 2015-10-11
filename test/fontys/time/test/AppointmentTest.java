@@ -64,7 +64,7 @@ public class AppointmentTest {
         this.ap = new Appointment(this.subject, this.ts);
         this.ct = new Contact(this.TestName);
         
-        assertTrue(this.ap.addContact(this.ct));
+        assertTrue(this.ap.addContact(this.ct)); //cometaar er bij
         
         this.ap.addContact((this.ct));
         assertFalse(this.ap.addContact(this.ct));
@@ -80,7 +80,7 @@ public class AppointmentTest {
         this.ap = new Appointment(this.subject, this.ts);
         
         this.ap.addContact((this.ct));
-        assertTrue(this.ap.getContact(ct));
+        assertTrue(this.ap.getContact(ct)); //cometaar er bij
         
         this.ap.removeContact(this.ct);
         assertFalse(this.ap.getContact(ct));
