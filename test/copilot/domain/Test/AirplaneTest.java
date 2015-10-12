@@ -3,10 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.domain;
+package copilot.domain.Test;
 
+import copilot.domain.Airplane;
+import copilot.domain.AirplanePart;
+import copilot.domain.Elevator;
+import copilot.domain.Fuel;
+import copilot.domain.Gun;
+import copilot.domain.Propellor;
 import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.image.Image;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,6 +31,7 @@ public class AirplaneTest {
     Propellor propellor;
     Gun gun;
     Fuel fuel;
+    Image image;
     
     public AirplaneTest() {
         
@@ -40,11 +47,12 @@ public class AirplaneTest {
     
     @Before
     public void setUp() {
-        airplane = new Airplane();
-        elevator = new Elevator(airplane, null);
-        propellor = new Propellor(airplane, null);
-        gun = new Gun(airplane, null);
-        fuel = new Fuel(airplane, null);
+        image = new Image(getClass().getResourceAsStream("Plane.png"));
+        airplane = new Airplane(image);
+        elevator = new Elevator(image, airplane, null);
+        propellor = new Propellor(image, airplane, null);
+        gun = new Gun(image, airplane, null);
+        fuel = new Fuel(image, airplane, null);
         
         ArrayList<AirplanePart> parts = new ArrayList<>();
         
