@@ -23,4 +23,8 @@ public class Administrator extends Moderator {
         super(username, password, dateOfBirth);
     }
    
+    @Override
+    public String toString() {
+        return super.getDisplayName() + " " + super.getUsername();
+    }
 }
