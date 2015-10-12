@@ -12,7 +12,7 @@ package copilot.controller;
 public class Obstacle extends GameObject {
 
     private boolean isDestructable;
-    
+
     /**
      * Initialize an instance of the Obstacle class which extends GameObject
      */
@@ -24,7 +24,7 @@ public class Obstacle extends GameObject {
      * @return the isDestructable
      */
     public boolean isIsDestructable() {
-        return isDestructable;
+        return this.isDestructable;
     }
 
     /**
@@ -33,5 +33,4 @@ public class Obstacle extends GameObject {
     public void setIsDestructable(boolean isDestructable) {
         this.isDestructable = isDestructable;
     }
-    
 }
