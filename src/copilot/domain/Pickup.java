@@ -5,6 +5,8 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+
 /**
  *
  * @author Joris
@@ -15,8 +17,11 @@ public abstract class Pickup extends GameObject {
 
     /**
      * Initialize an instance of the Pickup class which extends GameObject
+     *
+     * @param image the image, may not be null
      */
-    public Pickup() {
+    public Pickup(Image image) {
+        super(image);
         this.isPickedUp = false;
     }
 

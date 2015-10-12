@@ -5,6 +5,8 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+
 /**
  *
  * @author Joris
@@ -15,8 +17,11 @@ public class Obstacle extends GameObject {
 
     /**
      * Initialize an instance of the Obstacle class which extends GameObject
+     *
+     * @param image the image, may not be null
      */
-    public Obstacle() {
+    public Obstacle(Image image) {
+        super(image);
         this.isDestructable = false;
     }
 

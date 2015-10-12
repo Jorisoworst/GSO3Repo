@@ -5,20 +5,26 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+
 /**
  *
  * @author Niels
  */
 public class AirplanePart extends GameObject {
+
     private Airplane airplane;
     private User user;
-    
+
     /**
      * Initialize an instance of the Airplane class which extends GameObject
+     *
+     * @param image the image, may not be null
      * @param airplane the airplane, may not be null
      * @param user the user, may not be null
      */
-    public AirplanePart(Airplane airplane, User user) {
+    public AirplanePart(Image image, Airplane airplane, User user) {
+        super(image);
         this.airplane = airplane;
         this.user = user;
     }

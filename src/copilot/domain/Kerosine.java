@@ -5,6 +5,8 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+
 /**
  *
  * @author Joris
@@ -15,8 +17,11 @@ public class Kerosine extends Pickup {
 
     /**
      * Initialize an instance of the Kerosine class which extends Pickup
+     *
+     * @param image the image, may not be null
      */
-    public Kerosine() {
+    public Kerosine(Image image) {
+        super(image);
         this.amount = 0;
     }
 
