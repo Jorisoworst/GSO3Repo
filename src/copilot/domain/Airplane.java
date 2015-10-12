@@ -19,6 +19,7 @@ public class Airplane extends GameObject {
     private int maxFuelCapacity;
     private int fuelAmount;
     private ArrayList<AirplanePart> airplaneParts;
+    private int minimumSpeed = -40;
     
     /**
      * Initialize an instance of the Airplane class which extends GameObject
@@ -130,6 +131,29 @@ public class Airplane extends GameObject {
      */
     public boolean updateAirplane() {
        
+        
+        //get the airplane parts
+        Elevator elevator = null;
+        Propellor propeller = null;
+        for(AirplanePart part : airplaneParts)
+        {            
+            if(part instanceof Elevator)
+            {
+                elevator = (Elevator) part;
+            }
+            if(part instanceof Propellor)
+            {
+                propeller = (Propellor) part;
+            }
+        }
+        if(elevator == null || propeller == null)
+        {
+            throw new IllegalStateException("Not all airplane parts are configured");
+        }
+        double fuelConsumption = propeller.getFuelConsumption();
+        this.fuelAmount -= ((int)Math.round(fuelConsumption));
+        
+        
         //calculate the lift, to determen the vertical speed.
         //100 = squire feet wing span (could be adjusted)
         //0.002308 = air density at 1000f
@@ -138,8 +162,20 @@ public class Airplane extends GameObject {
         double cl = 2 * Math.PI * (this.pitch/100);
         double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
         int liftInt = (int) Math.round(lift);
-        int verticalSpeed = -40 + liftInt * 2; 
+        int verticalSpeed = minimumSpeed + liftInt * 2; 
         this.altitude = this.altitude + verticalSpeed;
+        
+        //if there is no fuel
+        if(fuelAmount < 0)
+        {
+            
+        }
+        else
+        {
+            //reset values
+        }
+        
+        
         return true;
     }
 }
