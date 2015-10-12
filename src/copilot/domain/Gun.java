@@ -6,6 +6,7 @@
 package copilot.domain;
 
 import java.awt.Point;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -16,11 +17,13 @@ public class Gun extends AirplanePart {
     
     /**
      * Initialize an instance of the Gun class which extends ArplanePart
+     *
+     * @param image the image, may not be null
      * @param airplane the airplane, may not be null
      * @param user the user, may not be null
      */
-    public Gun(Airplane airplane, User user) {
-        super(airplane, user);
+    public Gun(Image image, Airplane airplane, User user) {
+        super(image, airplane, user);
     }
 
     /**

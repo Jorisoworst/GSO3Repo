@@ -6,6 +6,7 @@
 package copilot.domain;
 
 import java.util.ArrayList;
+import javafx.scene.image.Image;
 import jdk.nashorn.internal.parser.TokenType;
 
 /**
@@ -23,8 +24,11 @@ public class Airplane extends GameObject {
     
     /**
      * Initialize an instance of the Airplane class which extends GameObject
+     *
+     * @param image the image, may not be null
      */
-    public Airplane() {
+    public Airplane(Image image) {
+        super(image);
     }
 
     /**

@@ -5,6 +5,8 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+
 /**
  *
  * @author Niels
@@ -15,11 +17,13 @@ public class Propellor extends AirplanePart {
     private Airplane airplane;
     /**
      * Initialize an instance of the Propellor class which extends ArplanePart
+     *
+     * @param image the image, may not be null
      * @param airplane the airplane, may not be null
      * @param user the user, may not be null
      */
-    public Propellor(Airplane airplane, User user) {
-        super(airplane, user);
+    public Propellor(Image image, Airplane airplane, User user) {
+        super(image, airplane, user);
         this.airplane = airplane;
         
     }
