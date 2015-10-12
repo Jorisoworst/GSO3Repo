@@ -5,6 +5,8 @@
  */
 package copilot.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,8 +19,15 @@ import static org.junit.Assert.*;
  * @author Ruud
  */
 public class AirplaneTest {
+    private static final double DELTA = 1e-15;
+    Airplane airplane;
+    Elevator elevator;
+    Propellor propellor;
+    Gun gun;
+    Fuel fuel;
     
     public AirplaneTest() {
+        
     }
     
     @BeforeClass
@@ -31,6 +40,20 @@ public class AirplaneTest {
     
     @Before
     public void setUp() {
+        airplane = new Airplane();
+        elevator = new Elevator(airplane, null);
+        propellor = new Propellor(airplane, null);
+        gun = new Gun(airplane, null);
+        fuel = new Fuel(airplane, null);
+        
+        ArrayList<AirplanePart> parts = new ArrayList<>();
+        
+        parts.add(elevator);
+        parts.add(propellor);
+        parts.add(gun);
+        parts.add(fuel);
+        
+        airplane.setAirplaneParts(parts);
     }
     
     @After
@@ -38,22 +61,107 @@ public class AirplaneTest {
     }
 
    @Test
-    public void TestLift()
+    public void TestPitch()
     {
         //CL = 2 * PI * angle of attack
         //L = 0.5 * p * v^2 * s * CL
         //Drag (force) = CD × 0.5* p * V^2 × S
         //cd of chesna = 0.027
-        
         double pitch = -20;
         double speed = 20;
-        for(int i = -20; i<50;i++)
+        //test pitch adjustments
+        for(int i = -50; i<50;i++)
         {
             pitch = i;
+            double currentPitch = airplane.getPitch();
+            elevator.setElevatorPitch(pitch);
             double cl = 2 * Math.PI * (pitch / 100);
             double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
             System.out.println("TestLift, pitch:" + pitch + " speed:" + speed + " CL = " + cl + " lift = " + lift);
+            
+            double expectedAirplanePitch = currentPitch + (Elevator.PITCH_INCREASMENT * pitch);
+            if(expectedAirplanePitch > 90)
+            {
+                expectedAirplanePitch = 90;
+            }
+            else if(expectedAirplanePitch < -90)
+            {
+                expectedAirplanePitch = -90;
+            }
+            
+            System.out.println("TestLift, pitch:" + i + " current: " + currentPitch + " calcPitchAP: " + expectedAirplanePitch);
+            assertEquals(expectedAirplanePitch, airplane.getPitch(), DELTA);
         }
  
+    }
+    
+    @Test
+    public void TestAlitude()
+    {
+        //CL = 2 * PI * angle of attack
+        //L = 0.5 * p * v^2 * s * CL
+        //Drag (force) = CD × 0.5* p * V^2 × S
+        //cd of chesna = 0.027
+        double pitch = 5;
+        int speed = 0;
+        //test pitch adjustments
+        for(int i = 0; i<100;i++)
+        {
+            speed = i;
+            int currentAltitude = airplane.getAltitude();            
+            airplane.setPitch(pitch);
+            airplane.setSpeed(speed);
+            
+            
+            double cl = 2 * Math.PI * (pitch / 100);
+            double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
+            int liftInt = (int) Math.round(lift);
+            int verticalSpeed = -40 + liftInt * 2;
+            int expectedAltitude = currentAltitude + verticalSpeed;
+            
+            airplane.updateAirplane();
+            int actualAltitude = airplane.getAltitude();
+            assertEquals("expected altitude is not equal to actual altitude.",expectedAltitude, actualAltitude);
+            System.out.println("TestLift, pitch:" + pitch + " speed:" + speed + " CL = " + cl + " lift = " + lift + " vs:" + verticalSpeed);
+            
+            
+        }
+        
+    }
+    
+    @Test
+    public void PropellorTest()
+    {
+        int rpm = 0;
+        airplane.setPitch(5);
+        for(int i = -1; i < 2601 ; i = i + 20)
+        {
+            rpm = i;
+            
+            //calculate expected speed
+            double airplanePitch = this.airplane.getPitch();
+            double knotsSpeed = rpm * airplanePitch * 0.00822894;
+            if(knotsSpeed < 0)
+            {
+                knotsSpeed = 0;
+            }
+
+            int currentSpeed = airplane.getSpeed();
+            double increasementSpeed = knotsSpeed - currentSpeed;            
+            int expectedAPspeed = currentSpeed + ((int)increasementSpeed);
+        
+            if(expectedAPspeed < 0)
+            {
+                expectedAPspeed = 0;
+            }
+            
+            propellor.setRpm(rpm);
+            int actualSpeed = airplane.getSpeed();
+            System.out.println("rpmTest, rpm: " + rpm + " currSpeed:" + currentSpeed + " newSpeed: " + expectedAPspeed);
+            assertEquals("speed expected is not equal to actual speed", expectedAPspeed, actualSpeed);
+            
+        }
+        
+        
     }
 }

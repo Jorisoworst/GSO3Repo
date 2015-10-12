@@ -6,6 +6,7 @@
 package copilot.domain;
 
 import java.util.ArrayList;
+import jdk.nashorn.internal.parser.TokenType;
 
 /**
  *
@@ -36,7 +37,17 @@ public class Airplane extends GameObject {
      * @param pitch the pitch to set
      */
     public void setPitch(double pitch) {
-        this.pitch = pitch;
+        if(pitch > 90)
+        {
+            this.pitch = 90;
+        }
+        else if(pitch < -90)
+        {
+            this.pitch = -90;
+        }
+        else{
+            this.pitch = pitch;
+        }
     }
 
     /**
@@ -118,35 +129,17 @@ public class Airplane extends GameObject {
      * @return a boolean whether updating the airplane went well or not
      */
     public boolean updateAirplane() {
-        // TODO
-        //get the airplane parts
-//        Elevator elevator = null;
-//        Propellor propeller = null;
-//        for(AirplanePart part : airplaneParts)
-//        {            
-//            if(part instanceof Elevator)
-//            {
-//                elevator = (Elevator) part;
-//            }
-//            if(part instanceof Propellor)
-//            {
-//                propeller = (Propellor) part;
-//            }
-//        }
-//        
-//        if(elevator != null && propeller != null)
-//        {
-//            
-//        }
-        
+       
         //calculate the lift, to determen the vertical speed.
         //100 = squire feet wing span (could be adjusted)
         //0.002308 = air density at 1000f
+        //-40 minimum.... speed? lift? idonno
         //THIS CALCULATION IS NOT CORRECT YET...
         double cl = 2 * Math.PI * (this.pitch/100);
-        double lift = 0.5 * 0.002308 * Math.exp(speed) * 100 * cl;
+        double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
         int liftInt = (int) Math.round(lift);
-        this.altitude = this.altitude + liftInt;
-        return false;
+        int verticalSpeed = -40 + liftInt * 2; 
+        this.altitude = this.altitude + verticalSpeed;
+        return true;
     }
 }
