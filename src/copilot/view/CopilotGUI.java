@@ -30,7 +30,7 @@ import org.dyn4j.dynamics.World;
 
 public class CopilotGUI extends Application {
 
-    Image player;
+    Image airplane;
     Image background;
     
     public int screenwidth;
@@ -42,7 +42,7 @@ public class CopilotGUI extends Application {
     public void start(Stage stage) throws Exception {
         //LoadImages
         background = new Image(getClass().getResourceAsStream("achtergrond.png"));
-        player = new Image(getClass().getResourceAsStream("Plane.png"));
+        airplane = new Image(getClass().getResourceAsStream("Plane.png"));
         
            screenwidth = 720;
            screenheight = 480;
@@ -60,7 +60,7 @@ public class CopilotGUI extends Application {
         
 
         gc.drawImage(background, 0, 0);
-        gc.drawImage(player, (screenwidth / 2) - (player.getWidth() / 2), screenheight / 2 - (player.getHeight() / 2));
+        gc.drawImage(airplane, (screenwidth / 2) - (airplane.getWidth() / 2), screenheight / 2 - (airplane.getHeight() / 2));
         
         
         World = new World();
