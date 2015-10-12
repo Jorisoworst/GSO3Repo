@@ -10,27 +10,27 @@ package copilot.controller;
  * @author Niels
  */
 public abstract class Pickup extends GameObject {
-    private boolean hasBeenPickedUp;
+
+    private boolean isPickedUp;
 
     /**
      * Initialize an instance of the Pickup class which extends GameObject
      */
     public Pickup() {
-        this.hasBeenPickedUp = false;
-    }
-    
-    /**
-     * @return the hasBeenPickedUp
-     */
-    public boolean isHasBeenPickedUp() {
-        return hasBeenPickedUp;
+        this.isPickedUp = false;
     }
 
     /**
-     * @param hasBeenPickedUp the hasBeenPickedUp to set
+     * @return the isPickedUp
      */
-    public void setHasBeenPickedUp(boolean hasBeenPickedUp) {
-        this.hasBeenPickedUp = hasBeenPickedUp;
+    public boolean isPickedUp() {
+        return this.isPickedUp;
     }
-    
+
+    /**
+     * @param isPickedUp the isPickedUp to set
+     */
+    public void setPickedUp(boolean isPickedUp) {
+        this.isPickedUp = isPickedUp;
+    }
 }

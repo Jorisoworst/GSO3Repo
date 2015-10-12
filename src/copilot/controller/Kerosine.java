@@ -10,8 +10,9 @@ package copilot.controller;
  * @author Niels
  */
 public class Kerosine extends Pickup {
+
     private int amount;
-    
+
     /**
      * Initialize an instance of the Kerosine class which extends Pickup
      */
@@ -23,7 +24,7 @@ public class Kerosine extends Pickup {
      * @return the amount
      */
     public int getAmount() {
-        return amount;
+        return this.amount;
     }
 
     /**
@@ -32,5 +33,4 @@ public class Kerosine extends Pickup {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-    
 }
