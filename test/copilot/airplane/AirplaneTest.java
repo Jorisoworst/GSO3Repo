@@ -40,12 +40,17 @@ public class AirplaneTest {
    @Test
     public void TestLift()
     {
-        double pitch = -1;
-        double speed = 0;
-        for(int i = 0; i<100;i++)
+        //CL = 2 * PI * angle of attack
+        //L = 0.5 * p * v^2 * s * CL
+        //Drag (force) = CD × 0.5* p * V^2 × S
+        //cd of chesna = 0.027
+        
+        double pitch = -20;
+        double speed = 20;
+        for(int i = -20; i<50;i++)
         {
-            speed = i;
-            double cl = 2 * Math.PI * pitch;
+            pitch = i;
+            double cl = 2 * Math.PI * (pitch / 100);
             double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
             System.out.println("TestLift, pitch:" + pitch + " speed:" + speed + " CL = " + cl + " lift = " + lift);
         }
