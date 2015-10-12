@@ -67,12 +67,13 @@ public class Propellor extends AirplanePart {
         
         airplane.setSpeed(newAirplaneSpeed);
         double fuelConsumption = calculateFuelConsumption(rpm);
+        this.setFuelConsumption(fuelConsumption);
     }
     
     private double calculateFuelConsumption(double rpm)
     {
         double fuelConsumption = 0;
-        
+        fuelConsumption = rpm / 260;
         
         return fuelConsumption;
     }
