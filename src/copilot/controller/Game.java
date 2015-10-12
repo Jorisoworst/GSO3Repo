@@ -27,7 +27,13 @@ public class Game {
         this.isStarted = false;
         this.score = 0;
         this.difficulty = 0;
+        if(session != null){
         this.session = session;
+        }
+        else
+        {
+            System.out.println("Session cannot be null, Session not found. 404");
+        }
     }
 
     /**
@@ -55,6 +61,7 @@ public class Game {
      * @param score the score to set
      */
     public void setScore(int score) {
+       
         this.score = score;
     }
 
