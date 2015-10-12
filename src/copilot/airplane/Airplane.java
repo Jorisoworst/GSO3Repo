@@ -141,15 +141,13 @@ public class Airplane extends GameObject {
 //        }
         
         //calculate the lift, to determen the vertical speed.
-        //800 = squire feet wing span (could be adjusted)
+        //100 = squire feet wing span (could be adjusted)
         //0.002308 = air density at 1000f
         //THIS CALCULATION IS NOT CORRECT YET...
-        double cl = 2 * Math.PI * this.pitch;
-        double lift = 0.5 * 0.002308 * Math.exp(speed) * 800 * cl;
-        
-        
-        
-        
+        double cl = 2 * Math.PI * (this.pitch/100);
+        double lift = 0.5 * 0.002308 * Math.exp(speed) * 100 * cl;
+        int liftInt = (int) Math.round(lift);
+        this.altitude = this.altitude + liftInt;
         return false;
     }
 }
