@@ -9,7 +9,7 @@ package copilot.domain;
  *
  * @author Niels
  */
-public abstract class GameObject {
+public abstract class GameObject extends org.dyn4j.dynamics.Body{
     private double height;
     private double width;
     private double x;
