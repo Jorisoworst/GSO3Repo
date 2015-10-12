@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.airplane;
+package copilot.domain;
 
-import copilot.controller.User;
 import java.awt.Point;
 
 /**
