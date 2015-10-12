@@ -40,6 +40,7 @@ public class AirplaneTest {
    @Test
     public void TestLift()
     {
+        
         double pitch = -1;
         double speed = 0;
         for(int i = 0; i<100;i++)
