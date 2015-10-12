@@ -12,8 +12,19 @@ import java.util.ArrayList;
  * @author Niels
  */
 public class GameAdministration {
-    private static GameAdministration instance;
+    private static GameAdministration instance;  
 
+    /**
+     * @return the instance of the singleton
+     */
+    public static GameAdministration getInstance() {
+        if (GameAdministration.instance == null) {
+            GameAdministration.instance = new GameAdministration();
+        }
+        
+        return GameAdministration.instance;
+    }
+    
     /**
      * @param aInstance the instance to set
      */
@@ -21,6 +32,7 @@ public class GameAdministration {
         instance = aInstance;
     }
     
+    private int requiredExperiencePoints;
     private ArrayList<User> users;
     private ArrayList<Session> sessions;
     private ArrayList<Game> games;
@@ -31,16 +43,19 @@ public class GameAdministration {
     private GameAdministration() {
         // EMPTY  
     }
-    
+      
     /**
-     * @return the instance of the singleton
+     * @return the requiredExperiencePoints
      */
-    public static GameAdministration getInstance() {
-        if (GameAdministration.instance == null) {
-            GameAdministration.instance = new GameAdministration();
-        }
-        
-        return GameAdministration.instance;
+    public int getRequiredExperiencePoints() {
+        return requiredExperiencePoints;
+    }
+
+    /**
+     * @param requiredExperiencePoints the requiredExperiencePoints to set
+     */
+    public void setRequiredExperiencePoints(int requiredExperiencePoints) {
+        this.requiredExperiencePoints = requiredExperiencePoints;
     }
 
     /**
@@ -92,16 +107,30 @@ public class GameAdministration {
      */
     public boolean addUser(User user) {
         // TODO
-        return false;
+        if (user == null) {
+            return false;
+        }
+        
+        this.users.add(user);
+        return true;
     }
     
     /**
      * Method to get a user from the users
-     * @param userId the user id, may not be 0 or negative
+     * @param userId the user id, may not be negative
      * @return a User object
      */
     public User getUser(int userId) {
         // TODO
+        if (userId < 0) {
+            return null;
+        }
+        
+        for (User user : this.users) {
+            if (user.getId() == userId) {
+                return user;
+            }
+        }
         return null;
     }
     
@@ -112,6 +141,15 @@ public class GameAdministration {
      */
     public User getUser(String username) {
         // TODO
+        if (username == null || username.equals("")) {
+            return null;
+        }
+        
+        for (User user : this.users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
         return null;
     }
     
@@ -122,21 +160,31 @@ public class GameAdministration {
      */
     public boolean createSession(User host) {
         // TODO
-         if (host == null) {
-            throw new IllegalArgumentException("The host may not be null");
+        if (host == null) {
+            return false;
         }
         
-        Session session = new Session(host);
-        return false;
+        Session session = new Session(host);      
+        this.sessions.add(session);        
+        return true;
     }
     
     /**
      * Method to get a session from the sessions
-     * @param sessionId the id of the session, may not be 0 or negative
+     * @param hostId the id of the host of a session, may not be negative
      * @return a Session object
      */
-    public Session getSession(int sessionId) {
+    public Session getSession(int hostId) {
         // TODO
+        if (hostId < 0) {
+            return null;
+        }
+        
+        for (Session session : this.sessions) {
+            if (session.getHost().getId() == hostId) {
+                return session;
+            }
+        }
         return null;
     }
     
@@ -147,16 +195,30 @@ public class GameAdministration {
      */
     public boolean addGame(Game game) {
         // TODO
-        return false;
+        if (game == null) {
+            return false;
+        }
+        
+        this.games.add(game);
+        return true;
     }
     
     /**
      * Method to get a game from the games
-     * @param gameId the id of the game, may not be 0 or negative
+     * @param hostId the id of the host who hosts the session where the game started, may not be negative
      * @return a Game object
      */
-    public Game getGame(int gameId) {
+    public Game getGame(int hostId) {
         // TODO
+        if (hostId < 0) {
+            return null;
+        }
+        
+        for (Game game : this.games) {
+            if (game.getSession().getHost().getId() == hostId) {
+                return game;
+            }
+        }
         return null;
     }
     
@@ -168,6 +230,16 @@ public class GameAdministration {
      */
     public boolean login(String username, String password) {
         // TODO
+        if (username == null || username.equals("") || password == null || password.equals("")) {
+            return false;
+        }
+        
+        for (User user : this.users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        
         return false;
     }
 }
