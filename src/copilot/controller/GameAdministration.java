@@ -122,6 +122,11 @@ public class GameAdministration {
      */
     public boolean createSession(User host) {
         // TODO
+         if (host == null) {
+            throw new IllegalArgumentException("The host may not be null");
+        }
+        
+        Session session = new Session(host);
         return false;
     }
     
