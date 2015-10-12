@@ -7,7 +7,7 @@ package copilot.domain;
 
 /**
  *
- * @author Niels
+ * @author Joris
  */
 public abstract class Pickup extends GameObject {
 
