@@ -5,52 +5,66 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public abstract class User {
-
+    private static int nextId = 0;
+    
     /**
      * @return the nextId
      */
     public static int getNextId() {
-        return nextId;
+        return User.nextId;
     }
 
     /**
-     * @param aNextId the nextId to set
+     * @param nextId the nextId to set
      */
-    public static void setNextId(int aNextId) {
-        nextId = aNextId;
+    public static void setNextId(int nextId) {
+        User.nextId = nextId;
     }
+    
     private boolean isBanned;
-    private Date registrationDate;
-    private Date dateOfBirth;
+    private Calendar registrationDate;
+    private Calendar dateOfBirth;
     private int id;
     private int personalBestScore;
     private int experiencePoints;
     private int level;
+    private int reports;
     private String username;
     private String password;
     private String displayName;
-    private static int nextId = 0;
+    
     
     /**
      * Initialize an instance of the User class which is abstract
-     * @param username the username, may not be null or empty
+     * @param username the username, may not be null or empty and must be unique
      * @param password the password, may not be null or empty
-     * @param dateOfBirth the date of birth, may not be null or empty
+     * @param dateOfBirth the date of birth, may not be null
      */
-    public User(String username, String password, Date dateOfBirth) {
+    public User(String username, String password, Calendar dateOfBirth) {
+        if (dateOfBirth == null)
+            throw new IllegalArgumentException("The date of birth must not be null");
+        if (username == null || 
+                username.isEmpty()) 
+            throw new IllegalArgumentException("The username must not be null or empty");
+        if (password == null ||
+                password.isEmpty())
+            throw new IllegalArgumentException("The password must not be null or empty");
+        
+        // TODO: Search for the user in the database if the user exists get the information, else set the information
         this.isBanned = false;
-        this.registrationDate = new Date();
+        this.registrationDate = Calendar.getInstance();
         this.dateOfBirth = dateOfBirth;
         this.id = User.nextId;
         this.personalBestScore = 0;
         this.experiencePoints = 0;
+        this.reports = 0;
         this.username = username;
         this.password = password;
         
@@ -60,8 +74,8 @@ public abstract class User {
     /**
      * @return the isBanned
      */
-    public boolean isIsBanned() {
-        return isBanned;
+    public boolean getIsBanned() {
+        return this.isBanned;
     }
 
     /**
@@ -74,92 +88,104 @@ public abstract class User {
     /**
      * @return the registrationDate
      */
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public Calendar getRegistrationDate() {
+        return this.registrationDate;
     }
 
     /**
      * @param registrationDate the registrationDate to set
      */
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setRegistrationDate(Calendar registrationDate) {
+        if (registrationDate != null) {
+            this.registrationDate = registrationDate;
+        }
     }
 
     /**
      * @return the dateOfBirth
      */
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public Calendar getDateOfBirth() {
+        return this.dateOfBirth;
     }
 
     /**
      * @param dateOfBirth the dateOfBirth to set
      */
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(Calendar dateOfBirth) {
+        if (dateOfBirth != null) { 
+            this.dateOfBirth = dateOfBirth;
+        }
     }
 
     /**
      * @return the id
      */
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**
-     * @param id the id to set
+     * @param id the id to set, must not be negative
      */
     public void setId(int id) {
-        this.id = id;
+        if (id >= 0) {
+            this.id = id;
+        }
     }
 
     /**
      * @return the personalBestScore
      */
     public int getPersonalBestScore() {
-        return personalBestScore;
+        return this.personalBestScore;
     }
 
     /**
-     * @param personalBestScore the personalBestScore to set
+     * @param personalBestScore the personalBestScore to set, must not be negative
      */
     public void setPersonalBestScore(int personalBestScore) {
-        this.personalBestScore = personalBestScore;
+        if (personalBestScore >= 0) {
+            this.personalBestScore = personalBestScore;
+        }
     }
 
     /**
      * @return the experiencePoints
      */
     public int getExperiencePoints() {
-        return experiencePoints;
+        return this.experiencePoints;
     }
 
     /**
-     * @param experiencePoints the experiencePoints to set
+     * @param experiencePoints the experiencePoints to set, must not be negative
      */
     public void setExperiencePoints(int experiencePoints) {
-        this.experiencePoints = experiencePoints;
+        if (experiencePoints >= 0) {
+            this.experiencePoints = experiencePoints;
+        }
     }
     
     /**
      * @return the level
      */
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     /**
      * @param level the level to set
      */
     public void setLevel(int level) {
-        this.level = level;
+        if (level >= 0) {
+            this.level = level;
+        }
     }
 
     /**
      * @return the username
      */
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
@@ -170,30 +196,64 @@ public abstract class User {
     }
 
     /**
-     * @return the password
+     * @return the reports
      */
-    public String getPassword() {
-        return password;
+    public int getReports() {
+        return reports;
     }
 
     /**
-     * @param password the password to set
+     * @param reports the reports to set, must not be negative
+     */
+    public void setReports(int reports) {
+        if (reports >= 0) {
+            this.reports = reports;
+        }
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
+     * @param password the password to set, must not be null or empty
      */
     public void setPassword(String password) {
-        this.password = password;
+        if (password != null &&
+                !password.isEmpty()) {
+            this.password = password;
+        }
     }
 
     /**
      * @return the displayName
      */
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     /**
-     * @param displayName the displayName to set
+     * @param displayName the displayName to set, must not be null or empty
      */
     public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        if (displayName != null &&
+                !displayName.isEmpty()) {
+            this.displayName = displayName;
+        }
     }
+    
+    /**
+     * Method to add a report
+     */
+    public void addReport() {
+        this.reports += 1;
+    }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

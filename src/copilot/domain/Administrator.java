@@ -5,11 +5,11 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Administrator extends Moderator {
     
@@ -19,12 +19,13 @@ public class Administrator extends Moderator {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or in the future
      */
-    public Administrator(String username, String password, Date dateOfBirth) {
+    public Administrator(String username, String password, Calendar dateOfBirth) {
         super(username, password, dateOfBirth);
     }
    
-    @Override
-    public String toString() {
-        return super.getDisplayName() + " " + super.getUsername();
-    }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

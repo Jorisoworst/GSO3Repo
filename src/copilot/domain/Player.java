@@ -5,11 +5,11 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Player extends User {
 
@@ -19,17 +19,23 @@ public class Player extends User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Player(String username, String password, Date dateOfBirth) {
+    public Player(String username, String password, Calendar dateOfBirth) {
         super(username, password, dateOfBirth);
     }   
     
     /**
      * Method to report a user
      * @param user the user to report, may not be null
-     * @return a boolean whether reporting the player went well or not
      */
-    public boolean reportPlayer(User user) {
-        // TODO
-        return false;
+    public void reportPlayer(User user) {
+        if (user == null)
+            throw new IllegalArgumentException("No user to report");
+        
+        user.addReport();
     }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

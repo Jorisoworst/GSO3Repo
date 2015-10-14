@@ -5,11 +5,11 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Moderator extends User {
 
@@ -19,17 +19,24 @@ public class Moderator extends User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Moderator(String username, String password, Date dateOfBirth) {
+    public Moderator(String username, String password, Calendar dateOfBirth) {
         super(username, password, dateOfBirth);
     }
     
     /**
-    * 
-    * @param id the user id, may not be 0 or negative
-    * @return a boolean whether banning the user went well or not
+    * Method to ban a user
+    * @param user the user must not be null
     */
-    public boolean banUser(int id) {
-        // TODO
-        return false;
+    public void banUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("The user must not be null");
+        }
+        
+        user.setIsBanned(true);
     }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

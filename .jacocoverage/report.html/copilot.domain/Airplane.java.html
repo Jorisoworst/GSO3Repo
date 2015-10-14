@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Airplane.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Airplane.java</span></div><h1>Airplane.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package copilot.domain;
+
+import java.util.ArrayList;
+import javafx.scene.image.Image;
+import jdk.nashorn.internal.parser.TokenType;
+
+/**
+ *
+ * @author Niels
+ */
+public class Airplane extends GameObject {
+    private double pitch;
+    private int altitude;
+    private int speed;
+    private int maxFuelCapacity;
+    private int fuelAmount;
+    private ArrayList&lt;AirplanePart&gt; airplaneParts;
+<span class="fc" id="L23">    private int minimumSpeed = -40;</span>
+    
+    /**
+     * Initialize an instance of the Airplane class which extends GameObject
+     *
+     * @param image the image, may not be null
+     */
+    public Airplane(Image image) {
+<span class="fc" id="L31">        super(image);</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * @return the pitch
+     */
+    public double getPitch() {
+<span class="fc" id="L38">        return pitch;</span>
+    }
+
+    /**
+     * @param pitch the pitch to set
+     */
+    public void setPitch(double pitch) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if(pitch &gt; 90)</span>
+        {
+<span class="fc" id="L47">            this.pitch = 90;</span>
+        }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        else if(pitch &lt; -90)</span>
+        {
+<span class="fc" id="L51">            this.pitch = -90;</span>
+        }
+        else{
+<span class="fc" id="L54">            this.pitch = pitch;</span>
+        }
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * @return the altitude
+     */
+    public int getAltitude() {
+<span class="fc" id="L62">        return altitude;</span>
+    }
+
+    /**
+     * @param altitude the altitude to set
+     */
+    public void setAltitude(int altitude) {
+<span class="nc" id="L69">        this.altitude = altitude;</span>
+<span class="nc" id="L70">    }</span>
+
+    /**
+     * @return the speed
+     */
+    public int getSpeed() {
+<span class="fc" id="L76">        return speed;</span>
+    }
+
+    /**
+     * @param speed the speed to set
+     */
+    public void setSpeed(int speed) {
+<span class="fc" id="L83">        this.speed = speed;</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * @return the maxFuelCapacity
+     */
+    public int getMaxFuelCapacity() {
+<span class="nc" id="L90">        return maxFuelCapacity;</span>
+    }
+
+    /**
+     * @param maxFuelCapacity the maxFuelCapacity to set
+     */
+    public void setMaxFuelCapacity(int maxFuelCapacity) {
+<span class="nc" id="L97">        this.maxFuelCapacity = maxFuelCapacity;</span>
+<span class="nc" id="L98">    }</span>
+
+    /**
+     * @return the fuelAmount
+     */
+    public int getFuelAmount() {
+<span class="nc" id="L104">        return fuelAmount;</span>
+    }
+
+    /**
+     * @param fuelAmount the fuelAmount to set
+     */
+    public void setFuelAmount(int fuelAmount) {
+<span class="nc" id="L111">        this.fuelAmount = fuelAmount;</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * @return the airplaneParts
+     */
+    public ArrayList&lt;AirplanePart&gt; getAirplaneParts() {
+<span class="nc" id="L118">        return airplaneParts;</span>
+    }
+
+    /**
+     * @param airplaneParts the airplaneParts to set
+     */
+    public void setAirplaneParts(ArrayList&lt;AirplanePart&gt; airplaneParts) {
+<span class="fc" id="L125">        this.airplaneParts = airplaneParts;</span>
+<span class="fc" id="L126">    }</span>
+    
+	 /**
+     * Method to update the airplane and its airplaneParts
+     * SPEED: determined by the propeller
+     * AIRPLANE PITCH: determined by elevator
+     * ALTITUDE: determined and calculated in this method.
+     * Speed, pitch and fuel all influances the altitude.
+     * @return a boolean whether updating the airplane went well or not
+     */
+    public boolean updateAirplane() {
+       
+        
+        //get the airplane parts
+<span class="fc" id="L140">        Elevator elevator = null;</span>
+<span class="fc" id="L141">        Propellor propeller = null;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        for(AirplanePart part : airplaneParts)</span>
+        {            
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if(part instanceof Elevator)</span>
+            {
+<span class="fc" id="L146">                elevator = (Elevator) part;</span>
+            }
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if(part instanceof Propellor)</span>
+            {
+<span class="fc" id="L150">                propeller = (Propellor) part;</span>
+            }
+<span class="fc" id="L152">        }</span>
+<span class="pc bpc" id="L153" title="2 of 4 branches missed.">        if(elevator == null || propeller == null)</span>
+        {
+<span class="nc" id="L155">            throw new IllegalStateException(&quot;Not all airplane parts are configured&quot;);</span>
+        }
+<span class="fc" id="L157">        double fuelConsumption = propeller.getFuelConsumption();</span>
+<span class="fc" id="L158">        this.fuelAmount -= ((int)Math.round(fuelConsumption));</span>
+        
+        
+        //calculate the lift, to determen the vertical speed.
+        //100 = squire feet wing span (could be adjusted)
+        //0.002308 = air density at 1000f
+        //-40 minimum.... speed? lift? idonno
+        //THIS CALCULATION IS NOT CORRECT YET...
+<span class="fc" id="L166">        double cl = 2 * Math.PI * (this.pitch/100);</span>
+<span class="fc" id="L167">        double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;</span>
+<span class="fc" id="L168">        int liftInt = (int) Math.round(lift);</span>
+<span class="fc" id="L169">        int verticalSpeed = minimumSpeed + liftInt * 2; </span>
+<span class="fc" id="L170">        this.altitude = this.altitude + verticalSpeed;</span>
+        
+        //if there is no fuel
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if(fuelAmount &lt; 0)</span>
+        {
+            
+        }
+        else
+        {
+            //reset values
+        }
+        
+        
+<span class="fc" id="L183">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
