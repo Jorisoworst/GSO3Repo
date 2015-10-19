@@ -10,10 +10,7 @@ import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  *
@@ -40,7 +37,5 @@ public class GameController implements Initializable {
 
     public void quitGame(Event evt) {
         System.out.println("QUIT GAME");
-
     }
-
 }

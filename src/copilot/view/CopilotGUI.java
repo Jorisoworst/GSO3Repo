@@ -4,80 +4,136 @@
  */
 package copilot.view;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import copilot.domain.Airplane;
+import copilot.domain.GameObject;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
-import javax.imageio.ImageIO;
-import org.dyn4j.dynamics.Body;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
 
 /**
  *
  * @author indyspaan
  */
+public class CopilotGUI extends JFrame {
 
-public class CopilotGUI extends Application {
+    private final int screenWidth = 800;
+    private final int screenHeight = 600;
+    private final Image background;
+    private final Image airplane;
+    private final Canvas canvas;
+    private World world;
+    private boolean stopped;
+    private long last;
 
-    Image airplane;
-    Image background;
-    
-    public int screenwidth;
-    public int screenheight;
-    private World World;
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println(e.getMessage());
+        }
 
-    
-    @Override
-    public void start(Stage stage) throws Exception {
-        //LoadImages
-        background = new Image(getClass().getResourceAsStream("achtergrond.png"));
-        airplane = new Image(getClass().getResourceAsStream("Plane.png"));
-        
-           screenwidth = 720;
-           screenheight = 480;
-        
-        stage.setTitle("COPILOT");
-        Group root = new Group();
-        Scene theScene = new Scene(root);
-        stage.setScene(theScene);
+        CopilotGUI window = new CopilotGUI();
+        window.setVisible(true);
+        window.start();
+    }
 
-        Canvas canvas = new Canvas(screenwidth, screenheight);
-        root.getChildren().add(canvas);
-        
+    public CopilotGUI() {
+        super("CoPilot");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        
+        this.background = new Image(getClass().getResourceAsStream("achtergrond.png"));;
+        this.airplane = new Image(getClass().getResourceAsStream("Plane.png"));;
 
-        gc.drawImage(background, 0, 0);
-        gc.drawImage(airplane, (screenwidth / 2) - (airplane.getWidth() / 2), screenheight / 2 - (airplane.getHeight() / 2));
-        
-        
-        World = new World();
+        Dimension size = new Dimension(screenWidth, screenHeight);
 
-        stage.show();
+        this.canvas = new Canvas();
+        this.canvas.setPreferredSize(size);
+        this.canvas.setMinimumSize(size);
+        this.canvas.setMaximumSize(size);
+
+        this.add(this.canvas);
+
+        this.setResizable(false);
+        this.pack();
+
+        this.stopped = false;
+
+        this.initializeWorld();
+    }
+
+    /**
+     * Creates game objects and adds them to the world.
+     */
+    private void initializeWorld() {
+        this.world = new World();
+
+        Rectangle rectShape = new Rectangle(1.0, 1.0);
+        GameObject rectangle = new Airplane(this.airplane);
+        rectangle.addFixture(rectShape);
+        rectangle.setMass(MassType.NORMAL);
+        rectangle.translate(0.0, 2.0);
+        rectangle.getLinearVelocity().set(-5.0, 0.0);
+        this.world.addBody(rectangle);
+    }
+
+    /**
+     * Start active rendering the example.
+     */
+    public void start() {
+        this.last = System.nanoTime();
+
+        Thread thread = new Thread() {
+            public void run() {
+                while (!isStopped()) {
+                    gameLoop();
+                }
+            }
+        };
+
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    /**
+     * The method calling the necessary methods to update the game, graphics,
+     * and poll for input.
+     */
+    private void gameLoop() {
 
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
+     * Renders the example.
      *
-     * @param args the command line arguments
+     * @param g the graphics object to render to
      */
-    public static void main(String[] args) {
-        launch(args);
+    private void render(Graphics2D g) {
+
+    }
+
+    /**
+     * Stops the game.
+     */
+    public synchronized void stop() {
+        this.stopped = true;
+    }
+
+    /**
+     * Returns true if the game is stopped.
+     *
+     * @return boolean true if stopped
+     */
+    public synchronized boolean isStopped() {
+        return this.stopped;
     }
 }
