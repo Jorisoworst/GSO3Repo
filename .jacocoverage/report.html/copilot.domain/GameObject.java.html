@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameObject.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">GameObject.java</span></div><h1>GameObject.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package copilot.domain;
+
+import javafx.scene.image.Image;
+import org.dyn4j.dynamics.Body;
+
+/**
+ *
+ * @author Joris
+ */
+public abstract class GameObject extends Body {
+
+    private final double height;
+    private final double width;
+    private final Image image;
+    private boolean isDestroyed;
+
+    /**
+     * Initialize an instance of the GameObject class which is abstract
+     *
+     * @param image the image, may not be null
+     */
+<span class="fc" id="L27">    public GameObject(Image image) {</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (image == null) {</span>
+<span class="nc" id="L29">            throw new IllegalArgumentException(&quot;No image set!&quot;);</span>
+        }
+
+<span class="fc" id="L32">        this.image = image;</span>
+<span class="fc" id="L33">        this.isDestroyed = false;</span>
+<span class="fc" id="L34">        this.height = this.image.getHeight();</span>
+<span class="fc" id="L35">        this.width = this.image.getWidth();</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * @return the height
+     */
+    public double getHeight() {
+<span class="nc" id="L42">        return this.height;</span>
+    }
+
+    /**
+     * @return the width
+     */
+    public double getWidth() {
+<span class="nc" id="L49">        return this.width;</span>
+    }
+
+    /**
+     * Method to call when a collision happened
+     *
+     * @param otherGameObject the GameObject which the airplane collides with,
+     * may not be null
+     */
+    public void onCollision(GameObject otherGameObject) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (otherGameObject == null) {</span>
+<span class="nc" id="L60">            throw new IllegalArgumentException(&quot;No other GameObject found!&quot;);</span>
+        }
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (Obstacle.class.isInstance(otherGameObject)) {</span>
+<span class="nc" id="L64">            this.destroy();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        } else if (Pickup.class.isInstance(otherGameObject)) {</span>
+<span class="nc" id="L66">            ((Pickup) otherGameObject).setPickedUp(true);</span>
+        }
+
+<span class="nc" id="L69">        otherGameObject.destroy();</span>
+<span class="nc" id="L70">    }</span>
+
+    /**
+     * Method to call when the GameObject gets destroyd
+     */
+    public void destroy() {
+<span class="nc" id="L76">        this.isDestroyed = true;</span>
+<span class="nc" id="L77">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

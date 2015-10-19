@@ -5,95 +5,104 @@
  */
 package copilot.domain;
 
+import javafx.scene.image.Image;
+import org.dyn4j.dynamics.Body;
+
 /**
  *
- * @author Niels
+ * @author Joris
  */
-public abstract class GameObject {
-    private double height;
-    private double width;
-    private double x;
-    private double y;
+public abstract class GameObject extends Body {
+
+    private final double height;
+    private final double width;
+    private final Image image;
+    private boolean isDestroyed;
 
     /**
      * Initialize an instance of the GameObject class which is abstract
+     *
+     * @param image the image, may not be null
      */
-    public GameObject() {
-        // TODO
-        this.height = 0;
-        this.width = 0;
-        this.x = 0;
-        this.y = 0;
+    public GameObject(Image image) {
+        if (image == null) {
+            throw new IllegalArgumentException("No image set!");
+        }
+
+        this.image = image;
+        this.isDestroyed = false;
+        this.height = this.image.getHeight();
+        this.width = this.image.getWidth();
     }
-    
+
     /**
      * @return the height
      */
     public double getHeight() {
-        return height;
-    }
-
-    /**
-     * @param height the height to set
-     */
-    public void setHeight(double height) {
-        this.height = height;
+        return this.height;
     }
 
     /**
      * @return the width
      */
     public double getWidth() {
-        return width;
+        return this.width;
     }
 
     /**
-     * @param width the width to set
+     * @return isDestroyed
      */
-    public void setWidth(double width) {
-        this.width = width;
+    public boolean isDestroyed() {
+        return this.isDestroyed;
     }
 
-    /**
-     * @return the x
-     */
-    public double getX() {
-        return x;
-    }
-
-    /**
-     * @param x the x to set
-     */
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    /**
-     * @return the y
-     */
-    public double getY() {
-        return y;
-    }
-
-    /**
-     * @param y the y to set
-     */
-    public void setY(double y) {
-        this.y = y;
-    }
-    
-    /**
-     * Method to call when a collision happened
-     * @param otherGameObject the GameObject which the airplane collides with, may not be null
-     */
-    public void onCollision(GameObject otherGameObject) {
-        // TODO
-    }
-    
     /**
      * Method to call when the GameObject gets destroyd
      */
     public void destroy() {
-        // TODO
+        this.isDestroyed = true;
+    }
+
+    /**
+     * Method to call when a collision happened
+     *
+     * @param otherGameObject the GameObject which the airplane collides with,
+     * may not be null
+     */
+    public void onCollision(GameObject otherGameObject) {
+        if (otherGameObject == null) {
+            throw new IllegalArgumentException("No other GameObject found!");
+        }
+
+        if (Obstacle.class.isInstance(otherGameObject)) {
+            this.destroy();
+        } else if (Pickup.class.isInstance(otherGameObject)) {
+            ((Pickup) otherGameObject).setPickedUp(true);
+        }
+
+        otherGameObject.destroy();
+    }
+
+    /**
+     * Initializes the object
+     */
+    public void init() {
+        // TODO merge this with constructor (not sure what's supposed to be in here)
+    }
+
+    /**
+     * Updates the object
+     *
+     * @param gameTime the amount of milliseconds the game has been running for
+     */
+    public void update(long gameTime) {
+        // TODO check for collisions etc. (make a core gameloop first in the World object in the GameView)
+    }
+
+    /**
+     * Draws the object
+     */
+    public void draw() {
+        // TODO draw the image to the canvas (don't know how yet)
     }
 }

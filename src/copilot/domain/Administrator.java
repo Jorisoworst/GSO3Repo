@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Administrator extends Moderator {
     
@@ -23,8 +23,9 @@ public class Administrator extends Moderator {
         super(username, password, dateOfBirth);
     }
    
-    @Override
-    public String toString() {
-        return super.getDisplayName() + " " + super.getUsername();
-    }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

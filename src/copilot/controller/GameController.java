@@ -5,10 +5,42 @@
  */
 package copilot.controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  *
  * @author Joris
  */
-public class GameController {
-    
+public class GameController implements Initializable {
+
+    //Main Menu
+    @FXML
+    Button startGameBtn;
+    @FXML
+    Button highscoresBtn;
+    @FXML
+    Button quitGameBtn;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public void startGame(Event evt) {
+        System.out.println("START GAME");
+    }
+
+    public void quitGame(Event evt) {
+        System.out.println("QUIT GAME");
+
+    }
+
 }

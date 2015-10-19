@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Moderator extends User {
 
@@ -24,12 +24,19 @@ public class Moderator extends User {
     }
     
     /**
-    * 
-    * @param id the user id, may not be negative
-    * @return a boolean whether banning the user went well or not
+    * Method to ban a user
+    * @param user the user must not be null
     */
-    public boolean banUser(int id) {
-        // TODO
-        return false;
+    public void banUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("The user must not be null");
+        }
+        
+        user.setIsBanned(true);
     }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }

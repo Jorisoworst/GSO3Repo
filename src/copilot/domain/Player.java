@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Player extends User {
 
@@ -26,10 +26,16 @@ public class Player extends User {
     /**
      * Method to report a user
      * @param user the user to report, may not be null
-     * @return a boolean whether reporting the player went well or not
      */
-    public boolean reportPlayer(User user) {
-        // TODO
-        return false;
+    public void reportPlayer(User user) {
+        if (user == null)
+            throw new IllegalArgumentException("No user to report");
+        
+        user.addReport();
     }
+    
+//    @Override
+//    public String toString() {
+//        return "";
+//    }
 }
