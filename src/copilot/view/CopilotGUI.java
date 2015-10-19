@@ -51,8 +51,8 @@ public class CopilotGUI extends JFrame {
         super("CoPilot");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.background = new Image(getClass().getResourceAsStream("achtergrond.png"));;
-        this.airplane = new Image(getClass().getResourceAsStream("Plane.png"));;
+        this.background = new Image(getClass().getResourceAsStream("achtergrond.png"));
+        this.airplane = new Image(getClass().getResourceAsStream("Plane.png"));
 
         Dimension size = new Dimension(screenWidth, screenHeight);
 
@@ -93,6 +93,7 @@ public class CopilotGUI extends JFrame {
         this.last = System.nanoTime();
 
         Thread thread = new Thread() {
+            @Override
             public void run() {
                 while (!isStopped()) {
                     gameLoop();
