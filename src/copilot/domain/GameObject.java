@@ -50,6 +50,20 @@ public abstract class GameObject extends Body {
     }
 
     /**
+     * @return isDestroyed
+     */
+    public boolean isDestroyed() {
+        return this.isDestroyed;
+    }
+
+    /**
+     * Method to call when the GameObject gets destroyd
+     */
+    public void destroy() {
+        this.isDestroyed = true;
+    }
+
+    /**
      * Method to call when a collision happened
      *
      * @param otherGameObject the GameObject which the airplane collides with,
@@ -70,9 +84,25 @@ public abstract class GameObject extends Body {
     }
 
     /**
-     * Method to call when the GameObject gets destroyd
+     * Initializes the object
      */
-    public void destroy() {
-        this.isDestroyed = true;
+    public void init() {
+        // TODO merge this with constructor (not sure what's supposed to be in here)
+    }
+
+    /**
+     * Updates the object
+     *
+     * @param gameTime the amount of milliseconds the game has been running for
+     */
+    public void update(long gameTime) {
+        // TODO check for collisions etc. (make a core gameloop first in the World object in the GameView)
+    }
+
+    /**
+     * Draws the object
+     */
+    public void draw() {
+        // TODO draw the image to the canvas (don't know how yet)
     }
 }

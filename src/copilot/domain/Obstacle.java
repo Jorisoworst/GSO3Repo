@@ -28,14 +28,14 @@ public class Obstacle extends GameObject {
     /**
      * @return the isDestructable
      */
-    public boolean isIsDestructable() {
+    public boolean isDestructable() {
         return this.isDestructable;
     }
 
     /**
      * @param isDestructable the isDestructable to set
      */
-    public void setIsDestructable(boolean isDestructable) {
+    public void setDestructable(boolean isDestructable) {
         this.isDestructable = isDestructable;
     }
 }
