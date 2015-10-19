@@ -44,8 +44,8 @@ public class CopilotGUI extends Application {
         background = new Image(getClass().getResourceAsStream("achtergrond.png"));
         airplane = new Image(getClass().getResourceAsStream("Plane.png"));
         
-           screenwidth = 720;
-           screenheight = 480;
+        screenwidth = 720;
+        screenheight = 480;
         
         stage.setTitle("COPILOT");
         Group root = new Group();
@@ -58,8 +58,7 @@ public class CopilotGUI extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
-
-        gc.drawImage(background, 0, 0);
+        gc.drawImage(background, 0, 0, screenwidth, screenheight);
         gc.drawImage(airplane, (screenwidth / 2) - (airplane.getWidth() / 2), screenheight / 2 - (airplane.getHeight() / 2));
         
         
