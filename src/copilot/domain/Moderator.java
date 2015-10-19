@@ -5,7 +5,7 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
@@ -19,13 +19,13 @@ public class Moderator extends User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Moderator(String username, String password, Date dateOfBirth) {
+    public Moderator(String username, String password, Calendar dateOfBirth) {
         super(username, password, dateOfBirth);
     }
     
     /**
     * 
-    * @param id the user id, may not be 0 or negative
+    * @param id the user id, may not be negative
     * @return a boolean whether banning the user went well or not
     */
     public boolean banUser(int id) {

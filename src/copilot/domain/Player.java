@@ -5,7 +5,7 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
@@ -19,7 +19,7 @@ public class Player extends User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Player(String username, String password, Date dateOfBirth) {
+    public Player(String username, String password, Calendar dateOfBirth) {
         super(username, password, dateOfBirth);
     }   
     

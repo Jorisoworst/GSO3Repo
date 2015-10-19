@@ -5,7 +5,7 @@
  */
 package copilot.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  *
@@ -27,8 +27,8 @@ public abstract class User {
         nextId = aNextId;
     }
     private boolean isBanned;
-    private Date registrationDate;
-    private Date dateOfBirth;
+    private Calendar registrationDate;
+    private Calendar dateOfBirth;
     private int id;
     private int personalBestScore;
     private int experiencePoints;
@@ -44,9 +44,9 @@ public abstract class User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public User(String username, String password, Date dateOfBirth) {
+    public User(String username, String password, Calendar dateOfBirth) {
         this.isBanned = false;
-        this.registrationDate = new Date();
+        this.registrationDate = Calendar.getInstance();
         this.dateOfBirth = dateOfBirth;
         this.id = User.nextId;
         this.personalBestScore = 0;
@@ -74,28 +74,28 @@ public abstract class User {
     /**
      * @return the registrationDate
      */
-    public Date getRegistrationDate() {
+    public Calendar getRegistrationDate() {
         return registrationDate;
     }
 
     /**
      * @param registrationDate the registrationDate to set
      */
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(Calendar registrationDate) {
         this.registrationDate = registrationDate;
     }
 
     /**
      * @return the dateOfBirth
      */
-    public Date getDateOfBirth() {
+    public Calendar getDateOfBirth() {
         return dateOfBirth;
     }
 
     /**
      * @param dateOfBirth the dateOfBirth to set
      */
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Calendar dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
