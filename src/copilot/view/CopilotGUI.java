@@ -44,6 +44,10 @@ public class CopilotGUI extends Application {
         background = new Image(getClass().getResourceAsStream("achtergrond.png"));
         airplane = new Image(getClass().getResourceAsStream("Plane.png"));
         
+        // LOAD IN THE MAIN MENU
+        //Parent rootMenu = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+        //Scene mainMenu = new Scene(rootMenu);
+        
         screenwidth = 720;
         screenheight = 480;
         
@@ -51,6 +55,9 @@ public class CopilotGUI extends Application {
         Group root = new Group();
         Scene theScene = new Scene(root);
         stage.setScene(theScene);
+        
+        // START THE MAIN MENU
+        //stage.setScene(mainMenu);
 
         Canvas canvas = new Canvas(screenwidth, screenheight);
         root.getChildren().add(canvas);
