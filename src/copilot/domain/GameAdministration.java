@@ -41,7 +41,9 @@ public class GameAdministration {
      * Initialize an instance of the GameAdministration singleton
      */
     private GameAdministration() {
-        // EMPTY  
+        this.users = new ArrayList<>();
+        this.sessions = new ArrayList<>();
+        this.games = new ArrayList<>();
     }
       
     /**
