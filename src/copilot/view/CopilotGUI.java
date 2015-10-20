@@ -36,7 +36,6 @@ public class CopilotGUI extends Application {
     public int screenwidth;
     public int screenheight;
     private World World;
-
     
     @Override
     public void start(Stage stage) throws Exception {
