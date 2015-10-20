@@ -62,10 +62,11 @@ public class CopilotGUI extends JFrame {
         this.canvas.setMaximumSize(size);
 
         this.add(this.canvas);
-
+        
         this.setResizable(false);
         this.pack();
-
+        
+        this.setLocationRelativeTo(null);
         this.stopped = false;
 
         this.initializeWorld();
