@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.domain;
+package copilot.domain.Test;
 
+import copilot.domain.GameAdministration;
+import copilot.domain.Player;
 import java.util.Calendar;
 import org.junit.After;
 import org.junit.AfterClass;
