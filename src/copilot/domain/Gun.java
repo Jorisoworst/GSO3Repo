@@ -42,5 +42,7 @@ public class Gun extends AirplanePart {
     
     public void shoot(Point mousePoint) {
         // TODO
+        Bullet bullet = new Bullet(null, mousePoint);
+        //TODO: end where to? give a start position to bullet?
     }
 }
