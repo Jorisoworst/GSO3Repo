@@ -5,8 +5,13 @@
  */
 package copilot.domain;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import javafx.scene.image.Image;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.geometry.Convex;
 
 /**
  *
@@ -14,9 +19,11 @@ import org.dyn4j.dynamics.Body;
  */
 public abstract class GameObject extends Body {
 
-    private final double height;
-    private final double width;
-    private final Image image;
+    public static final double SCALE = 45.0;
+    private double height;
+    private double width;
+    private Image image;
+    private Color color;
     private boolean isDestroyed;
 
     /**
@@ -30,6 +37,10 @@ public abstract class GameObject extends Body {
         }
 
         this.image = image;
+        this.color = new Color(
+                (float) Math.random() * 0.5f + 0.5f,
+                (float) Math.random() * 0.5f + 0.5f,
+                (float) Math.random() * 0.5f + 0.5f);
         this.isDestroyed = false;
         this.height = this.image.getHeight();
         this.width = this.image.getWidth();
@@ -84,25 +95,22 @@ public abstract class GameObject extends Body {
     }
 
     /**
-     * Initializes the object
-     */
-    public void init() {
-        // TODO merge this with constructor (not sure what's supposed to be in here)
-    }
-
-    /**
-     * Updates the object
+     * Render the object
      *
-     * @param gameTime the amount of milliseconds the game has been running for
+     * @param g the 2D graphics object
      */
-    public void update(long gameTime) {
-        // TODO check for collisions etc. (make a core gameloop first in the World object in the GameView)
-    }
+    public void render(Graphics2D g) {
+        AffineTransform ot = g.getTransform();
+        AffineTransform lt = new AffineTransform();
+        lt.translate(this.transform.getTranslationX() * SCALE, this.transform.getTranslationY() * SCALE);
+        lt.rotate(this.transform.getRotation());
+        g.transform(lt);
 
-    /**
-     * Draws the object
-     */
-    public void draw() {
-        // TODO draw the image to the canvas (don't know how yet)
+        for (BodyFixture fixture : this.fixtures) {
+            Convex convex = fixture.getShape();
+            Graphics2DRenderer.render(g, convex, SCALE, color);
+        }
+
+        g.setTransform(ot);
     }
 }
