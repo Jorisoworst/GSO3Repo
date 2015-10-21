@@ -8,6 +8,7 @@ package copilot.domain;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -133,6 +134,119 @@ public class DatabaseAdministration {
         
         return users;
     }
+    
+    public boolean AddUser(User user)
+    {   
+        String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiancePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
+            st.setString(2, user.getDisplayName());
+            st.setInt(3, user.getExperiencePoints());
+            st.setBoolean(4, user.getIsBanned());
+            st.setInt(5, user.getLevel());
+            st.setString(6, user.getPassword());
+            st.setInt(7, user.getPersonalBestScore());
+            st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
+            st.setString(9, user.getUsername());
+            if(user instanceof Administrator)
+            {
+                st.setString(10, "A");
+            }
+            else if(user instanceof Moderator)
+            {
+                st.setString(10, "M");
+            }
+            else
+            {
+                st.setString(10, "P");
+            }
+            st.executeQuery();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return false;
+    }
+    
+    public boolean UpdateUser(User user)
+    {
+        String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiancePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
+                + " RegistrationDate = ?, Username = ?, UserType = ? WHERE Id = ?";
+        try {
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
+            st.setString(2, user.getDisplayName());
+            st.setInt(3, user.getExperiencePoints());
+            st.setBoolean(4, user.getIsBanned());
+            st.setInt(5, user.getLevel());
+            st.setString(6, user.getPassword());
+            st.setInt(7, user.getPersonalBestScore());
+            st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
+            st.setString(9, user.getUsername());
+            if(user instanceof Administrator)
+            {
+                st.setString(10, "A");
+            }
+            else if(user instanceof Moderator)
+            {
+                st.setString(10, "M");
+            }
+            else
+            {
+                st.setString(10, "P");
+            }
+            st.setInt(11, user.getId());
+            st.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean DeleteUser(int userId)
+    {
+        try {
+        String query = "DELETE FROM user WHERE Id = ?";
+        
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, userId);
+            st.executeQuery();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+        
+    }
+    
+    public List<Score> SelectScore()
+    {
+        
+        return null;
+    }
+    
+    public boolean AddScore(Score score)
+    {
+        
+        return false;
+    }
+    
+    public boolean UpdateScore(Score score)
+    {
+        
+        return false;
+    }
+    
+    public boolean DeleteScore(int scoreId)
+    {
+        return false;
+    }
+    
+    
     
     
     
