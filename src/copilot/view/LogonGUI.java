@@ -24,88 +24,86 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class LogonGUI {
     
-	public static void main(String[] args) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                System.out.println(e.getMessage());
-            }
-            
-            JFrame frame = new JFrame("LogonGUI");
-            frame.setSize(300, 150);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println(e.getMessage());
+        }
 
-            JPanel panel = new JPanel();
-            frame.add(panel);
-            placeComponents(panel);
+        JFrame frame = new JFrame("CO-Pilot Login");
+        frame.setSize(300, 150);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
-            frame.setVisible(true);
-	}
+        JPanel panel = new JPanel();
+        frame.add(panel);
+        placeComponents(panel);
 
-	private static void placeComponents(JPanel panel) {
+        frame.setVisible(true);
+    }
 
-            panel.setLayout(null);
+    private static void placeComponents(JPanel panel) {
 
-            JLabel userLabel = new JLabel("Username:");
-            userLabel.setBounds(10, 10, 80, 25);
-            panel.add(userLabel);
+        panel.setLayout(null);
 
-            JTextField userText = new JTextField(20);
-            userText.setBounds(100, 10, 160, 25);
-            panel.add(userText);
+        JLabel userLabel = new JLabel("Username:");
+        userLabel.setBounds(10, 10, 80, 25);
+        panel.add(userLabel);
 
-            JLabel passwordLabel = new JLabel("Password:");
-            passwordLabel.setBounds(10, 40, 80, 25);
-            panel.add(passwordLabel);
+        JTextField userText = new JTextField(20);
+        userText.setBounds(100, 10, 160, 25);
+        panel.add(userText);
 
-            JPasswordField passwordText = new JPasswordField(20);
-            passwordText.setBounds(100, 40, 160, 25);
-            panel.add(passwordText);
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(10, 40, 80, 25);
+        panel.add(passwordLabel);
 
-            JButton loginButton = new JButton("login");
-            loginButton.setBounds(10, 80, 80, 25);
-            panel.add(loginButton);
+        JPasswordField passwordText = new JPasswordField(20);
+        passwordText.setBounds(100, 40, 160, 25);
+        panel.add(passwordText);
 
-            JButton registerButton = new JButton("register");
-            registerButton.setBounds(180, 80, 80, 25);
-            panel.add(registerButton);
+        JButton loginButton = new JButton("login");
+        loginButton.setBounds(10, 80, 80, 25);
+        panel.add(loginButton);
+
+        JButton registerButton = new JButton("register");
+        registerButton.setBounds(180, 80, 80, 25);
+        panel.add(registerButton);
 
 
-            loginButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameAdministration admin = GameAdministration.getInstance();
-                    boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
-                    
-                    if(login) {
-                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                        
-// TODO this frame will become the main menu
-                        JFrame frame = new CopilotGUI(); 
-                        
-                        frame.setVisible(true);
-                        frameToClose.dispose();
-                        
-                    } else {
-                        passwordText.setText(null);
-                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
-                    }
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameAdministration admin = GameAdministration.getInstance();
+                boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
+
+                if(login) {
+                    JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);                 
+                    frameToClose.dispose();  
+                    MainMenuGUI mainMenu = new MainMenuGUI();  
+
+                } else {
+                    passwordText.setText(null);
+                    JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
                 }
-            });
+            }
+        });
 
-            registerButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                    try {
-                        String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
+                    if (dateAsString != null) {
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         format.setLenient(false);
                         Date date = format.parse(dateAsString);
                         Calendar birthday = Calendar.getInstance();
                         birthday.setTime(date);
-                        
+                    
+
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
                             GameAdministration admin = GameAdministration.getInstance();
@@ -114,12 +112,12 @@ public class LogonGUI {
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(panel,"Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);   
                         }
-                        
-                    } catch (HeadlessException | ParseException ex) {
-                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE); 
                     }
-                }                    
-            });
-	}
 
+                } catch (HeadlessException | ParseException ex) {
+                    JOptionPane.showMessageDialog(panel,"Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE); 
+                }
+            }                    
+        });
+    }
 }
