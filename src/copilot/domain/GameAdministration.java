@@ -40,18 +40,28 @@ public class GameAdministration {
     /**
      * Initialize an instance of the GameAdministration singleton
      */
-    private GameAdministration() {
+    private GameAdministration() throws NullPointerException {
         try {
             this.dbAdmin = new DatabaseAdministration();
         } catch (Exception ex) {
-            throw new NullPointerException("The database could not be created");
+            System.out.println(ex);
         }
         
-        this.users = this.dbAdmin.GetUsers();
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+        }
         
         // nog te koppelen aan database
         this.sessions = new ArrayList<>();
         this.games = new ArrayList<>();
+    }
+    
+    public boolean getDatabaseState() {
+        if (this.dbAdmin != null) {
+            return true;
+        } 
+        
+        return false;
     }
 
     /**
@@ -126,11 +136,13 @@ public class GameAdministration {
             return null;
         }
         
-        this.users = this.dbAdmin.GetUsers();
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
         
-        for (User user : this.users) {
-            if (user.getId() == userId) {
-                return user;
+            for (User user : this.users) {
+                if (user.getId() == userId) {
+                    return user;
+                }
             }
         }
         return null;
@@ -146,11 +158,13 @@ public class GameAdministration {
             return null;
         }
         
-        this.users = this.dbAdmin.GetUsers();
-        
-        for (User user : this.users) {
-            if (user.getUsername().equals(username)) {
-                return user;
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+
+            for (User user : this.users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
             }
         }
         return null;
@@ -235,16 +249,17 @@ public class GameAdministration {
             return false;
         }
         
-        this.users = this.dbAdmin.GetUsers();
-        
-        if(this.users != null) {
-            for (User user : this.users) {
-                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                    return true;
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+
+            if(this.users != null) {
+                for (User user : this.users) {
+                    if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                        return true;
+                    }
                 }
             }
         }
-        
         return false;
     }
 }

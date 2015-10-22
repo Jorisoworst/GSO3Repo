@@ -76,16 +76,20 @@ public class LogonGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameAdministration admin = GameAdministration.getInstance();
-                boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
+                if (admin.getDatabaseState()) {
+                    boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
-                if(login) {
-                    JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);                 
-                    frameToClose.dispose();  
-                    MainMenuGUI mainMenu = new MainMenuGUI();  
+                    if(login) {
+                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);                 
+                        frameToClose.dispose();  
+                        MainMenuGUI mainMenu = new MainMenuGUI();  
 
+                    } else {
+                        passwordText.setText(null);
+                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    passwordText.setText(null);
-                    JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel,"The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -107,8 +111,12 @@ public class LogonGUI {
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
                             GameAdministration admin = GameAdministration.getInstance();
-                            admin.addUser(user);
-                            JOptionPane.showMessageDialog(panel,"Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
+                            if (admin.getDatabaseState()) {
+                                admin.addUser(user);
+                                JOptionPane.showMessageDialog(panel,"Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(panel,"The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                            }
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(panel,"Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);   
                         }

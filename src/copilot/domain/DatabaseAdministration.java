@@ -44,16 +44,10 @@ public class DatabaseAdministration {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(serverUrl,username,password);
             return true;
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+            return false;
+        }    
     }
     
     public ArrayList<User> GetUsers()
