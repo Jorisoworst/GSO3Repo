@@ -80,7 +80,7 @@ public class DatabaseAdministration {
                 }
                 
                 String displayName = rs.getString("DisplayName");
-                int experiencePoint = rs.getInt("ExperiancePoint");
+                int experiencePoint = rs.getInt("ExperiencePoint");
                 boolean isBanned = rs.getBoolean("IsBanned");
                 int level = rs.getInt("Level");
                 String password = rs.getString("Password");
@@ -135,11 +135,11 @@ public class DatabaseAdministration {
         return users;
     }
     
-    public boolean AddUser(User user)
+    public User AddUser(User user)
     {   
-        String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiancePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiencePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Report, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         try {
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
             st.setString(2, user.getDisplayName());
             st.setInt(3, user.getExperiencePoints());
@@ -148,33 +148,36 @@ public class DatabaseAdministration {
             st.setString(6, user.getPassword());
             st.setInt(7, user.getPersonalBestScore());
             st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
-            st.setString(9, user.getUsername());
+            st.setInt(9, user.getReports());
+            st.setString(10, user.getUsername());
             if(user instanceof Administrator)
             {
-                st.setString(10, "A");
+                st.setString(11, "A");
             }
             else if(user instanceof Moderator)
             {
-                st.setString(10, "M");
+                st.setString(11, "M");
             }
             else
             {
-                st.setString(10, "P");
+                st.setString(11, "P");
             }
-            st.executeQuery();
-            return true;
+            int resultId = st.executeUpdate();
+             
+            user.setId(resultId);
+            return user;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
-        return false;
+        return null;
     }
     
     public boolean UpdateUser(User user)
     {
-        String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiancePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
-                + " RegistrationDate = ?, Username = ?, UserType = ? WHERE Id = ?";
+        String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiencePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
+                + " RegistrationDate = ?, Report = ?, Username = ?, UserType = ? WHERE Id = ?";
         try {
             PreparedStatement st = conn.prepareStatement(query);
             st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
@@ -185,20 +188,21 @@ public class DatabaseAdministration {
             st.setString(6, user.getPassword());
             st.setInt(7, user.getPersonalBestScore());
             st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
-            st.setString(9, user.getUsername());
+            st.setInt(9, user.getReports());
+            st.setString(10, user.getUsername());
             if(user instanceof Administrator)
             {
-                st.setString(10, "A");
+                st.setString(11, "A");
             }
             else if(user instanceof Moderator)
             {
-                st.setString(10, "M");
+                st.setString(11, "M");
             }
             else
             {
-                st.setString(10, "P");
+                st.setString(11, "P");
             }
-            st.setInt(11, user.getId());
+            st.setInt(12, user.getId());
             st.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -210,11 +214,10 @@ public class DatabaseAdministration {
     public boolean DeleteUser(int userId)
     {
         try {
-        String query = "DELETE FROM user WHERE Id = ?";
-        
+            String query = "DELETE FROM user WHERE Id = ?";
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, userId);
-            st.executeQuery();
+            st.executeUpdate();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,14 +228,55 @@ public class DatabaseAdministration {
     
     public List<Score> SelectScore()
     {
+        List<Score> scores = new ArrayList<>();
+        
+        String query = "SELECT * FROM score";
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next())
+            {
+                int scoreId = rs.getInt("Id");
+                int score = rs.getInt("Score");
+                int user1 = rs.getInt("User_1");
+                int user2 = rs.getInt("User_2");
+                int user3 = rs.getInt("User_3");
+                int user4 = rs.getInt("User_4");
+                
+                Score scoreObj = new Score(score,user1,user2,user3,user4);
+                scoreObj.setScoreId(scoreId);
+                scores.add(scoreObj);
+            }
+            
+            st.close();
+            return scores;
+        }
+        catch(SQLException sqe)
+        {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, sqe);
+        }
         
         return null;
     }
     
-    public boolean AddScore(Score score)
+    public Score AddScore(Score score)
     {
-        
-        return false;
+        String query = "INSERT INTO score (Score, User_1, User_2, User_3, User_4) VALUES(?,?,?,?,?)";
+        try {
+            PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            st.setInt(1, score.getScore());
+            st.setInt(2, score.getUser1id());
+            st.setInt(3, score.getUser2id());
+            st.setInt(4, score.getUser3id());
+            st.setInt(5, score.getUser4id());
+            int resultId = st.executeUpdate();
+            score.setScoreId(resultId);
+            return score;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     public boolean UpdateScore(Score score)
@@ -243,6 +287,58 @@ public class DatabaseAdministration {
     
     public boolean DeleteScore(int scoreId)
     {
+        return false;
+    }
+    
+    public GameSetting GetGameSetting()
+    {
+        GameSetting gameSettings = null;
+        String query = "SELECT * FROM gameSetting";
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next())
+            {
+                double levelUp = rs.getDouble("LevelUp");
+                int maxFuel = rs.getInt("MaxFuelCapacity");
+                int maxUser = rs.getInt("MaxUser");
+                int requiredExp = rs.getInt("RequiredExperiencePoint");
+                gameSettings = new GameSetting();
+                gameSettings.setLevelUp(levelUp);
+                gameSettings.setMaxFuelCapacity(maxFuel);
+                gameSettings.setMaxUser(maxUser);
+                gameSettings.setRequiredExperiencePoints(requiredExp);
+                
+        
+            }
+            st.close();
+        }
+        catch(SQLException sqe)
+        {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, sqe);
+        }
+        
+        return gameSettings;
+    }
+    
+    public boolean SaveGameSetting(GameSetting gameSetting)
+    {
+        String trunQuery = "TRUNCATE TABLE gamesetting";
+        String query = "INSERT INTO gamesetting VALUES(?,?,?,?)";
+        try {
+            Statement s = conn.createStatement();
+            s.executeUpdate(trunQuery);
+            PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            st.setDouble(1, gameSetting.getLevelUp());
+            st.setInt(2, gameSetting.getMaxFuelCapacity());
+            st.setInt(3, gameSetting.getMaxUser());
+            st.setInt(4, gameSetting.getRequiredExperiencePoints());
+            st.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
     
