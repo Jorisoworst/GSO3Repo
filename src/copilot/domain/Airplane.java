@@ -172,11 +172,12 @@ public class Airplane extends GameObject {
         //if there is no fuel
         if(fuelAmount < 0)
         {
-            
+            fuelAmount = 0;
         }
         else
         {
             //reset values
+            
         }
         
         

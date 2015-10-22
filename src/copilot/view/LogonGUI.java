@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -89,6 +88,7 @@ public class LogonGUI {
                         frameToClose.dispose();
                         
                     } else {
+                        passwordText.setText(null);
                         JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -97,14 +97,13 @@ public class LogonGUI {
             registerButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Calendar birthday = null;
                     
                     try {
                         String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         format.setLenient(false);
                         Date date = format.parse(dateAsString);
-                        birthday = Calendar.getInstance();
+                        Calendar birthday = Calendar.getInstance();
                         birthday.setTime(date);
                         
                         try {
@@ -113,11 +112,11 @@ public class LogonGUI {
                             admin.addUser(user);
                             JOptionPane.showMessageDialog(panel,"Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
                         } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(panel,"Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(panel,"Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);   
                         }
                         
                     } catch (HeadlessException | ParseException ex) {
-                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE); 
                     }
                 }                    
             });
