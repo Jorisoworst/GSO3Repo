@@ -49,13 +49,13 @@ public abstract class User {
      */
     public User(String username, String password, Calendar dateOfBirth) {
         if (dateOfBirth == null)
-            throw new IllegalArgumentException("The date of birth must not be null");
+            throw new IllegalArgumentException("The date of birth must not be unknown");
         if (username == null || 
                 username.isEmpty()) 
-            throw new IllegalArgumentException("The username must not be null or empty");
+            throw new IllegalArgumentException("The username must not be empty");
         if (password == null ||
                 password.isEmpty())
-            throw new IllegalArgumentException("The password must not be null or empty");
+            throw new IllegalArgumentException("The password must not be empty");
         
         // TODO: Search for the user in the database if the user exists get the information, else set the information
         this.isBanned = false;
