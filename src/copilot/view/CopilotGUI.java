@@ -65,6 +65,7 @@ public class CopilotGUI extends JFrame {
 
         this.setResizable(false);
         this.pack();
+        this.setLocationRelativeTo(null);
 
         this.stopped = false;
 

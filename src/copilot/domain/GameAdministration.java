@@ -41,7 +41,10 @@ public class GameAdministration {
      * Initialize an instance of the GameAdministration singleton
      */
     private GameAdministration() {
-        // EMPTY  
+        // TODO HAS TO BE REPLACED WITH DATABASE
+        this.users = new ArrayList<>();
+        this.sessions = new ArrayList<>();
+        this.games = new ArrayList<>();
     }
       
     /**
@@ -234,9 +237,11 @@ public class GameAdministration {
             return false;
         }
         
-        for (User user : this.users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return true;
+        if(this.users != null) {
+            for (User user : this.users) {
+                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                    return true;
+                }
             }
         }
         
