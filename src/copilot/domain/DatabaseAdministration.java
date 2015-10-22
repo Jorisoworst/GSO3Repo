@@ -15,7 +15,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,9 +56,9 @@ public class DatabaseAdministration {
         return false;
     }
     
-    public List<User> GetUsers()
+    public ArrayList<User> GetUsers()
     {
-        List<User> users = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
         
         String query = "SELECT * FROM user";
         
@@ -226,9 +225,9 @@ public class DatabaseAdministration {
         
     }
     
-    public List<Score> SelectScore()
+    public ArrayList<Score> SelectScore()
     {
-        List<Score> scores = new ArrayList<>();
+        ArrayList<Score> scores = new ArrayList<>();
         
         String query = "SELECT * FROM score";
         try {
