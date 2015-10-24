@@ -272,14 +272,35 @@ public class DatabaseAdministration {
         return null;
     }
     
-    public boolean UpdateScore(Score score)
+      public boolean UpdateScore(Score score)
     {
-        
+        String query = "UPDATE score SET Score = ?, User_1 =?, User_2 = ?, User_3 = ?, User_4 = ?";
+        try {
+            PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            st.setInt(1, score.getScore());
+            st.setInt(2, score.getUser1id());
+            st.setInt(3, score.getUser2id());
+            st.setInt(4, score.getUser3id());
+            st.setInt(5, score.getUser4id());
+            st.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
     
     public boolean DeleteScore(int scoreId)
     {
+         try {
+            String query = "DELETE FROM score WHERE Id = ?";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, scoreId);
+            st.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
     
