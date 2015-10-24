@@ -2,6 +2,7 @@ package copilot.view;
 
 import copilot.domain.GameAdministration;
 import copilot.domain.Player;
+import copilot.domain.User;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,10 @@ public class LogonGUI {
 
         frame.setVisible(true);
     }
+    
+    public LogonGUI() {
+        LogonGUI.main(null);
+    }
 
     private static void placeComponents(JPanel panel) {
 
@@ -76,13 +81,17 @@ public class LogonGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameAdministration admin = GameAdministration.getInstance();
-                if (admin.getDatabaseState()) {
+                
+                // has to change to admin.getDatabaseState()
+                if (true) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
-                    if(login) {
-                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);                 
+                    // HAS TO BE login
+                    if(true) {
+                        User user = admin.getUser(userText.getText());
+                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
+                        MainMenuGUI mainMenu = new MainMenuGUI(user);                 
                         frameToClose.dispose();  
-                        MainMenuGUI mainMenu = new MainMenuGUI();  
 
                     } else {
                         passwordText.setText(null);
@@ -110,6 +119,7 @@ public class LogonGUI {
 
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
+                            user.setRegistrationDate(Calendar.getInstance());
                             GameAdministration admin = GameAdministration.getInstance();
                             if (admin.getDatabaseState()) {
                                 admin.addUser(user);
