@@ -33,11 +33,11 @@ public class GameObjectTest {
     @Before
     public void setUp() {
         try {
-            this.image = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\Plane.png"));
-            // TODO: hardcoded
+            this.image = ImageIO.read(this.getClass().getResource("Plane.png"));
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         this.airplane = new Airplane(this.image);
         this.kerosine = new Kerosine(this.image);
         this.obstacle = new Obstacle(this.image);

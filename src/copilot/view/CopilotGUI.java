@@ -16,7 +16,6 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,9 +73,9 @@ public class CopilotGUI extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
-            this.airplaneImage = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\Plane.png"));
-            this.backgroundImage = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\achtergrond.png"));
-            this.bulletImage = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\bullet.png"));
+            this.airplaneImage = ImageIO.read(this.getClass().getResource("Plane.png"));
+            this.backgroundImage = ImageIO.read(this.getClass().getResource("achtergrond.png"));
+            this.bulletImage = ImageIO.read(this.getClass().getResource("bullet.png"));
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }

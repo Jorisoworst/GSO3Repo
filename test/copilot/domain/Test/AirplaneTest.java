@@ -55,11 +55,11 @@ public class AirplaneTest {
     @Before
     public void setUp() {
         try {
-            this.image = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\Plane.png"));
-            // TODO: hardcoded
+            this.image = ImageIO.read(this.getClass().getResource("Plane.png"));
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         airplane = new Airplane(image);
         elevator = new Elevator(image, airplane, null);
         propellor = new Propellor(image, airplane, null);
