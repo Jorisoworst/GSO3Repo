@@ -51,8 +51,8 @@ public class CopilotGUI extends JFrame {
         super("CoPilot");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.background = new Image(getClass().getResourceAsStream("achtergrond.png"));;
-        this.airplane = new Image(getClass().getResourceAsStream("Plane.png"));;
+        this.background = new Image(getClass().getResourceAsStream("achtergrond.png"));
+        this.airplane = new Image(getClass().getResourceAsStream("Plane.png"));
 
         Dimension size = new Dimension(screenWidth, screenHeight);
 
@@ -60,14 +60,11 @@ public class CopilotGUI extends JFrame {
         this.canvas.setPreferredSize(size);
         this.canvas.setMinimumSize(size);
         this.canvas.setMaximumSize(size);
-
         this.add(this.canvas);
-
+        
         this.setResizable(false);
         this.pack();
-
         this.stopped = false;
-
         this.initializeWorld();
     }
 
