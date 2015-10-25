@@ -90,6 +90,7 @@ public class CopilotGUI extends JFrame {
         this.last = System.nanoTime();
 
         Thread thread = new Thread() {
+            @Override
             public void run() {
                 while (!isStopped()) {
                     gameLoop();

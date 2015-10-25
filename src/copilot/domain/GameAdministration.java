@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Niels
  */
 public class GameAdministration {
-    private static GameAdministration instance;  
+    private static GameAdministration instance; 
 
     /**
      * @return the instance of the singleton
@@ -32,7 +32,7 @@ public class GameAdministration {
         instance = aInstance;
     }
     
-    private int requiredExperiencePoints;
+    private DatabaseAdministration dbAdmin;
     private ArrayList<User> users;
     private ArrayList<Session> sessions;
     private ArrayList<Game> games;
@@ -40,22 +40,28 @@ public class GameAdministration {
     /**
      * Initialize an instance of the GameAdministration singleton
      */
-    private GameAdministration() {
-        // EMPTY  
+    private GameAdministration() throws NullPointerException {
+        try {
+            this.dbAdmin = new DatabaseAdministration();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+        }
+        
+        // nog te koppelen aan database
+        this.sessions = new ArrayList<>();
+        this.games = new ArrayList<>();
     }
-      
-    /**
-     * @return the requiredExperiencePoints
-     */
-    public int getRequiredExperiencePoints() {
-        return requiredExperiencePoints;
-    }
-
-    /**
-     * @param requiredExperiencePoints the requiredExperiencePoints to set
-     */
-    public void setRequiredExperiencePoints(int requiredExperiencePoints) {
-        this.requiredExperiencePoints = requiredExperiencePoints;
+    
+    public boolean getDatabaseState() {
+        if (this.dbAdmin != null) {
+            return true;
+        } 
+        
+        return false;
     }
 
     /**
@@ -106,12 +112,17 @@ public class GameAdministration {
      * @return a boolean whether adding the user went well or not
      */
     public boolean addUser(User user) {
-        // TODO
         if (user == null) {
             return false;
         }
         
         this.users.add(user);
+        
+        try {
+            this.dbAdmin.AddUser(user);
+        } catch (Exception ex) {
+            return false;
+        }
         return true;
     }
     
@@ -121,14 +132,17 @@ public class GameAdministration {
      * @return a User object
      */
     public User getUser(int userId) {
-        // TODO
         if (userId < 0) {
             return null;
         }
         
-        for (User user : this.users) {
-            if (user.getId() == userId) {
-                return user;
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+        
+            for (User user : this.users) {
+                if (user.getId() == userId) {
+                    return user;
+                }
             }
         }
         return null;
@@ -140,14 +154,17 @@ public class GameAdministration {
      * @return a User object
      */
     public User getUser(String username) {
-        // TODO
         if (username == null || username.equals("")) {
             return null;
         }
         
-        for (User user : this.users) {
-            if (user.getUsername().equals(username)) {
-                return user;
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+
+            for (User user : this.users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
             }
         }
         return null;
@@ -209,7 +226,6 @@ public class GameAdministration {
      * @return a Game object
      */
     public Game getGame(int hostId) {
-        // TODO
         if (hostId < 0) {
             return null;
         }
@@ -229,17 +245,21 @@ public class GameAdministration {
      * @return a boolean whether logging in the user went well or not
      */
     public boolean login(String username, String password) {
-        // TODO
         if (username == null || username.equals("") || password == null || password.equals("")) {
             return false;
         }
         
-        for (User user : this.users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return true;
+        if (this.dbAdmin != null) {
+            this.users = this.dbAdmin.GetUsers();
+
+            if(this.users != null) {
+                for (User user : this.users) {
+                    if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                        return true;
+                    }
+                }
             }
         }
-        
         return false;
     }
 }
