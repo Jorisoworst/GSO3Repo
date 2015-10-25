@@ -5,37 +5,60 @@
  */
 package copilot.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.Event;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  *
  * @author Joris
  */
-public class GameController implements Initializable {
+public class GameController implements KeyListener {
 
-    //Main Menu
-    @FXML
-    Button startGameBtn;
-    @FXML
-    Button highscoresBtn;
-    @FXML
-    Button quitGameBtn;
+    public String KEY_PRESSED = "NONE";
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void keyTyped(KeyEvent e) {
 
     }
 
-    public void startGame(Event evt) {
-        System.out.println("START GAME");
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP: {
+                KEY_PRESSED = "UP";
+                break;
+            }
+            case KeyEvent.VK_DOWN: {
+                KEY_PRESSED = "DOWN";
+                break;
+            }
+            case KeyEvent.VK_LEFT: {
+                KEY_PRESSED = "LEFT";
+                break;
+            }
+            case KeyEvent.VK_RIGHT: {
+                KEY_PRESSED = "RIGHT";
+                break;
+            }
+            case KeyEvent.VK_SPACE: {
+                KEY_PRESSED = "SPACE";
+                break;
+            }
+            case KeyEvent.VK_ESCAPE: {
+                KEY_PRESSED = "ESCAPE";
+                break;
+            }
+            default: {
+                KEY_PRESSED = "NONE";
+                break;
+            }
+        }
+
+        System.out.println(KEY_PRESSED);
     }
 
-    public void quitGame(Event evt) {
-        System.out.println("QUIT GAME");
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

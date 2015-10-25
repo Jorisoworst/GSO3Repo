@@ -5,21 +5,19 @@
  */
 package copilot.domain;
 
-import java.awt.Point;
-import javafx.scene.image.Image;
+import java.awt.Image;
+import org.dyn4j.geometry.Vector2;
 
 /**
  *
  * @author Ruud
  */
-public class Bullet extends GameObject{
+public class Bullet extends GameObject {
 
-    private Point bulletDirection;
-    
-    public Bullet(Image image, Point mousePoint) {
+    private Vector2 bulletDirection;
+
+    public Bullet(Image image, Vector2 mousePoint) {
         super(image);
         this.bulletDirection = mousePoint;
-        
     }
-    
 }

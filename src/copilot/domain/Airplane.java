@@ -6,7 +6,7 @@
 package copilot.domain;
 
 import java.util.ArrayList;
-import javafx.scene.image.Image;
+import java.awt.Image;
 import jdk.nashorn.internal.parser.TokenType;
 
 /**

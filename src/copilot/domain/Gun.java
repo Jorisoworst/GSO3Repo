@@ -5,8 +5,8 @@
  */
 package copilot.domain;
 
-import java.awt.Point;
-import javafx.scene.image.Image;
+import java.awt.Image;
+import org.dyn4j.geometry.Vector2;
 
 /**
  *
@@ -40,7 +40,7 @@ public class Gun extends AirplanePart {
         this.fireRate = fireRate;
     }
     
-    public void shoot(Point mousePoint) {
+    public void shoot(Vector2 mousePoint) {
         // TODO
         Bullet bullet = new Bullet(null, mousePoint);
         //TODO: end where to? give a start position to bullet?

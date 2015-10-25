@@ -8,7 +8,13 @@ package copilot.domain.Test;
 import copilot.domain.Airplane;
 import copilot.domain.Obstacle;
 import copilot.domain.Kerosine;
-import javafx.scene.image.Image;
+import copilot.view.CopilotGUI;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.awt.Image;
+import javax.imageio.ImageIO;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -26,7 +32,12 @@ public class GameObjectTest {
 
     @Before
     public void setUp() {
-        this.image = new Image(getClass().getResourceAsStream("Plane.png"));
+        try {
+            this.image = ImageIO.read(new File("C:\\Users\\Joris\\Documents\\School\\Proftaak\\CoPilot\\src\\copilot\\view\\Plane.png"));
+            // TODO: hardcoded
+        } catch (IOException ex) {
+            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.airplane = new Airplane(this.image);
         this.kerosine = new Kerosine(this.image);
         this.obstacle = new Obstacle(this.image);

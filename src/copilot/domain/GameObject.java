@@ -5,13 +5,10 @@
  */
 package copilot.domain;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
-import javafx.scene.image.Image;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.geometry.Convex;
 
 /**
  *
@@ -19,11 +16,9 @@ import org.dyn4j.geometry.Convex;
  */
 public abstract class GameObject extends Body {
 
-    public static final double SCALE = 45.0;
     private double height;
     private double width;
     private Image image;
-    private Color color;
     private boolean isDestroyed;
 
     /**
@@ -37,13 +32,9 @@ public abstract class GameObject extends Body {
         }
 
         this.image = image;
-        this.color = new Color(
-                (float) Math.random() * 0.5f + 0.5f,
-                (float) Math.random() * 0.5f + 0.5f,
-                (float) Math.random() * 0.5f + 0.5f);
         this.isDestroyed = false;
-        this.height = this.image.getHeight();
-        this.width = this.image.getWidth();
+        this.height = this.image.getHeight(null);
+        this.width = this.image.getWidth(null);
     }
 
     /**
@@ -102,15 +93,10 @@ public abstract class GameObject extends Body {
     public void render(Graphics2D g) {
         AffineTransform ot = g.getTransform();
         AffineTransform lt = new AffineTransform();
-        lt.translate(this.transform.getTranslationX() * SCALE, this.transform.getTranslationY() * SCALE);
+        lt.translate(this.transform.getTranslationX(), this.transform.getTranslationY());
         lt.rotate(this.transform.getRotation());
         g.transform(lt);
-
-        for (BodyFixture fixture : this.fixtures) {
-            Convex convex = fixture.getShape();
-            Graphics2DRenderer.render(g, convex, SCALE, color);
-        }
-
         g.setTransform(ot);
+        g.drawImage(this.image, (int) lt.getTranslateX(), (int) lt.getTranslateY(), null);
     }
 }

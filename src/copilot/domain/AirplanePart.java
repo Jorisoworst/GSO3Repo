@@ -5,7 +5,7 @@
  */
 package copilot.domain;
 
-import javafx.scene.image.Image;
+import java.awt.Image;
 
 /**
  *
