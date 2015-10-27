@@ -44,7 +44,7 @@ public class GameAdministration {
         try {
             this.dbAdmin = new DatabaseAdministration();
         } catch (Exception ex) {
-            System.out.println(ex);
+            // do nothing
         }
         
         if (this.dbAdmin != null) {

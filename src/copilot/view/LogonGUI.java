@@ -82,7 +82,7 @@ public class LogonGUI {
             public void actionPerformed(ActionEvent e) {
                 GameAdministration admin = GameAdministration.getInstance();
                 
-                // has to change to admin.getDatabaseState()
+                // HAS TO BE admin.getDatabaseState()
                 if (true) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
