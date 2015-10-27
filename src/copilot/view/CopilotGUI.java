@@ -89,7 +89,7 @@ public class CopilotGUI extends JFrame {
         try {
             this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
             this.airplaneImage = this.airplaneImage.getScaledInstance(103, 60, 1);
-            this.backgroundImage = ImageIO.read(this.getClass().getClassLoader().getResource("background.png"));
+            this.backgroundImage = ImageIO.read(this.getClass().getClassLoader().getResource("background.png")); 
             this.bulletImage = ImageIO.read(this.getClass().getClassLoader().getResource("bullet.png"));
             this.obstacleImage1 = ImageIO.read(this.getClass().getClassLoader().getResource("goose_wing_down.png"));
             this.obstacleImage1 = this.obstacleImage1.getScaledInstance(103, 60, 1);
