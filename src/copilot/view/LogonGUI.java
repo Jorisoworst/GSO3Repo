@@ -119,9 +119,9 @@ public class LogonGUI {
 
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
-                            user.setRegistrationDate(Calendar.getInstance());
                             GameAdministration admin = GameAdministration.getInstance();
-                            if (admin.getDatabaseState()) {
+                            // HAS TO BE admin.getDatabaseState()
+                            if (true) {
                                 admin.addUser(user);
                                 JOptionPane.showMessageDialog(panel,"Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
                             } else {

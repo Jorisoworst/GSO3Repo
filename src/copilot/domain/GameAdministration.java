@@ -49,6 +49,8 @@ public class GameAdministration {
         
         if (this.dbAdmin != null) {
             this.users = this.dbAdmin.GetUsers();
+        } else {
+            this.users = new ArrayList<>();
         }
         
         // nog te koppelen aan database
@@ -160,13 +162,14 @@ public class GameAdministration {
         
         if (this.dbAdmin != null) {
             this.users = this.dbAdmin.GetUsers();
-
-            for (User user : this.users) {
-                if (user.getUsername().equals(username)) {
-                    return user;
-                }
+        }
+        
+        for (User user : this.users) {
+            if (user.getUsername().equals(username)) {
+                return user;
             }
         }
+        
         return null;
     }
     
@@ -175,15 +178,15 @@ public class GameAdministration {
      * @param host the host, may not be null
      * @return a boolean whether adding the session went well or not
      */
-    public boolean createSession(User host) {
+    public Session createSession(User host) {
         // TODO
         if (host == null) {
-            return false;
+            return null;
         }
         
         Session session = new Session(host);      
         this.sessions.add(session);        
-        return true;
+        return session;
     }
     
     /**

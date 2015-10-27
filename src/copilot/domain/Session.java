@@ -54,6 +54,13 @@ public class Session {
     public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
+    
+    /**
+     * @param user the user to set
+     */
+    public void addUser(User user) {
+        this.users.add(user);
+    }
 
     /**
      * @return the isStarted
