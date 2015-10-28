@@ -37,19 +37,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-
 /**
  *
  * @author NielsPrasing
  */
 public class MainMenuGUI {
 
+    private Clip clip;
     private Font font, sizedFont = null;
     private Image bgImage;
-    private Clip clip;
-
-
     protected int screenWidth, screenHeight;
+    private AudioInputStream hover, click;
 
     public MainMenuGUI(User userLoggedIn) {
         try {
@@ -67,21 +65,11 @@ public class MainMenuGUI {
             this.bgImage = this.bgImage.getScaledInstance(this.screenWidth, this.screenHeight, 1);
             // load font
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
-            font = Font.createFont(Font.TRUETYPE_FONT, is);
-            font = font.deriveFont(Font.PLAIN, 30);
-            sizedFont = font.deriveFont(Font.PLAIN, 32);
+            this.font = Font.createFont(Font.TRUETYPE_FONT, is);
+            this.font = this.font.deriveFont(Font.PLAIN, 30);
+            this.sizedFont = this.font.deriveFont(Font.PLAIN, 32);
 
-            // load sound
-            //URL bgMusic = this.getClass().getResource("/sounds/game_sound.wav");
-            URL bgMusic = this.getClass().getResource("/sounds/0.wav");
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(bgMusic);
-            clip = AudioSystem.getClip();
-            // Open audio clip and load samples from the audio input stream.
-            clip.open(audioIn);
-            clip.start();
-            //clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-        } catch (IOException | FontFormatException | UnsupportedAudioFileException | LineUnavailableException ex) {
+        } catch (IOException | FontFormatException ex) {
             Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -111,12 +99,14 @@ public class MainMenuGUI {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 joinButton.setFont(sizedFont);
                 joinButton.setText(">JOIN");
+                loadSound();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 joinButton.setFont(font);
                 joinButton.setText("JOIN");
+                stopSound();
             }
         });
 
@@ -132,12 +122,14 @@ public class MainMenuGUI {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 hostButton.setFont(sizedFont);
                 hostButton.setText(">HOST");
+                loadSound();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 hostButton.setFont(font);
                 hostButton.setText("HOST");
+                stopSound();
             }
         });
 
@@ -153,12 +145,14 @@ public class MainMenuGUI {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 settingsButton.setFont(sizedFont);
                 settingsButton.setText(">SETTINGS");
+                loadSound();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 settingsButton.setFont(font);
                 settingsButton.setText("SETTINGS");
+                stopSound();
             }
         });
 
@@ -174,12 +168,14 @@ public class MainMenuGUI {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 creditsButton.setFont(sizedFont);
                 creditsButton.setText(">CREDITS");
+                loadSound();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 creditsButton.setFont(font);
                 creditsButton.setText("CREDITS");
+                stopSound();
             }
         });
 
@@ -195,12 +191,14 @@ public class MainMenuGUI {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 logoutButton.setFont(sizedFont);
                 logoutButton.setText(">LOGOUT");
+                loadSound();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 logoutButton.setFont(font);
                 logoutButton.setText("LOGOUT");
+                stopSound();
             }
         });
 
@@ -212,7 +210,6 @@ public class MainMenuGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.stop();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 LobbyGUI lobby = new LobbyGUI(user);
                 frameToClose.dispose();
@@ -223,7 +220,6 @@ public class MainMenuGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.stop();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 Session session = GameAdministration.getInstance().createSession(user);
                 session.addUser(user);
@@ -236,7 +232,6 @@ public class MainMenuGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.stop();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 SettingsGUI settings = new SettingsGUI(user);
                 frameToClose.dispose();
@@ -247,7 +242,6 @@ public class MainMenuGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.stop();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 CreditsGUI credits = new CreditsGUI(user);
                 frameToClose.dispose();
@@ -258,12 +252,36 @@ public class MainMenuGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.stop();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                LogonGUI logon = new LogonGUI();
+                LaunchGUI logon = new LaunchGUI();
                 frameToClose.dispose();
             }
         });
     }
 
+    public void loadSound() {
+        try {
+            this.hover = AudioSystem.getAudioInputStream(this.getClass().getResource("/sounds/hover.wav"));
+            this.clip = AudioSystem.getClip();
+            this.clip.open(this.hover);
+            this.clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void stopSound() {
+        try {
+            this.clip.flush();
+            this.clip.drain();
+            this.clip.stop();
+            this.clip.close();
+            //this.hover.reset();
+            this.hover.close();
+            
+            //this.hover = null;
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
