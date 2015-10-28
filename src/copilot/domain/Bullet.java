@@ -14,10 +14,14 @@ import org.dyn4j.geometry.Vector2;
  */
 public class Bullet extends GameObject {
 
-    private Vector2 bulletDirection;
+    private Vector2 location;
 
-    public Bullet(Image image, Vector2 mousePoint) {
+    public Bullet(Image image, Vector2 location) {
         super(image);
-        this.bulletDirection = mousePoint;
+        this.location = location;
+    }
+
+    public Vector2 getLocation() {
+        return this.location;
     }
 }

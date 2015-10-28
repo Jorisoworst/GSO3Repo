@@ -37,7 +37,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-
 /**
  *
  * @author NielsPrasing
@@ -47,7 +46,6 @@ public class MainMenuGUI {
     private Font font, sizedFont = null;
     private Image bgImage;
     private Clip clip;
-
 
     protected int screenWidth, screenHeight;
 
