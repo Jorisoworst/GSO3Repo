@@ -6,12 +6,21 @@ import copilot.domain.User;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +33,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LogonGUI {
+
+    private static Clip clip;
+    private static URL bgMusic;
     
     public static void main(String[] args) {
         try {
@@ -31,7 +43,7 @@ public class LogonGUI {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             System.out.println(e.getMessage());
         }
-
+        
         JFrame frame = new JFrame("CO-Pilot Login");
         frame.setSize(300, 150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +55,7 @@ public class LogonGUI {
 
         frame.setVisible(true);
     }
-    
+
     public LogonGUI() {
         LogonGUI.main(null);
     }
@@ -76,29 +88,28 @@ public class LogonGUI {
         registerButton.setBounds(180, 80, 80, 25);
         panel.add(registerButton);
 
-
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameAdministration admin = GameAdministration.getInstance();
-                
-                // has to change to admin.getDatabaseState()
+
+                // HAS TO BE admin.getDatabaseState()
                 if (true) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
                     // HAS TO BE login
-                    if(true) {
+                    if (true) {
                         User user = admin.getUser(userText.getText());
-                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                        MainMenuGUI mainMenu = new MainMenuGUI(user);                 
-                        frameToClose.dispose();  
+                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+                        MainMenuGUI mainMenu = new MainMenuGUI(user);
+                        frameToClose.dispose();
 
                     } else {
                         passwordText.setText(null);
-                        JOptionPane.showMessageDialog(panel,"Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(panel, "Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(panel,"The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -115,27 +126,26 @@ public class LogonGUI {
                         Date date = format.parse(dateAsString);
                         Calendar birthday = Calendar.getInstance();
                         birthday.setTime(date);
-                    
 
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
-                            user.setRegistrationDate(Calendar.getInstance());
                             GameAdministration admin = GameAdministration.getInstance();
-                            if (admin.getDatabaseState()) {
+                            // HAS TO BE admin.getDatabaseState()
+                            if (true) {
                                 admin.addUser(user);
-                                JOptionPane.showMessageDialog(panel,"Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(panel, "Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(panel,"The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(panel, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
                             }
                         } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(panel,"Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);   
+                            JOptionPane.showMessageDialog(panel, "Something went wrong, please try again, ERROR: " + ex.getMessage(), "ALERT", JOptionPane.ERROR_MESSAGE);
                         }
                     }
 
                 } catch (HeadlessException | ParseException ex) {
-                    JOptionPane.showMessageDialog(panel,"Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE); 
+                    JOptionPane.showMessageDialog(panel, "Your information was not correct, try again and use the correct date format", "ALERT", JOptionPane.ERROR_MESSAGE);
                 }
-            }                    
+            }
         });
     }
 }

@@ -45,7 +45,6 @@ public class DatabaseAdministration {
             conn = DriverManager.getConnection(serverUrl,username,password);
             return true;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
-            Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }    
     }
