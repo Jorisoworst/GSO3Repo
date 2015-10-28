@@ -42,26 +42,4 @@ public class GameObjectTest {
         this.kerosine = new Kerosine(this.image);
         this.obstacle = new Obstacle(this.image);
     }
-
-    /**
-     * Test of onCollision method, of class GameObject.
-     */
-    @Test
-    public void testOnCollisionPickup() {
-        this.airplane.onCollision(this.kerosine);
-        assertFalse(this.airplane.isDestroyed());
-        assertTrue(this.kerosine.isPickedUp());
-        assertTrue(this.kerosine.isDestroyed());
-        assertEquals(this.airplane.getFuelAmount(), this.kerosine.getAmount());
-    }
-
-    /**
-     * Test of onCollision method, of class GameObject.
-     */
-    @Test
-    public void testOnCollisionObstacle() {
-        this.airplane.onCollision(this.obstacle);
-        assertTrue(this.airplane.isDestroyed());
-        assertTrue(this.obstacle.isDestroyed());
-    }
 }

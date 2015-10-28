@@ -9,16 +9,22 @@ import copilot.domain.Airplane;
 import copilot.domain.Bullet;
 import copilot.domain.GameObject;
 import copilot.domain.Obstacle;
+import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,12 +34,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Transform;
 import org.dyn4j.geometry.Vector2;
 
 /**
@@ -42,20 +49,24 @@ import org.dyn4j.geometry.Vector2;
  */
 public class CopilotGUI extends JFrame {
 
+    public static final boolean DEBUG_MODE = false;
+    public static final boolean FULLSCREEN = true;
     public static final double NANO_TO_BASE = 1.0e9;
-    public static final double FORCE = 100000;
     public static final double BULLET_FORCE = 20;
     public static final double ZEBRA_FORCE = 5;
-    protected int screenWidth, screenHeight;
-    private int score = 0;
+    private double force;
+    private int lives;
+    private int score;
     private Random rnd;
     private Timer timer;
-    private JPanel contentPane;
-    private JLabel lblScore;
+    private JPanel contentPane, labelPanel;
+    private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel;
     private GameController gameController;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2;
+    private Font font;
     protected Canvas canvas;
     protected World world;
+    protected int screenWidth, screenHeight;
     protected boolean stopped;
     protected long last;
 
@@ -72,6 +83,7 @@ public class CopilotGUI extends JFrame {
         }
 
         CopilotGUI window = new CopilotGUI();
+        window.setLocationRelativeTo(null);
         window.setVisible(true);
         window.start();
     }
@@ -81,10 +93,11 @@ public class CopilotGUI extends JFrame {
      */
     public CopilotGUI() {
         super("CoPilot");
-
-        this.stopped = false;
         this.rnd = new Random();
         this.timer = new Timer();
+        this.stopped = false;
+        this.lives = 3;
+        this.score = 0;
 
         try {
             this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
@@ -93,9 +106,16 @@ public class CopilotGUI extends JFrame {
             this.bulletImage = ImageIO.read(this.getClass().getClassLoader().getResource("bullet.png"));
             this.obstacleImage1 = ImageIO.read(this.getClass().getClassLoader().getResource("goose_wing_down.png"));
             this.obstacleImage1 = this.obstacleImage1.getScaledInstance(103, 60, 1);
-        } catch (IOException ex) {
+
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+            this.font = Font.createFont(Font.TRUETYPE_FONT, is);
+            this.font = this.font.deriveFont(Font.PLAIN, 20);
+        } catch (IOException | FontFormatException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        this.gameController = new GameController();
+        this.addKeyListener(this.gameController);
 
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -105,27 +125,19 @@ public class CopilotGUI extends JFrame {
             }
         });
 
-        this.gameController = new GameController();
-        this.addKeyListener(this.gameController);
-
-//        Dimension size = Toolkit.getDefaultToolkit().getScreenSize(); TODO
-        Dimension size = new Dimension(800, 600);
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
-
         this.createGUI();
-
-        this.canvas = new Canvas();
-        this.canvas.setPreferredSize(size);
-        this.canvas.setMinimumSize(size);
-        this.canvas.setMaximumSize(size);
-        this.add(this.canvas);
-
+        this.setContentPane(this.contentPane);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.setExtendedState(JFrame.MAXIMIZED_BOTH); TODO
-//        this.setUndecorated(true); TODO
-        this.pack();
+        this.setResizable(false);
 
+        if (FULLSCREEN) {
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH); // TODO
+            this.force = 10;
+        } else {
+            this.force = 3;
+        }
+
+        this.pack();
         this.initializeWorld();
     }
 
@@ -137,8 +149,8 @@ public class CopilotGUI extends JFrame {
         this.world.setGravity(new Vector2(0.0, 9.81));
         this.world.addListener(this.gameController);
 
-        Rectangle airplaneShape = new Rectangle(5.0, 5.0);
         GameObject airplane = new Airplane(this.airplaneImage);
+        Rectangle airplaneShape = new Rectangle(airplane.getWidth(), airplane.getHeight());
         airplane.addFixture(airplaneShape);
         airplane.setMass(MassType.NORMAL);
         airplane.translate(this.screenWidth / 2 - (airplane.getWidth() / 2), this.screenHeight / 2 - (airplane.getHeight()));
@@ -165,17 +177,7 @@ public class CopilotGUI extends JFrame {
 
         thread.setDaemon(true);
         thread.start();
-        FireTimer();
-    }
-
-    public void FireTimer() {
-        int timeinterval = 1500;
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                spawnObject();
-            }
-        }, 0, timeinterval);
+        this.startTimer();
     }
 
     /**
@@ -201,14 +203,6 @@ public class CopilotGUI extends JFrame {
         double elapsedTime = diff / NANO_TO_BASE;
         this.world.update(elapsedTime);
         this.update(elapsedTime);
-
-        this.lblScore.setText(
-                "Score: " + this.score
-                + " Speed: " + this.score
-                + " Alt: " + this.score
-                + " Fuel: " + this.score
-                + " Objects: " + this.world.getBodyCount()
-        );
     }
 
     /**
@@ -222,6 +216,16 @@ public class CopilotGUI extends JFrame {
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
             go.render(g);
+
+            if (DEBUG_MODE) {
+                Vector2 v = go.getTransform().getTranslation();
+                Double d1 = go.getWidth();
+                Double d2 = go.getHeight();
+                Double d3 = v.x;
+                Double d4 = v.y;
+                g.setColor(Color.MAGENTA);
+                g.fillRect(d3.intValue(), d4.intValue(), d1.intValue(), d2.intValue());
+            }
         }
     }
 
@@ -231,79 +235,146 @@ public class CopilotGUI extends JFrame {
      * @param elapsedTime the total elapsed time since the last frame.
      */
     protected void update(double elapsedTime) {
+        String key = this.gameController.KEY_PRESSED;
+
+        if (key.equals("ESCAPE")) {
+            System.exit(0);
+        }
+
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
 
             if (go instanceof Obstacle) {
                 Obstacle obstacle = (Obstacle) go;
-                obstacle.translate(new Vector2(-ZEBRA_FORCE, 0));
+
+                if (obstacle.getTransform().getTranslationX() + obstacle.getWidth() < 0) {
+                    this.world.removeBody(obstacle);
+                } else {
+                    obstacle.translate(new Vector2(-ZEBRA_FORCE, 0));
+                }
             }
 
             if (go instanceof Bullet) {
                 Bullet bullet = (Bullet) go;
-                bullet.translate(new Vector2(BULLET_FORCE, 0));
 
-                for (Body b : bullet.getInContactBodies(true)) {
-                    System.out.println("Bullet in contact with Body ^^");
+                if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
+                    this.world.removeBody(bullet);
+                } else {
+                    bullet.translate(new Vector2(BULLET_FORCE, 0));
+                    Object o = bullet.getUserData();
 
-                    if (b instanceof Obstacle) {
-                        bullet.setActive(false);
-                        b.setActive(false);
-
-                        System.out.println("Obstacle destroyed by bullet :D");
+                    if (o != null) {
+                        if (o instanceof Obstacle) {
+                            this.world.removeBody(bullet);
+                            this.world.removeBody((Obstacle) o);
+                            this.score++;
+                        }
                     }
                 }
             }
 
             if (go instanceof Airplane) {
                 Airplane airplane = (Airplane) go;
+                double airplaneWidth = airplane.getWidth();
+                double airplaneHeight = airplane.getHeight();
 
-                switch (this.gameController.KEY_PRESSED) {
+                Transform airplaneTransform = airplane.getTransform();
+                double airplaneX = airplaneTransform.getTranslationX();
+                double airplaneY = airplaneTransform.getTranslationY();
+
+                this.altLabel.setText("Alt: " + (this.screenHeight - Math.round(airplaneY)));
+                this.speedLabel.setText("Speed: " + ZEBRA_FORCE);
+                this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
+
+                switch (key) {
                     case "UP": {
-                        airplane.applyForce(new Vector2(0, -FORCE));
+                        if (airplaneY - (this.scoreLabel.getHeight() * 2) > 0) {
+                            airplane.translate(new Vector2(0, -force));
+                        }
                         break;
                     }
                     case "DOWN": {
-                        airplane.applyForce(new Vector2(0, FORCE));
+                        if (airplaneY + airplaneHeight < this.screenHeight) {
+                            airplane.translate(new Vector2(0, force));
+                        }
                         break;
                     }
                     case "LEFT": {
-                        airplane.applyForce(new Vector2(-FORCE, 0));
+                        if (airplaneX > 0) {
+                            airplane.translate(new Vector2(-force, 0));
+                        }
                         break;
                     }
                     case "RIGHT": {
-                        airplane.applyForce(new Vector2(FORCE, 0));
+                        if (airplaneX + airplaneWidth < this.screenWidth) {
+                            airplane.translate(new Vector2(force, 0));
+                        }
                         break;
                     }
                     case "SPACE": {
-                        Rectangle bulletShape = new Rectangle(10.0, 10.0);
-                        Bullet bullet = new Bullet(this.bulletImage, airplane.getTransform().getTranslation());
+                        Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY + (airplaneHeight / 2) - 10));
+                        Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());
                         bullet.addFixture(bulletShape);
                         bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
-                        bullet.translate(airplane.getTransform().getTranslation());
+                        bullet.translate(bullet.getLocation());
                         this.world.addBody(bullet);
                         this.gameController.KEY_PRESSED = "NONE";
                         break;
                     }
-                    case "ESCAPE": {
-                        System.exit(0);
-                        break;
-                    }
                     default: {
-                        airplane.clearForce();
                         break;
                     }
                 }
+
+                Object o = airplane.getUserData();
+
+                if (o != null) {
+                    if (o instanceof Obstacle) {
+                        airplane.setUserData(null);
+                        this.world.removeBody((Obstacle) o);
+                        this.lives--;
+                    }
+                }
+
+                if (this.lives <= 0 || airplaneY + airplaneHeight >= this.screenHeight) {
+                    this.world.removeBody(airplane);
+                }
+
+                if (!this.world.containsBody(airplane)) {
+                    this.stop();
+                    this.gameOver();
+                }
             }
         }
+
+        this.scoreLabel.setText("Score: " + this.score);
+        this.livesLabel.setText("Lives: " + this.lives);
     }
 
+    /**
+     * Start the time.
+     */
+    private void startTimer() {
+        int timeinterval = 1500;
+
+        this.timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                spawnObject();
+            }
+        }, 0, timeinterval);
+    }
+
+    /**
+     * Spawn an obstacle.
+     */
     public void spawnObject() {
-        Rectangle objShape = new Rectangle(10.0, 10.0);
         Obstacle obstacle = new Obstacle(this.obstacleImage1);
+        Rectangle objShape = new Rectangle(obstacle.getWidth(), obstacle.getHeight());
         obstacle.addFixture(objShape);
         obstacle.setMass(MassType.FIXED_LINEAR_VELOCITY);
-        obstacle.translate(this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth, this.rnd.nextInt(this.screenHeight));
+        obstacle.translate(this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth, this.rnd.nextInt(this.screenHeight - (this.scoreLabel.getHeight() * 2)));
+
         this.world.addBody(obstacle);
     }
 
@@ -312,16 +383,59 @@ public class CopilotGUI extends JFrame {
      */
     private void createGUI() {
         this.contentPane = new JPanel();
-        this.lblScore = new JLabel(
-                "Score: " + this.score
-                + " Speed: " + this.score
-                + " Alt: " + this.score
-                + " Fuel: " + this.score
-                + " Objects: 0"
-        );
-        this.lblScore.setFont(new Font("Verdana", 1, 20));
-        this.contentPane.add(this.lblScore);
-        this.setContentPane(this.contentPane);
+        this.contentPane.setLayout(new BorderLayout());
+
+        this.labelPanel = new JPanel();
+        this.labelPanel.setLayout(new GridLayout(0, 5));
+        this.labelPanel.setBackground(new Color(121, 201, 249));
+
+        this.scoreLabel = new JLabel("Score: 0");
+        this.labelPanel.add(this.scoreLabel);
+
+        this.livesLabel = new JLabel("Lives: 0");
+        this.labelPanel.add(this.livesLabel);
+
+        this.altLabel = new JLabel("Alt: 0");
+        this.labelPanel.add(this.altLabel);
+
+        this.speedLabel = new JLabel("Speed: 0");
+        this.labelPanel.add(this.speedLabel);
+
+        this.fuelLabel = new JLabel("Fuel: 0");
+        this.labelPanel.add(this.fuelLabel);
+
+        for (Component comp : this.labelPanel.getComponents()) {
+            JLabel lbl = (JLabel) comp;
+            lbl.setFont(this.font);
+            lbl.setForeground(Color.WHITE);
+            lbl.setHorizontalAlignment(SwingConstants.CENTER);
+        }
+
+        this.contentPane.add(this.labelPanel, BorderLayout.PAGE_START);
+
+        Dimension size;
+
+        if (FULLSCREEN) {
+            size = Toolkit.getDefaultToolkit().getScreenSize();
+        } else {
+            size = new Dimension(800, 600);
+        }
+
+        this.screenWidth = size.width;
+        this.screenHeight = size.height;
+
+        this.canvas = new Canvas();
+        this.canvas.setPreferredSize(size);
+        this.canvas.setMinimumSize(size);
+        this.canvas.setMaximumSize(size);
+
+        this.contentPane.add(this.canvas, BorderLayout.PAGE_END);
+    }
+
+    public void gameOver() {
+        this.dispose();
+
+        GameOverGUI goGUI = new GameOverGUI();
     }
 
     /**
