@@ -43,7 +43,7 @@ import org.dyn4j.geometry.Vector2;
 public class CopilotGUI extends JFrame {
 
     public static final double NANO_TO_BASE = 1.0e9;
-    public static final double FORCE = 1000;
+    public static final double FORCE = 100000;
     public static final double BULLET_FORCE = 20;
     public static final double ZEBRA_FORCE = 5;
     protected int screenWidth, screenHeight;
@@ -108,7 +108,8 @@ public class CopilotGUI extends JFrame {
         this.gameController = new GameController();
         this.addKeyListener(this.gameController);
 
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+//        Dimension size = Toolkit.getDefaultToolkit().getScreenSize(); TODO
+        Dimension size = new Dimension(800, 600);
         this.screenWidth = size.width;
         this.screenHeight = size.height;
 
@@ -121,8 +122,8 @@ public class CopilotGUI extends JFrame {
         this.add(this.canvas);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setUndecorated(true);
+//        this.setExtendedState(JFrame.MAXIMIZED_BOTH); TODO
+//        this.setUndecorated(true); TODO
         this.pack();
 
         this.initializeWorld();
@@ -134,8 +135,9 @@ public class CopilotGUI extends JFrame {
     protected void initializeWorld() {
         this.world = new World();
         this.world.setGravity(new Vector2(0.0, 9.81));
+        this.world.addListener(this.gameController);
 
-        Rectangle airplaneShape = new Rectangle(1.0, 1.0);
+        Rectangle airplaneShape = new Rectangle(5.0, 5.0);
         GameObject airplane = new Airplane(this.airplaneImage);
         airplane.addFixture(airplaneShape);
         airplane.setMass(MassType.NORMAL);
@@ -205,7 +207,7 @@ public class CopilotGUI extends JFrame {
                 + " Speed: " + this.score
                 + " Alt: " + this.score
                 + " Fuel: " + this.score
-                + " Objects: " + this.score
+                + " Objects: " + this.world.getBodyCount()
         );
     }
 
@@ -243,11 +245,11 @@ public class CopilotGUI extends JFrame {
 
                 for (Body b : bullet.getInContactBodies(true)) {
                     System.out.println("Bullet in contact with Body ^^");
-                    
+
                     if (b instanceof Obstacle) {
                         bullet.setActive(false);
                         b.setActive(false);
-                        
+
                         System.out.println("Obstacle destroyed by bullet :D");
                     }
                 }
@@ -274,7 +276,7 @@ public class CopilotGUI extends JFrame {
                         break;
                     }
                     case "SPACE": {
-                        Rectangle bulletShape = new Rectangle(1.0, 1.0);
+                        Rectangle bulletShape = new Rectangle(10.0, 10.0);
                         Bullet bullet = new Bullet(this.bulletImage, airplane.getTransform().getTranslation());
                         bullet.addFixture(bulletShape);
                         bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
@@ -297,7 +299,7 @@ public class CopilotGUI extends JFrame {
     }
 
     public void spawnObject() {
-        Rectangle objShape = new Rectangle(1.0, 1.0);
+        Rectangle objShape = new Rectangle(10.0, 10.0);
         Obstacle obstacle = new Obstacle(this.obstacleImage1);
         obstacle.addFixture(objShape);
         obstacle.setMass(MassType.FIXED_LINEAR_VELOCITY);
@@ -315,7 +317,7 @@ public class CopilotGUI extends JFrame {
                 + " Speed: " + this.score
                 + " Alt: " + this.score
                 + " Fuel: " + this.score
-                + " Objects: " + this.score
+                + " Objects: 0"
         );
         this.lblScore.setFont(new Font("Verdana", 1, 20));
         this.contentPane.add(this.lblScore);
