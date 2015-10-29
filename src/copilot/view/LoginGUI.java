@@ -179,7 +179,7 @@ public class LoginGUI {
                             birthday.setTime(date);
 
                             try {
-                                Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
+                                Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), "" /*DisplayName*/, birthday); // TODO add DisplayName textfield in the gui
                                 GameAdministration admin = GameAdministration.getInstance();
                                 // HAS TO BE admin.getDatabaseState()
                                 if (admin.getDatabaseState()) {

@@ -19,8 +19,8 @@ public class Moderator extends User {
      * @param password the password, may not be null or empty
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Moderator(String username, String password, Calendar dateOfBirth) {
-        super(username, password, dateOfBirth);
+    public Moderator(String username, String password, String displayName, Calendar dateOfBirth) {
+        super(username, password, displayName, dateOfBirth);
     }
     
     /**

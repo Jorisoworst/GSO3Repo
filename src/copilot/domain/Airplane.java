@@ -106,9 +106,9 @@ public class Airplane extends GameObject {
      * @param fuelAmount the fuelAmount to set
      */
     public void setFuelAmount(int fuelAmount) {
-        if (fuelAmount < this.maxFuelCapacity) {
+        if (fuelAmount < this.maxFuelCapacity && fuelAmount >= 0) {
             this.fuelAmount = fuelAmount;
-        } else {
+        } else if (fuelAmount > this.maxFuelCapacity) {
             this.fuelAmount = this.maxFuelCapacity;
         }
     }

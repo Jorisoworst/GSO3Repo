@@ -62,7 +62,7 @@ public class DatabaseAdministrationTest {
     {
         Random random = new Random();
         int randomInt = random.nextInt(100);
-        User user = new Player("TestUser"+randomInt, "testPassword", Calendar.getInstance());
+        User user = new Player("TestUser"+randomInt, "testPassword", "", Calendar.getInstance());
         user.setDisplayName("TestDisplayName");
         user.setRegistrationDate(Calendar.getInstance());
         User resultUser = dbAdmin.AddUser(user);

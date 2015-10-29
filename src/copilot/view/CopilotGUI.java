@@ -54,8 +54,7 @@ public class CopilotGUI extends JFrame {
     public static final boolean FULLSCREEN = true;
     public static final double NANO_TO_BASE = 1.0e9;
     public static final double BULLET_FORCE = 20;
-    public static final double ZEBRA_FORCE = 5;
-    private double force, fuelTimer;
+    private double force, zebraForce, fuelTimer, speedTimer;
     private int fps, lives, score;
     private Random rnd;
     private Timer timer;
@@ -96,6 +95,8 @@ public class CopilotGUI extends JFrame {
         this.rnd = new Random();
         this.timer = new Timer();
         this.stopped = false;
+        this.zebraForce = 5;
+        this.force = 5;
         this.lives = 3;
         this.score = 0;
         this.fuelTimer = 0;
@@ -135,9 +136,6 @@ public class CopilotGUI extends JFrame {
             this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
             this.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.setUndecorated(true);
-            this.force = 10;
-        } else {
-            this.force = 3;
         }
 
         this.pack();
@@ -156,7 +154,7 @@ public class CopilotGUI extends JFrame {
         Rectangle airplaneShape = new Rectangle(airplane.getWidth(), airplane.getHeight());
         airplane.addFixture(airplaneShape);
         airplane.setMass(MassType.NORMAL);
-        airplane.translate(this.screenWidth / 2 - (airplane.getWidth() / 2), this.screenHeight / 2 - (airplane.getHeight()));
+        airplane.translate(this.screenWidth / 4 - (airplane.getWidth() / 2), this.screenHeight / 2 - (airplane.getHeight()));
 
         this.world.addBody(airplane);
     }
@@ -250,27 +248,13 @@ public class CopilotGUI extends JFrame {
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
 
-            if (go instanceof Obstacle) {
-                Obstacle obstacle = (Obstacle) go;
-
-                if (obstacle.getTransform().getTranslationX() + obstacle.getWidth() < 0) {
-                    this.world.removeBody(obstacle);
+            if (go instanceof Obstacle || go instanceof Kerosine) {
+                if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
+                    this.world.removeBody(go);
                 } else {
-                    obstacle.translate(new Vector2(-ZEBRA_FORCE, 0));
+                    go.translate(new Vector2(-zebraForce, 0));
                 }
-            }
-
-            if (go instanceof Kerosine) {
-                Kerosine kerosine = (Kerosine) go;
-
-                if (kerosine.getTransform().getTranslationX() + kerosine.getWidth() < 0) {
-                    this.world.removeBody(kerosine);
-                } else {
-                    kerosine.translate(new Vector2(-ZEBRA_FORCE, 0));
-                }
-            }
-
-            if (go instanceof Bullet) {
+            } else if (go instanceof Bullet) {
                 Bullet bullet = (Bullet) go;
 
                 if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
@@ -287,9 +271,7 @@ public class CopilotGUI extends JFrame {
                         }
                     }
                 }
-            }
-
-            if (go instanceof Airplane) {
+            } else if (go instanceof Airplane) {
                 Airplane airplane = (Airplane) go;
                 double airplaneWidth = airplane.getWidth();
                 double airplaneHeight = airplane.getHeight();
@@ -304,17 +286,24 @@ public class CopilotGUI extends JFrame {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
+                
+                this.speedTimer++;
+                
+                if (this.speedTimer == 100) {
+                    this.zebraForce++;
+                    this.speedTimer = 0;
+                }
 
                 airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));
 
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
-                this.speedLabel.setText("Speed: " + ZEBRA_FORCE);
+                this.speedLabel.setText("Speed: " + zebraForce);
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.fpsLabel.setText("FPS:" + this.fps);
 
                 switch (key) {
                     case "UP": {
-                        if (airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
+                        if (airplane.getFuelAmount() > 0 && airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
                             airplane.translate(new Vector2(0, -force));
                         }
                         break;
@@ -367,7 +356,7 @@ public class CopilotGUI extends JFrame {
                     }
                 }
 
-                if (this.lives <= 0 || airplaneY >= this.screenHeight || airplane.getFuelAmount() <= 0) {
+                if (this.lives <= 0 || airplaneY >= this.screenHeight /*|| airplane.getFuelAmount() <= 0*/) {
                     this.world.removeBody(airplane);
                 }
 

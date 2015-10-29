@@ -96,11 +96,13 @@ public class GameController implements CollisionListener {
                     break;
                 }
                 case "LeftArrow": {
-                    KEY_PRESSED = "LEFT";
+//                    KEY_PRESSED = "LEFT";
+                    KEY_PRESSED = "NONE";
                     break;
                 }
                 case "RightArrow": {    
-                    KEY_PRESSED = "RIGHT";
+//                    KEY_PRESSED = "RIGHT";
+                    KEY_PRESSED = "NONE";
                     break;
                 }
                 case "Space": {

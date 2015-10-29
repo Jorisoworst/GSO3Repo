@@ -41,9 +41,9 @@ public class UserTest {
     @Before
     public void setUp() {
         this.now = Calendar.getInstance();
-        this.player = new Player("testPlayer", "pass", now);
-        this.moderator = new Moderator("testModerator", "pass", now);
-        this.administrator = new Administrator("testAdmin", "pass", now);
+        this.player = new Player("testPlayer", "pass", "", now);
+        this.moderator = new Moderator("testModerator", "pass", "", now);
+        this.administrator = new Administrator("testAdmin", "pass", "", now);
     }
     
     @After
@@ -66,7 +66,7 @@ public class UserTest {
         //* @param username the username, may not be null or empty and must be unique
         // Check if it is possible to use null as an username
         try {
-            this.player = new Player(null, "password", this.now);
+            this.player = new Player(null, "password", "", this.now);
             Assert.fail("The username must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -74,7 +74,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as an username
         try {
-            this.player = new Player("", "password", this.now);
+            this.player = new Player("", "password", "", this.now);
             Assert.fail("The username must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -83,7 +83,7 @@ public class UserTest {
         //* @param password the password, may not be null or empty
         // Check if it is possible to use null as a password
         try {
-            this.player = new Player("username", null, this.now);
+            this.player = new Player("username", null, "", this.now);
             Assert.fail("The password must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -91,7 +91,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as a password
         try {
-            this.player = new Player("username", "", this.now);
+            this.player = new Player("username", "", "", this.now);
             Assert.fail("The password must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -100,7 +100,7 @@ public class UserTest {
         //* @param dateOfBirth the date of birth, may not be null
         // Check if it is possible to use null as a date of birth
         try {
-            this.player = new Player("username", "password", null);
+            this.player = new Player("username", "password", "", null);
             Assert.fail("The date of birth must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -123,7 +123,7 @@ public class UserTest {
         //* @param username the username, may not be null or empty and must be unique
         // Check if it is possible to use null as an username
         try {
-            this.moderator = new Moderator(null, "password", this.now);
+            this.moderator = new Moderator(null, "password", "", this.now);
             Assert.fail("The username must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -131,7 +131,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as an username
         try {
-            this.moderator = new Moderator("", "password", this.now);
+            this.moderator = new Moderator("", "password", "", this.now);
             Assert.fail("The username must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -140,7 +140,7 @@ public class UserTest {
         //* @param password the password, may not be null or empty
         // Check if it is possible to use null as a password
         try {
-            this.moderator = new Moderator("username", null, this.now);
+            this.moderator = new Moderator("username", null, "", this.now);
             Assert.fail("The password must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -148,7 +148,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as a password
         try {
-            this.moderator = new Moderator("username", "", this.now);
+            this.moderator = new Moderator("username", "", "", this.now);
             Assert.fail("The password must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -157,7 +157,7 @@ public class UserTest {
         //* @param dateOfBirth the date of birth, may not be null
         // Check if it is possible to use null as a date of birth
         try {
-            this.moderator = new Moderator("username", "password", null);
+            this.moderator = new Moderator("username", "password", "", null);
             Assert.fail("The date of birth must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -180,7 +180,7 @@ public class UserTest {
         //* @param username the username, may not be null or empty and must be unique
         // Check if it is possible to use null as an username
         try {
-            this.administrator = new Administrator(null, "password", this.now);
+            this.administrator = new Administrator(null, "password", "", this.now);
             Assert.fail("The username must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -188,7 +188,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as an username
         try {
-            this.administrator = new Administrator("", "password", this.now);
+            this.administrator = new Administrator("", "password", "", this.now);
             Assert.fail("The username must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -197,7 +197,7 @@ public class UserTest {
         //* @param password the password, may not be null or empty
         // Check if it is possible to use null as a password
         try {
-            this.administrator = new Administrator("username", null, this.now);
+            this.administrator = new Administrator("username", null, "", this.now);
             Assert.fail("The password must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -205,7 +205,7 @@ public class UserTest {
         
         // Check if it is possible to use an empty string as a password
         try {
-            this.administrator = new Administrator("username", "", this.now);
+            this.administrator = new Administrator("username", "", "", this.now);
             Assert.fail("The password must not be empty");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);
@@ -214,7 +214,7 @@ public class UserTest {
         //* @param dateOfBirth the date of birth, may not be null
         // Check if it is possible to use null as a date of birth
         try {
-            this.administrator = new Administrator("username", "password", null);
+            this.administrator = new Administrator("username", "password", "", null);
             Assert.fail("The date of birth must not be null");
         } catch (Exception e) {
             Assert.assertTrue(e.getClass() == IllegalArgumentException.class);

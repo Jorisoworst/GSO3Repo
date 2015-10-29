@@ -87,21 +87,20 @@ public class DatabaseAdministration {
                 User user = null;
                 if(userType.equals("A"))
                 {
-                    user = new Administrator(username, password, calBirthday);
+                    user = new Administrator(username, password, displayName, calBirthday);
                 }
                 else if(userType.equals("M"))
                 {
-                    user = new Moderator(username, password, calBirthday);
+                    user = new Moderator(username, password, displayName, calBirthday);
                     
                 }
                 else if(userType.equals("P"))
                 {
-                    user = new Player(username, password, calBirthday);
+                    user = new Player(username, password, displayName, calBirthday);
                     
                 }
                 if(user != null)
                 {
-                    user.setDisplayName(displayName);
                     user.setExperiencePoints(experiencePoint);
                     user.setId(accountId);
                     user.setLevel(level);

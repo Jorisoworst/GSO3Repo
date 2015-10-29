@@ -45,9 +45,10 @@ public abstract class User {
      * Initialize an instance of the User class which is abstract
      * @param username the username, may not be null or empty and must be unique
      * @param password the password, may not be null or empty
+     * @param displayName the displayName, may be null
      * @param dateOfBirth the date of birth, may not be null
      */
-    public User(String username, String password, Calendar dateOfBirth) {
+    public User(String username, String password, String displayName, Calendar dateOfBirth) {
         if (dateOfBirth == null)
             throw new IllegalArgumentException("The date of birth must not be unknown");
         if (username == null || 
@@ -66,6 +67,12 @@ public abstract class User {
         this.reports = 0;
         this.username = username;
         this.password = password;
+        
+        if (displayName.isEmpty()) {
+            this.displayName = this.username;
+        } else {
+            this.displayName = displayName;
+        }
         
         User.nextId++;
     }
