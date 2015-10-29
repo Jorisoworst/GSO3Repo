@@ -54,9 +54,8 @@ public class CopilotGUI extends JFrame {
     public static final double NANO_TO_BASE = 1.0e9;
     public static final double BULLET_FORCE = 20;
     public static final double ZEBRA_FORCE = 5;
-    public int FPS;
     private double force;
-    private int lives, score;
+    private int fps, lives, score;
     private Random rnd;
     private Timer timer;
     private JPanel contentPane, labelPanel;
@@ -68,7 +67,7 @@ public class CopilotGUI extends JFrame {
     protected World world;
     protected int screenWidth, screenHeight;
     protected boolean stopped;
-    protected long last;
+    protected long last, lastTime;
 
     /**
      * Main method.
@@ -114,7 +113,6 @@ public class CopilotGUI extends JFrame {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //this.addKeyListener(this.gameController);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -130,7 +128,8 @@ public class CopilotGUI extends JFrame {
         this.gameController = new GameController(this.contentPane);
 
         if (FULLSCREEN) {
-            this.setPreferredSize(new Dimension(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, java.awt.Toolkit.getDefaultToolkit().getScreenSize().height));
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            this.setPreferredSize(new Dimension(screenSize.width, screenSize.height));
             this.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.setUndecorated(true);
             this.setResizable(false);
@@ -172,7 +171,10 @@ public class CopilotGUI extends JFrame {
             @Override
             public void run() {
                 while (!isStopped()) {
+                    lastTime = System.nanoTime();
                     gameLoop();
+                    fps = Math.round(1000000000 / (System.nanoTime() - lastTime));
+                    lastTime = System.nanoTime();
                 }
             }
         };
@@ -189,9 +191,7 @@ public class CopilotGUI extends JFrame {
     protected void gameLoop() {
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-        
-        FPS++;
-        
+
         this.render(g);
         g.dispose();
 
@@ -200,12 +200,12 @@ public class CopilotGUI extends JFrame {
         }
 
         Toolkit.getDefaultToolkit().sync();
-        
+
         long time = System.nanoTime();
         long diff = time - this.last;
         this.last = time;
         double elapsedTime = diff / NANO_TO_BASE;
-        this.world.update(elapsedTime);
+        this.world.updatev(elapsedTime);
         this.update(elapsedTime);
     }
 
@@ -289,8 +289,7 @@ public class CopilotGUI extends JFrame {
                 this.altLabel.setText("Alt: " + (this.screenHeight - Math.round(airplaneY)));
                 this.speedLabel.setText("Speed: " + ZEBRA_FORCE);
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
-
-                this.fpsLabel.setText("FPS:" + FPS);
+                this.fpsLabel.setText("FPS:" + this.fps);
 
                 switch (key) {
                     case "UP": {
@@ -367,9 +366,8 @@ public class CopilotGUI extends JFrame {
             @Override
             public void run() {
                 spawnObject();
-                
             }
-            
+
         }, 0, timeinterval);
     }
 
@@ -412,7 +410,7 @@ public class CopilotGUI extends JFrame {
         this.fuelLabel = new JLabel("Fuel: 0");
         this.labelPanel.add(this.fuelLabel);
 
-        this.fpsLabel = new JLabel("FPS:" + FPS);
+        this.fpsLabel = new JLabel("FPS:" + this.fps);
         this.labelPanel.add(this.fpsLabel);
 
         for (Component comp : this.labelPanel.getComponents()) {
