@@ -128,11 +128,9 @@ public class CopilotGUI extends JFrame {
         this.gameController = new GameController(this.contentPane);
 
         if (FULLSCREEN) {
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            this.setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+            this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
             this.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.setUndecorated(true);
-            this.setResizable(false);
             this.force = 10;
         } else {
             this.force = 3;
