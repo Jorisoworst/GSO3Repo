@@ -1,25 +1,13 @@
 package copilot.view;
 
-import copilot.domain.GameAdministration;
-import copilot.domain.Player;
-import copilot.domain.User;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -32,16 +20,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LaunchGUI {
-
     private Clip clip;
     private Font font, sizedFont = null;
     private Image launchScreen;
@@ -70,7 +54,6 @@ public class LaunchGUI {
             this.launchScreen = ImageIO.read(this.getClass().getClassLoader().getResource("launch_screen_copilot.png"));
             this.font = Font.createFont(Font.TRUETYPE_FONT, is);
             
-
             URL launch = this.getClass().getResource("/sounds/click.wav");
             this.launchClick = AudioSystem.getAudioInputStream(launch);
 
@@ -93,13 +76,10 @@ public class LaunchGUI {
         placeComponents(panel);
 
         frame.setVisible(true);
-
     }
 
     private void placeComponents(JPanel panel) {
-
         panel.setLayout(null);
-
 
         JButton launchButton = new JButton("LAUNCH");
         launchButton.setFont(font);

@@ -45,7 +45,7 @@ import org.dyn4j.geometry.Vector2;
 
 /**
  *
- * @author indyspaan
+ * @author IndyGames
  */
 public class CopilotGUI extends JFrame {
 
@@ -56,8 +56,7 @@ public class CopilotGUI extends JFrame {
     public static final double ZEBRA_FORCE = 5;
     public int FPS;
     private double force;
-    private int lives;
-    private int score;
+    private int lives, score;
     private Random rnd;
     private Timer timer;
     private JPanel contentPane, labelPanel;
@@ -131,7 +130,10 @@ public class CopilotGUI extends JFrame {
         this.gameController = new GameController(this.contentPane);
 
         if (FULLSCREEN) {
-            this.setExtendedState(JFrame.MAXIMIZED_BOTH); // TODO
+            this.setPreferredSize(new Dimension(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, java.awt.Toolkit.getDefaultToolkit().getScreenSize().height));
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            this.setUndecorated(true);
+            this.setResizable(false);
             this.force = 10;
         } else {
             this.force = 3;
@@ -187,7 +189,9 @@ public class CopilotGUI extends JFrame {
     protected void gameLoop() {
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+        
         FPS++;
+        
         this.render(g);
         g.dispose();
 
@@ -203,35 +207,6 @@ public class CopilotGUI extends JFrame {
         double elapsedTime = diff / NANO_TO_BASE;
         this.world.update(elapsedTime);
         this.update(elapsedTime);
-
-        
-
-//        long lastTime = System.nanoTime();
-//        double amountOfTicks = 60.0;
-//        double ns = 1000000000;
-//        double delta = 0;
-//        long timer = System.currentTimeMillis();
-//        int frames = 0;
-//        while(true) {
-//            long now = System.nanoTime();
-//            delta += (now - lastTime) / ns / amountOfTicks;
-//            lastTime = now;
-//            while(delta >= 1){
-////                tick();
-//                delta--;
-//            }
-//
-//            if(true)
-//                this.world.update(elapsedTime);
-//                this.update(elapsedTime);
-//            frames++;
-//
-//            if(System.currentTimeMillis() - timer > 1000){
-//                timer += 1000;
-//                System.out.println("FPS: " + frames);
-//                frames = 0;
-//            }
-//        }
     }
 
     /**
@@ -469,9 +444,7 @@ public class CopilotGUI extends JFrame {
     }
 
     public void gameOver() {
-        this.dispose();
-
-        GameOverGUI goGUI = new GameOverGUI();
+        GameOverGUI goGUI = new GameOverGUI(this);
     }
 
     /**

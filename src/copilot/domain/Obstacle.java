@@ -9,10 +9,9 @@ import java.awt.Image;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public class Obstacle extends GameObject {
-
     private boolean isDestructable;
 
     /**

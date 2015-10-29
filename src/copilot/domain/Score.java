@@ -7,10 +7,9 @@ package copilot.domain;
 
 /**
  *
- * @author Ruud
+ * @author IndyGames
  */
 public class Score {
-    
     private int scoreId, score, user1id, user2id, user3id, user4id;
     private User user1, user2, user3, user4;
     

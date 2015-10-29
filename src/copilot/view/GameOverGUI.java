@@ -5,65 +5,69 @@
  */
 package copilot.view;
 
-import static copilot.view.CopilotGUI.FULLSCREEN;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public class GameOverGUI extends JFrame {
 
     private JPanel contentPane;
-    private String gameOverText;
+    private final String gameOverText;
     private JLabel gameOverLabel;
 
-    public GameOverGUI() {
+    public GameOverGUI(CopilotGUI copilotGUI) {
         super("CoPilot - Game Over");
         this.createGUI();
         this.setContentPane(this.contentPane);
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, java.awt.Toolkit.getDefaultToolkit().getScreenSize().height));
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.setLayout(new GridBagLayout());
+        
         this.gameOverText = "Game Over";
+        
+        copilotGUI.dispose();
     }
 
     public void createGUI() {
-        
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        Dimension size;
-
-        if (FULLSCREEN) {
-            size = Toolkit.getDefaultToolkit().getScreenSize();
-        } else {
-            size = new Dimension(800, 600);
-        }
-        
         this.contentPane = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
                 g.setColor(Color.BLACK);
                 g.fillRect(0, 0, this.getWidth(), this.getHeight());
-                
-                
+
                 gameOverLabel = new JLabel(gameOverText);
                 gameOverLabel.setForeground(Color.WHITE);
-
+                
+                InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+                try {
+                    gameOverLabel.setFont(Font.createFont(Font.TRUETYPE_FONT, is));
+                    gameOverLabel.setFont(new Font(gameOverLabel.getName(), Font.PLAIN, 64));
+                } catch (FontFormatException | IOException ex) {
+                    Logger.getLogger(LaunchGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 gameOverLabel.setLocation(((this.getWidth() / 2) - (gameOverLabel.getWidth() / 2)), ((this.getHeight() / 2) -  (gameOverLabel.getHeight() / 2)));
-                contentPane.add((gameOverLabel));
-
-
-//                g.setColor(Color.WHITE);
-//                g.drawString(gameOverText, this.getWidth() / 2 - (gameOverText.length()), this.getHeight() / 2);
+                this.add((gameOverLabel));
             }
         };
     }

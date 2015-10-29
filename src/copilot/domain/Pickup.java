@@ -9,10 +9,9 @@ import java.awt.Image;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public abstract class Pickup extends GameObject {
-
     private boolean isPickedUp;
 
     /**

@@ -5,7 +5,6 @@
  */
 package copilot.domain;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -39,7 +38,6 @@ public class DatabaseAdministration {
     
     private boolean initConnection()
     {
-        
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(serverUrl,username,password);
@@ -52,9 +50,7 @@ public class DatabaseAdministration {
     public ArrayList<User> GetUsers()
     {
         ArrayList<User> users = new ArrayList<>();
-        
         String query = "SELECT * FROM user";
-        
         
         try {
             Statement st = conn.createStatement();
@@ -118,8 +114,6 @@ public class DatabaseAdministration {
                 }
                 
             }
-
-            
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -354,9 +348,4 @@ public class DatabaseAdministration {
         }
         return false;
     }
-    
-    
-    
-    
-    
 }

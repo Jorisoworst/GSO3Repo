@@ -7,7 +7,7 @@ package copilot.domain;
 
 /**
  *
- * @author Ruud
+ * @author IndyGames
  */
 public class GameSetting {
     private int maxFuelCapacity, maxUser, requiredExperiencePoints;
@@ -49,5 +49,4 @@ public class GameSetting {
     public void setLevelUp(double levelUp) {
         this.levelUp = levelUp;
     }
-    
 }

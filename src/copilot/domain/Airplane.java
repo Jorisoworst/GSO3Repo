@@ -7,18 +7,14 @@ package copilot.domain;
 
 import java.util.ArrayList;
 import java.awt.Image;
-import jdk.nashorn.internal.parser.TokenType;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Airplane extends GameObject {
     private double pitch;
-    private int altitude;
-    private int speed;
-    private int maxFuelCapacity;
-    private int fuelAmount;
+    private int altitude, speed, maxFuelCapacity, fuelAmount;
     private ArrayList<AirplanePart> airplaneParts;
     private int minimumSpeed = -40;
     
@@ -179,7 +175,6 @@ public class Airplane extends GameObject {
             //reset values
             
         }
-        
         
         return true;
     }

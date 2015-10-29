@@ -25,7 +25,7 @@ import org.dyn4j.geometry.Vector2;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public final class Graphics2DRenderer {
 

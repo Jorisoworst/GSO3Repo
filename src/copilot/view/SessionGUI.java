@@ -6,7 +6,6 @@
 package copilot.view;
 
 import copilot.domain.Session;
-import copilot.domain.User;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -14,7 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author NielsPrasing
+ * @author IndyGames
  */
 public class SessionGUI {
     

@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public class GUIController implements Initializable {
 

@@ -57,7 +57,6 @@ public abstract class User {
                 password.isEmpty())
             throw new IllegalArgumentException("The password must not be empty");
         
-        // TODO: Search for the user in the database if the user exists get the information, else set the information
         this.isBanned = false;
         this.registrationDate = Calendar.getInstance();
         this.dateOfBirth = dateOfBirth;

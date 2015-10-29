@@ -10,10 +10,9 @@ import org.dyn4j.geometry.Vector2;
 
 /**
  *
- * @author Ruud
+ * @author IndyGames
  */
 public class Bullet extends GameObject {
-
     private Vector2 location;
 
     public Bullet(Image image, Vector2 location) {

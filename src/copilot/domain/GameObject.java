@@ -12,12 +12,10 @@ import org.dyn4j.dynamics.Body;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
 public abstract class GameObject extends Body {
-
-    private double height;
-    private double width;
+    private double height, width;
     private Image image;
 //    private boolean isDestroyed;
 

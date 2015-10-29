@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Session {    
 

@@ -9,12 +9,13 @@ import java.awt.Image;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Elevator extends AirplanePart {
     private double elevatorPitch;
     private Airplane airplane;
     public static double PITCH_INCREASMENT = 0.3;
+    
     /**
      * Initialize an instance of the Elevator class which extends ArplanePart
      *
@@ -49,6 +50,4 @@ public class Elevator extends AirplanePart {
         this.elevatorPitch = elevatorPitch;
         //airplane.updateAirplane();
     }
-	
-    
 }

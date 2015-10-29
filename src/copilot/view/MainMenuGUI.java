@@ -8,7 +8,6 @@ package copilot.view;
 import copilot.domain.GameAdministration;
 import copilot.domain.Session;
 import copilot.domain.User;
-import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -18,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -39,10 +37,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author NielsPrasing
+ * @author IndyGames
  */
 public class MainMenuGUI {
-
     private Clip clip;
     private Font font, sizedFont = null;
     private Image bgImage;

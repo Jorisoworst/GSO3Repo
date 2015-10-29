@@ -9,7 +9,7 @@ import java.awt.Image;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Fuel extends AirplanePart {
 

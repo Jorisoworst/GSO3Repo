@@ -10,7 +10,7 @@ import org.dyn4j.geometry.Vector2;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Gun extends AirplanePart {
     private int fireRate;

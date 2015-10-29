@@ -17,7 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author NielsPrasing
+ * @author IndyGames
  */
 public class CreditsGUI {
     

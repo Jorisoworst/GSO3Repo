@@ -9,12 +9,13 @@ import java.awt.Image;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Propellor extends AirplanePart {
     private int rpm;
     private double fuelConsumption;
     private Airplane airplane;
+    
     /**
      * Initialize an instance of the Propellor class which extends ArplanePart
      *
@@ -95,5 +96,4 @@ public class Propellor extends AirplanePart {
     public void setFuelConsumption(double fuelConsumption) {
         this.fuelConsumption = fuelConsumption;
     }
-    
 }

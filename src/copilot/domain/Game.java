@@ -9,13 +9,11 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Game {
     private boolean isStarted;
-    private int score;
-    private int difficulty;
-    private int changeInterval;
+    private int score, difficulty, changeInterval;
     private Session session;
     private ArrayList<GameObject> objects;
     

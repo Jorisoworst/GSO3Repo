@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class GameAdministration {
     private static GameAdministration instance; 
@@ -53,7 +53,7 @@ public class GameAdministration {
             this.users = new ArrayList<>();
         }
         
-        // nog te koppelen aan database
+        // add to database
         this.sessions = new ArrayList<>();
         this.games = new ArrayList<>();
     }
