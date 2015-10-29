@@ -25,6 +25,8 @@ public class Airplane extends GameObject {
      */
     public Airplane(Image image) {
         super(image);
+        this.maxFuelCapacity = 100;
+        this.fuelAmount = this.maxFuelCapacity;
     }
 
     /**
@@ -104,7 +106,11 @@ public class Airplane extends GameObject {
      * @param fuelAmount the fuelAmount to set
      */
     public void setFuelAmount(int fuelAmount) {
-        this.fuelAmount = fuelAmount;
+        if (fuelAmount < this.maxFuelCapacity) {
+            this.fuelAmount = fuelAmount;
+        } else {
+            this.fuelAmount = this.maxFuelCapacity;
+        }
     }
 
     /**
@@ -165,7 +171,7 @@ public class Airplane extends GameObject {
         int verticalSpeed = minimumSpeed + liftInt * 2; 
         this.altitude = this.altitude + verticalSpeed;
         
-        //if there is no fuel
+        //if there is no fuel :(
         if(fuelAmount < 0)
         {
             fuelAmount = 0;

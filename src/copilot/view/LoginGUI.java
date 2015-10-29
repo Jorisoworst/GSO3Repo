@@ -140,11 +140,11 @@ public class LoginGUI {
                 GameAdministration admin = GameAdministration.getInstance();
 
                 // HAS TO BE admin.getDatabaseState()
-                if (true) {
+                if (admin.getDatabaseState()) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
                     // HAS TO BE login
-                    if (true) {
+                    if (login) {
                         LoginGUI.clip.stop();
                         User user = admin.getUser(userText.getText());
                         JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
@@ -182,7 +182,7 @@ public class LoginGUI {
                                 Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), birthday);
                                 GameAdministration admin = GameAdministration.getInstance();
                                 // HAS TO BE admin.getDatabaseState()
-                                if (true) {
+                                if (admin.getDatabaseState()) {
                                     admin.addUser(user);
                                     JOptionPane.showMessageDialog(panel, "Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
                                 } else {

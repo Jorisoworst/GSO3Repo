@@ -7,7 +7,6 @@ package copilot.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -59,7 +58,6 @@ public class GameOverGUI extends JFrame {
         }
 
         this.gameOverLabel = new JLabel(this.gameOverText);
-        this.gameOverLabel.setPreferredSize(new Dimension(200, 100));
         this.gameOverLabel.setForeground(Color.WHITE);
         this.gameOverLabel.setFont(this.font);
         this.gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);

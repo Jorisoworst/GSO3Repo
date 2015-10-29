@@ -9,15 +9,12 @@ import copilot.domain.Airplane;
 import copilot.domain.Obstacle;
 import copilot.domain.Kerosine;
 import copilot.view.CopilotGUI;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Image;
 import javax.imageio.ImageIO;
 import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -39,7 +36,7 @@ public class GameObjectTest {
         }
         
         this.airplane = new Airplane(this.image);
-        this.kerosine = new Kerosine(this.image);
+        this.kerosine = new Kerosine(this.image, 100);
         this.obstacle = new Obstacle(this.image);
     }
 }

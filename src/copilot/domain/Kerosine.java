@@ -19,9 +19,9 @@ public class Kerosine extends Pickup {
      *
      * @param image the image, may not be null
      */
-    public Kerosine(Image image) {
+    public Kerosine(Image image, int amount) {
         super(image);
-        this.amount = 0;
+        this.amount = amount;
     }
 
     /**
@@ -29,12 +29,5 @@ public class Kerosine extends Pickup {
      */
     public int getAmount() {
         return this.amount;
-    }
-
-    /**
-     * @param amount the amount to set
-     */
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 }
