@@ -54,13 +54,14 @@ public class CopilotGUI extends JFrame {
     public static final double NANO_TO_BASE = 1.0e9;
     public static final double BULLET_FORCE = 20;
     public static final double ZEBRA_FORCE = 5;
+    public int FPS;
     private double force;
     private int lives;
     private int score;
     private Random rnd;
     private Timer timer;
     private JPanel contentPane, labelPanel;
-    private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel;
+    private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private GameController gameController;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2;
     private Font font;
@@ -114,9 +115,7 @@ public class CopilotGUI extends JFrame {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.gameController = new GameController();
-        this.addKeyListener(this.gameController);
-
+        //this.addKeyListener(this.gameController);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -129,6 +128,7 @@ public class CopilotGUI extends JFrame {
         this.setContentPane(this.contentPane);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
+        this.gameController = new GameController(this.contentPane);
 
         if (FULLSCREEN) {
             this.setExtendedState(JFrame.MAXIMIZED_BOTH); // TODO
@@ -187,7 +187,7 @@ public class CopilotGUI extends JFrame {
     protected void gameLoop() {
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-
+        FPS++;
         this.render(g);
         g.dispose();
 
@@ -196,13 +196,42 @@ public class CopilotGUI extends JFrame {
         }
 
         Toolkit.getDefaultToolkit().sync();
-
+        
         long time = System.nanoTime();
         long diff = time - this.last;
         this.last = time;
         double elapsedTime = diff / NANO_TO_BASE;
         this.world.update(elapsedTime);
         this.update(elapsedTime);
+
+        
+
+//        long lastTime = System.nanoTime();
+//        double amountOfTicks = 60.0;
+//        double ns = 1000000000;
+//        double delta = 0;
+//        long timer = System.currentTimeMillis();
+//        int frames = 0;
+//        while(true) {
+//            long now = System.nanoTime();
+//            delta += (now - lastTime) / ns / amountOfTicks;
+//            lastTime = now;
+//            while(delta >= 1){
+////                tick();
+//                delta--;
+//            }
+//
+//            if(true)
+//                this.world.update(elapsedTime);
+//                this.update(elapsedTime);
+//            frames++;
+//
+//            if(System.currentTimeMillis() - timer > 1000){
+//                timer += 1000;
+//                System.out.println("FPS: " + frames);
+//                frames = 0;
+//            }
+//        }
     }
 
     /**
@@ -286,6 +315,8 @@ public class CopilotGUI extends JFrame {
                 this.speedLabel.setText("Speed: " + ZEBRA_FORCE);
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
 
+                this.fpsLabel.setText("FPS:" + FPS);
+
                 switch (key) {
                     case "UP": {
                         if (airplaneY - (this.scoreLabel.getHeight() * 2) > 0) {
@@ -361,7 +392,9 @@ public class CopilotGUI extends JFrame {
             @Override
             public void run() {
                 spawnObject();
+                
             }
+            
         }, 0, timeinterval);
     }
 
@@ -403,6 +436,9 @@ public class CopilotGUI extends JFrame {
 
         this.fuelLabel = new JLabel("Fuel: 0");
         this.labelPanel.add(this.fuelLabel);
+
+        this.fpsLabel = new JLabel("FPS:" + FPS);
+        this.labelPanel.add(this.fpsLabel);
 
         for (Component comp : this.labelPanel.getComponents()) {
             JLabel lbl = (JLabel) comp;
