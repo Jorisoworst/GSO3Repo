@@ -27,8 +27,6 @@ import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -48,33 +46,32 @@ import org.dyn4j.geometry.Vector2;
  *
  * @author IndyGames
  */
-public class CopilotGUI extends JFrame {
+public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final double NANO_TO_BASE = 1.0e9;
-    public static final double BULLET_FORCE = 2000;
-    public static final double FORCE = 500;
+    public static final long NANO_TO_BASE = 1000000000;
+    public static final int BULLET_FORCE = 25;
+    public static final int FORCE = 7;
+    public static final int TARGET_FPS = 60;
     private final GameController gameController;
-    private double zebraForce;
-    private int fps, lives, score, backgroundX, fpsTimer, fuelTimer, speedTimer, animationTimer;
+    private boolean stopped;
+    private long last, lastTime;
+    private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
+    private Canvas canvas;
+    private World world;
     private Random rnd;
-    private Timer timer;
+    private JFrame frame;
     private JPanel contentPane, labelPanel;
     private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2, kerosineImage;
     private Font font;
-    protected Canvas canvas;
-    protected World world;
-    protected int screenWidth, screenHeight;
-    protected boolean stopped;
-    protected long last, lastTime;
 
     /**
      * Constructor for this gui.
      */
     public CopilotGUI() {
-        super("CoPilot");
+        this.frame = new JFrame("CoPilot");
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -83,16 +80,16 @@ public class CopilotGUI extends JFrame {
         }
 
         this.rnd = new Random();
-        this.timer = new Timer();
         this.stopped = false;
         this.zebraForce = FORCE;
         this.lives = 3;
         this.score = 0;
-        this.fuelTimer = 0;
+        this.backgroundX = 0;
+        this.spawnTimer = 0;
         this.fpsTimer = 0;
+        this.fuelTimer = 0;
         this.speedTimer = 0;
         this.animationTimer = 0;
-        this.backgroundX = 0;
 
         try {
             this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
@@ -117,7 +114,7 @@ public class CopilotGUI extends JFrame {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.addWindowListener(new WindowAdapter() {
+        this.frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 stop();
@@ -125,19 +122,20 @@ public class CopilotGUI extends JFrame {
             }
         });
 
-        this.createGUI();
-        this.setContentPane(this.contentPane);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.gameController = new GameController(this.contentPane);
-
         if (FULLSCREEN) {
-            this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            this.setUndecorated(true);
+            this.frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            this.frame.setUndecorated(true);
         }
 
-        this.pack();
+        this.createGUI();
+        this.gameController = new GameController(this.contentPane);
+        this.frame.setContentPane(this.contentPane);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLocationRelativeTo(null);
+        this.frame.setResizable(false);
+        this.frame.setVisible(true);
+        this.frame.pack();
         this.initializeWorld();
     }
 
@@ -180,7 +178,6 @@ public class CopilotGUI extends JFrame {
 
         thread.setDaemon(true);
         thread.start();
-        this.startTimer();
     }
 
     /**
@@ -203,8 +200,8 @@ public class CopilotGUI extends JFrame {
         long time = System.nanoTime();
         long diff = time - this.last;
         this.last = time;
-        double elapsedTime = diff / NANO_TO_BASE;
-        
+        long elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
+
         this.world.update(elapsedTime);
         this.update(elapsedTime);
     }
@@ -246,11 +243,23 @@ public class CopilotGUI extends JFrame {
      *
      * @param elapsedTime the total elapsed time since the last frame.
      */
-    protected void update(double elapsedTime) {
+    protected void update(long elapsedTime) {
         String key = this.gameController.KEY_PRESSED;
 
         if (key.equals("ESCAPE")) {
             System.exit(0);
+        }
+
+        this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
+        
+        if (this.spawnTimer >= 75) {
+            if ((rnd.nextInt(5) + 1) % 5 == 0) {
+                spawnObject("P");
+            } else {
+                spawnObject("O");
+            }
+
+            this.spawnTimer = 0;
         }
 
         for (int i = 0; i < this.world.getBodyCount(); i++) {
@@ -266,7 +275,7 @@ public class CopilotGUI extends JFrame {
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    this.animationTimer += (elapsedTime * 100);
+                    this.animationTimer += elapsedTime;
 
                     if (this.animationTimer >= 25) {
                         if (obstacle.getImage() == this.obstacleImage2) {
@@ -304,21 +313,22 @@ public class CopilotGUI extends JFrame {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
-                this.fuelTimer += (elapsedTime * 100);
+                this.fuelTimer += elapsedTime;
 
                 if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
 
-                this.speedTimer += (elapsedTime * 100);
+                this.speedTimer += elapsedTime;
 
                 if (this.speedTimer >= 100) {
                     this.zebraForce++;
+                    this.score += elapsedTime * (this.zebraForce / 7);
                     this.speedTimer = 0;
                 }
 
-                this.fpsTimer += (elapsedTime * 100);
+                this.fpsTimer += elapsedTime;
 
                 if (this.fpsTimer >= 50) {
                     this.fpsLabel.setText("FPS: " + this.fps);
@@ -391,8 +401,7 @@ public class CopilotGUI extends JFrame {
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
                 this.speedLabel.setText("Speed: " + this.zebraForce);
-                this.score += (elapsedTime * this.zebraForce) / 20;
-                this.backgroundX -= 1 * (elapsedTime * (this.zebraForce / 2));
+                this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
                 if (!this.world.containsBody(airplane)) {
                     this.stop();
@@ -403,55 +412,42 @@ public class CopilotGUI extends JFrame {
     }
 
     /**
-     * Start the time.
-     */
-    private void startTimer() {
-        int timeinterval = 750;
-
-        this.timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if ((rnd.nextInt(5) + 1) % 5 == 0) {
-                    spawnObject("P");
-                } else {
-                    spawnObject("O");
-                }
-            }
-
-        }, 0, timeinterval);
-    }
-
-    /**
      * Spawn an object.
      *
      * @param type object type to spawn
      */
     public void spawnObject(String type) {
+        GameObject go = null;
+
         switch (type) {
             case "O": {
-                Obstacle obstacle = new Obstacle(this.obstacleImage1);
-                Rectangle objShape = new Rectangle(obstacle.getWidth(), obstacle.getHeight());
-                obstacle.addFixture(objShape);
-                obstacle.setMass(MassType.FIXED_LINEAR_VELOCITY);
-                obstacle.translate(
-                        this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
-                        this.rnd.nextInt(this.screenHeight - (int) obstacle.getHeight() - this.scoreLabel.getHeight()) + obstacle.getHeight() + this.scoreLabel.getHeight()
-                );
-                this.world.addBody(obstacle);
+                go = new Obstacle(this.obstacleImage1);
                 break;
             }
             case "P": {
-                Kerosine kerosine = new Kerosine(this.kerosineImage, this.rnd.nextInt(100) + 1);
-                Rectangle objShape = new Rectangle(kerosine.getWidth(), kerosine.getHeight());
-                kerosine.addFixture(objShape);
-                kerosine.setMass(MassType.FIXED_LINEAR_VELOCITY);
-                kerosine.translate(
-                        this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
-                        this.rnd.nextInt(this.screenHeight - (int) kerosine.getHeight() - this.scoreLabel.getHeight()) + kerosine.getHeight() + this.scoreLabel.getHeight()
-                );
-                this.world.addBody(kerosine);
+                go = new Kerosine(this.kerosineImage, this.rnd.nextInt(100) + 1);
                 break;
             }
+        }
+
+        if (go != null) {
+            int randomY = this.rnd.nextInt(this.screenHeight - this.scoreLabel.getHeight() - (int) go.getHeight());
+
+            if (randomY > this.screenHeight - go.getHeight()) {
+                randomY = this.screenHeight - (int) go.getHeight();
+            } else if (randomY < this.scoreLabel.getHeight()) {
+                randomY = this.scoreLabel.getHeight();
+            }
+
+            Rectangle objShape = new Rectangle(go.getWidth(), go.getHeight());
+            go.addFixture(objShape);
+            go.setMass(MassType.FIXED_LINEAR_VELOCITY);
+            go.translate(
+                    this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
+                    randomY
+            );
+            
+            this.world.addBody(go);
         }
     }
 
@@ -513,7 +509,8 @@ public class CopilotGUI extends JFrame {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this, this.score);
+        GameOverGUI goGUI = new GameOverGUI(this.frame, this.score);
+        this.frame.dispose();
     }
 
     /**

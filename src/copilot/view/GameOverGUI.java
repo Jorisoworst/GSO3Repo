@@ -24,33 +24,33 @@ import javax.swing.SwingConstants;
  *
  * @author IndyGames
  */
-public class GameOverGUI extends JFrame {
+public class GameOverGUI {
 
     private final String gameOverText;
+    private final int score;
+    private JFrame frame;
     private JPanel contentPane;
     private JLabel gameOverLabel, scoreLabel;
     private Font font;
-    private int score;
 
-    public GameOverGUI(CopilotGUI copilotGUI, int score) {
-        super("CoPilot - Game Over");
+    public GameOverGUI(JFrame copilotGUI, int score) {
+        this.frame = new JFrame("CoPilot - Game Over");
         this.gameOverText = "Game Over";
         this.score = score;
         this.createGUI();
-        this.setContentPane(this.contentPane);
-        this.setPreferredSize(copilotGUI.getPreferredSize());
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setUndecorated(true);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setLayout(new GridBagLayout());
-        copilotGUI.dispose();
+        this.frame.setContentPane(this.contentPane);
+        this.frame.setPreferredSize(copilotGUI.getPreferredSize());
+        this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.frame.setUndecorated(true);
+        this.frame.setResizable(false);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.pack();
+        this.frame.setLocationRelativeTo(null);
+        this.frame.setVisible(true);
+        this.frame.setLayout(new GridBagLayout());
     }
 
-    public void createGUI() {
+    private void createGUI() {
         try {
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
             this.font = Font.createFont(Font.TRUETYPE_FONT, is);

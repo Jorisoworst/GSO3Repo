@@ -274,8 +274,6 @@ public class MainMenuGUI {
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 CopilotGUI game = new CopilotGUI();
-                game.setLocationRelativeTo(null);
-                game.setVisible(true);
                 game.start();
                 frameToClose.dispose();
             }
