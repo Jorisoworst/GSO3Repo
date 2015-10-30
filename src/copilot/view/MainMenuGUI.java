@@ -175,6 +175,29 @@ public class MainMenuGUI {
                 stopSound();
             }
         });
+        
+        JButton debugButton = new JButton("SINGLEPLAYER DEBUG");
+        debugButton.setHorizontalAlignment(SwingConstants.LEFT);
+        debugButton.setBounds(this.screenWidth - 480, screenHeight - 150, 540, 50);
+        debugButton.setFont(font);
+        debugButton.setContentAreaFilled(false);
+        panel.add(debugButton);
+
+        debugButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                debugButton.setFont(sizedFont);
+                debugButton.setText(">SINGLEPLAYER DEBUG");
+                loadSound();
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                debugButton.setFont(font);
+                debugButton.setText("SINGLEPLAYER DEBUG");
+                stopSound();
+            }
+        });
 
         JButton logoutButton = new JButton("LOGOUT");
         logoutButton.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -241,6 +264,19 @@ public class MainMenuGUI {
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 CreditsGUI credits = new CreditsGUI(user);
+                frameToClose.dispose();
+            }
+        });
+        
+        debugButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+                CopilotGUI game = new CopilotGUI();
+                game.setLocationRelativeTo(null);
+                game.setVisible(true);
+                game.start();
                 frameToClose.dispose();
             }
         });
