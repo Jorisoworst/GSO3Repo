@@ -36,6 +36,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
@@ -52,7 +53,9 @@ public class CopilotGUI extends JFrame {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final double NANO_TO_BASE = 1.0e9;
+    public static final int TARGET_FPS = 60;
+    public static final long NANO_TO_BASE = 1000000000;
+    public static final long OPTIMAL_TIME = NANO_TO_BASE / TARGET_FPS;
     public static final double BULLET_FORCE = 20;
     public static final double FORCE = 5;
     private final GameController gameController;
@@ -68,7 +71,7 @@ public class CopilotGUI extends JFrame {
     protected World world;
     protected int screenWidth, screenHeight;
     protected boolean stopped;
-    protected long last, lastTime;
+    protected long lastTime;
 
     /**
      * Constructor for this gui.
@@ -159,10 +162,9 @@ public class CopilotGUI extends JFrame {
     }
 
     /**
-     * Start active rendering the game.
+     * Start rendering the game.
      */
     public void start() {
-        this.last = System.nanoTime();
         this.canvas.setIgnoreRepaint(true);
         this.canvas.createBufferStrategy(2);
 
@@ -171,7 +173,9 @@ public class CopilotGUI extends JFrame {
             public void run() {
                 while (!isStopped()) {
                     lastTime = System.nanoTime();
+
                     gameLoop();
+
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     lastTime = System.nanoTime();
                 }
@@ -200,12 +204,14 @@ public class CopilotGUI extends JFrame {
 
         Toolkit.getDefaultToolkit().sync();
 
-        long time = System.nanoTime();
-        long diff = time - this.last;
-        this.last = time;
-        double elapsedTime = diff / (NANO_TO_BASE / 60);
-        this.world.update(elapsedTime);
-        this.update(elapsedTime);
+        long now = System.nanoTime();
+        long updateLength = now - this.lastTime;
+        this.lastTime = now;
+        double deltaTime = updateLength / OPTIMAL_TIME;
+        this.lastTime += updateLength;
+
+        this.world.update(deltaTime);
+        this.update(deltaTime);
     }
 
     /**
@@ -512,7 +518,9 @@ public class CopilotGUI extends JFrame {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this, this.score);
+        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(this);
+        GameOverGUI goGUI = new GameOverGUI(this.score);
+        frameToClose.dispose();
     }
 
     /**
