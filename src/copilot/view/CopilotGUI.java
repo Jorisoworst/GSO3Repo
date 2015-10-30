@@ -34,7 +34,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
@@ -51,14 +50,15 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final long NANO_TO_BASE = 1000000000;
-    public static final int BULLET_FORCE = 25;
-    public static final int FORCE = 7;
+    public static final double NANO_TO_BASE = 1.0e9;
+    public static final double BULLET_FORCE = 25;
+    public static final double FORCE = 7;
     public static final int TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
+    private double zebraForce;
     private long last, lastTime;
-    private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
+    private int screenWidth, screenHeight, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
     private Canvas canvas;
     private World world;
     private Random rnd;
@@ -201,7 +201,7 @@ public class CopilotGUI {
         long time = System.nanoTime();
         long diff = time - this.last;
         this.last = time;
-        long elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
+        double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
 
         this.world.update(elapsedTime);
         this.update(elapsedTime);
@@ -244,7 +244,7 @@ public class CopilotGUI {
      *
      * @param elapsedTime the total elapsed time since the last frame.
      */
-    protected void update(long elapsedTime) {
+    protected void update(double elapsedTime) {
         String key = this.gameController.KEY_PRESSED;
 
         if (key.equals("ESCAPE")) {
@@ -252,7 +252,7 @@ public class CopilotGUI {
         }
 
         this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
-        
+
         if (this.spawnTimer >= 75) {
             if ((rnd.nextInt(5) + 1) % 5 == 0) {
                 spawnObject("P");
@@ -401,7 +401,7 @@ public class CopilotGUI {
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
-                this.speedLabel.setText("Speed: " + this.zebraForce);
+                this.speedLabel.setText("Speed: " + (int) this.zebraForce);
                 this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
                 if (!this.world.containsBody(airplane)) {
@@ -447,7 +447,7 @@ public class CopilotGUI {
                     this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
                     randomY
             );
-            
+
             this.world.addBody(go);
         }
     }

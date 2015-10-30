@@ -11,7 +11,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -29,7 +28,7 @@ public class GameOverGUI {
 
     private final String gameOverText;
     private final int score;
-    private JFrame frame;
+    private final JFrame frame;
     private JPanel contentPane;
     private JLabel gameOverLabel, scoreLabel;
     private Font font;
