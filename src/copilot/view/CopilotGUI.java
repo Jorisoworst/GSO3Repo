@@ -204,6 +204,7 @@ public class CopilotGUI extends JFrame {
         long diff = time - this.last;
         this.last = time;
         double elapsedTime = diff / (NANO_TO_BASE / 60);
+        
         if (elapsedTime >= 1) {
             this.world.update(elapsedTime);
             this.update(elapsedTime);
@@ -315,7 +316,7 @@ public class CopilotGUI extends JFrame {
 
                 this.speedTimer += elapsedTime;
 
-                if (this.speedTimer >= 50) {
+                if (this.speedTimer >= 100) {
                     this.zebraForce++;
                     this.speedTimer = 0;
                 }
@@ -388,12 +389,12 @@ public class CopilotGUI extends JFrame {
                     this.world.removeBody(airplane);
                 }
 
-                this.score += (elapsedTime * this.zebraForce) / 10;
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
                 this.speedLabel.setText("Speed: " + this.zebraForce);
+                this.score += (elapsedTime * this.zebraForce) / 20;
                 this.backgroundX -= 1 * (elapsedTime * (this.zebraForce / 2));
 
                 if (!this.world.containsBody(airplane)) {
