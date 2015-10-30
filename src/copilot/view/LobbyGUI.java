@@ -92,7 +92,7 @@ public class LobbyGUI {
             modelUsers.addElement(userInList.getUsername());
         }
         
-        // TODO
+        // TODO kan pas echt gaan werken wanneer RMI goed werkzaam is
         joinButton.addActionListener(new ActionListener() {
 
             @Override
