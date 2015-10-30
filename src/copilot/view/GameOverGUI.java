@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -32,13 +33,13 @@ public class GameOverGUI extends JFrame {
     private Font font;
     private int score;
 
-    public GameOverGUI(CopilotGUI copilotGUI, int score) {
+    public GameOverGUI(int score) {
         super("CoPilot - Game Over");
         this.gameOverText = "Game Over";
         this.score = score;
         this.createGUI();
         this.setContentPane(this.contentPane);
-        this.setPreferredSize(copilotGUI.getPreferredSize());
+        this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setResizable(false);
@@ -47,7 +48,6 @@ public class GameOverGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setLayout(new GridBagLayout());
-        copilotGUI.dispose();
     }
 
     public void createGUI() {

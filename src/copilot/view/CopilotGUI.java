@@ -36,6 +36,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
@@ -517,7 +518,9 @@ public class CopilotGUI extends JFrame {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this, this.score);
+        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(this);
+        GameOverGUI goGUI = new GameOverGUI(this.score);
+        frameToClose.dispose();
     }
 
     /**
