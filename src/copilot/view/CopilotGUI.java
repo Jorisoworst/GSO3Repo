@@ -215,10 +215,10 @@ public class CopilotGUI extends JFrame {
      */
     protected void render(Graphics2D g) {
         g.drawImage(this.backgroundImage, this.backgroundX, 0, null);
-        
+
         if (this.backgroundX <= 0) {
             g.drawImage(this.backgroundImage, this.backgroundX + this.backgroundImage.getWidth(null), 0, null);
-            
+
             if (this.backgroundX <= -this.backgroundImage.getWidth(null)) {
                 this.backgroundX = 0;
             }
@@ -265,9 +265,9 @@ public class CopilotGUI extends JFrame {
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    this.animationTimer += 1 * (elapsedTime * 100);
+                    this.animationTimer += 1 * (elapsedTime * this.fps);
 
-                    if (this.animationTimer >= 20) {
+                    if (this.animationTimer >= this.fps / 5) {
                         if (obstacle.getImage() == this.obstacleImage2) {
                             obstacle.setImage(this.obstacleImage1);
                         } else {
@@ -303,32 +303,29 @@ public class CopilotGUI extends JFrame {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
-                this.fuelTimer += 1 * (elapsedTime * 100);
+                this.fuelTimer += 1 * (elapsedTime * this.fps);
 
-                if (this.fuelTimer >= 25) {
+                if (this.fuelTimer >= this.fps / 4) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
 
-                this.speedTimer += 1 * (elapsedTime * 100);
+                this.speedTimer += 1 * (elapsedTime * this.fps);
 
-                if (this.speedTimer >= 25) {
+                if (this.speedTimer >= this.fps / 4) {
                     this.zebraForce++;
                     this.speedTimer = 0;
-                    this.speedLabel.setText("Speed: " + this.zebraForce);
                     this.score += 1 * (elapsedTime * this.zebraForce);
                 }
 
-                this.fpsTimer += 1 * (elapsedTime * 100);
+                this.fpsTimer += 1 * (elapsedTime * this.fps);
 
-                if (this.fpsTimer >= 100) {
+                if (this.fpsTimer >= this.fps / 2) {
                     this.fpsTimer = 0;
                     this.fpsLabel.setText("FPS:" + this.fps);
                 }
 
                 airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));
-
-                this.altLabel.setText("Alt: " + airplane.getAltitude());
 
                 switch (key) {
                     case "UP": {
@@ -390,8 +387,10 @@ public class CopilotGUI extends JFrame {
                 }
 
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
+                this.altLabel.setText("Alt: " + airplane.getAltitude());
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
+                this.speedLabel.setText("Speed: " + this.zebraForce);
                 this.backgroundX -= 1 * (elapsedTime * (this.zebraForce / 2));
 
                 if (!this.world.containsBody(airplane)) {
