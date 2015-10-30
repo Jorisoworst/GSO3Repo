@@ -204,12 +204,8 @@ public class CopilotGUI extends JFrame {
         long diff = time - this.last;
         this.last = time;
         double elapsedTime = diff / (NANO_TO_BASE / 60);
-        
-        if (elapsedTime >= 1) {
-            this.world.update(elapsedTime);
-            this.update(elapsedTime);
-            elapsedTime--;
-        }
+        this.world.update(elapsedTime);
+        this.update(elapsedTime);
     }
 
     /**
