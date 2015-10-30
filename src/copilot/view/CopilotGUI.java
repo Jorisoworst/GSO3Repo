@@ -52,11 +52,9 @@ public class CopilotGUI extends JFrame {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final int TARGET_FPS = 60;
-    public static final long NANO_TO_BASE = 1000000000;
-    public static final long OPTIMAL_TIME = NANO_TO_BASE / TARGET_FPS;
-    public static final double BULLET_FORCE = 20;
-    public static final double FORCE = 5;
+    public static final double NANO_TO_BASE = 1.0e9;
+    public static final double BULLET_FORCE = 2000;
+    public static final double FORCE = 500;
     private final GameController gameController;
     private double zebraForce;
     private int fps, lives, score, backgroundX, fpsTimer, fuelTimer, speedTimer, animationTimer;
@@ -70,7 +68,7 @@ public class CopilotGUI extends JFrame {
     protected World world;
     protected int screenWidth, screenHeight;
     protected boolean stopped;
-    protected long lastTime;
+    protected long last, lastTime;
 
     /**
      * Constructor for this gui.
@@ -164,6 +162,7 @@ public class CopilotGUI extends JFrame {
      * Start rendering the game.
      */
     public void start() {
+        this.last = System.nanoTime();
         this.canvas.setIgnoreRepaint(true);
         this.canvas.createBufferStrategy(2);
 
@@ -172,9 +171,7 @@ public class CopilotGUI extends JFrame {
             public void run() {
                 while (!isStopped()) {
                     lastTime = System.nanoTime();
-
                     gameLoop();
-
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     lastTime = System.nanoTime();
                 }
@@ -203,14 +200,13 @@ public class CopilotGUI extends JFrame {
 
         Toolkit.getDefaultToolkit().sync();
 
-        long now = System.nanoTime();
-        long updateLength = now - this.lastTime;
-        this.lastTime = now;
-        double deltaTime = updateLength / OPTIMAL_TIME;
-        this.lastTime += updateLength;
-
-        this.world.update(deltaTime);
-        this.update(deltaTime);
+        long time = System.nanoTime();
+        long diff = time - this.last;
+        this.last = time;
+        double elapsedTime = diff / NANO_TO_BASE;
+        
+        this.world.update(elapsedTime);
+        this.update(elapsedTime);
     }
 
     /**
@@ -234,13 +230,13 @@ public class CopilotGUI extends JFrame {
             go.render(g);
 
             if (DEBUG_MODE) {
-                Vector2 v = go.getTransform().getTranslation();
-                Double d1 = go.getWidth();
-                Double d2 = go.getHeight();
-                Double d3 = v.x;
-                Double d4 = v.y;
+                Vector2 gameObjectLocation = go.getTransform().getTranslation();
+                Double gameObjectWidth = go.getWidth();
+                Double gameObjectHeight = go.getHeight();
+                Double gameObjectX = gameObjectLocation.x;
+                Double gameObjectY = gameObjectLocation.y;
                 g.setColor(Color.MAGENTA);
-                g.fillRect(d3.intValue(), d4.intValue(), d1.intValue(), d2.intValue());
+                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth.intValue(), gameObjectHeight.intValue());
             }
         }
     }
@@ -270,7 +266,7 @@ public class CopilotGUI extends JFrame {
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    this.animationTimer += elapsedTime;
+                    this.animationTimer += (elapsedTime * 100);
 
                     if (this.animationTimer >= 25) {
                         if (obstacle.getImage() == this.obstacleImage2) {
@@ -308,24 +304,24 @@ public class CopilotGUI extends JFrame {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
-                this.fuelTimer += elapsedTime;
+                this.fuelTimer += (elapsedTime * 100);
 
                 if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
 
-                this.speedTimer += elapsedTime;
+                this.speedTimer += (elapsedTime * 100);
 
                 if (this.speedTimer >= 100) {
                     this.zebraForce++;
                     this.speedTimer = 0;
                 }
 
-                this.fpsTimer += elapsedTime;
+                this.fpsTimer += (elapsedTime * 100);
 
                 if (this.fpsTimer >= 50) {
-                    this.fpsLabel.setText("FPS:" + this.fps);
+                    this.fpsLabel.setText("FPS: " + this.fps);
                     this.fpsTimer = 0;
                 }
 
