@@ -51,13 +51,13 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final long NANO_TO_BASE = 1000000000;
+    public static final double NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
-    public static final int TARGET_FPS = 60;
+    public static final double TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
-    private long last, lastTime;
+    private double last, lastTime;
     private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
     private Canvas canvas;
     private World world;
@@ -198,11 +198,10 @@ public class CopilotGUI {
 
         Toolkit.getDefaultToolkit().sync();
 
-        long time = System.nanoTime();
-        long diff = time - this.last;
+        double time = System.nanoTime();
+        double diff = time - this.last;
         this.last = time;
-        long elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
-
+        double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
         this.world.update(elapsedTime);
         this.update(elapsedTime);
     }
@@ -244,7 +243,7 @@ public class CopilotGUI {
      *
      * @param elapsedTime the total elapsed time since the last frame.
      */
-    protected void update(long elapsedTime) {
+    protected void update(double elapsedTime) {
         String key = this.gameController.KEY_PRESSED;
 
         if (key.equals("ESCAPE")) {
