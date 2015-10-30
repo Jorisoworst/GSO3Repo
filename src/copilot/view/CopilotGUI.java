@@ -468,7 +468,7 @@ public class CopilotGUI extends JFrame {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this);
+        GameOverGUI goGUI = new GameOverGUI(this, this.score);
     }
 
     /**

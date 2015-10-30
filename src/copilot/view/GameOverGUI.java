@@ -28,12 +28,14 @@ public class GameOverGUI extends JFrame {
 
     private final String gameOverText;
     private JPanel contentPane;
-    private JLabel gameOverLabel;
+    private JLabel gameOverLabel, scoreLabel;
     private Font font;
+    private int score;
 
-    public GameOverGUI(CopilotGUI copilotGUI) {
+    public GameOverGUI(CopilotGUI copilotGUI, int score) {
         super("CoPilot - Game Over");
         this.gameOverText = "Game Over";
+        this.score = score;
         this.createGUI();
         this.setContentPane(this.contentPane);
         this.setPreferredSize(copilotGUI.getPreferredSize());
@@ -57,10 +59,15 @@ public class GameOverGUI extends JFrame {
             Logger.getLogger(LaunchGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.gameOverLabel = new JLabel(this.gameOverText);
+        this.gameOverLabel = new JLabel(gameOverText);
         this.gameOverLabel.setForeground(Color.WHITE);
         this.gameOverLabel.setFont(this.font);
         this.gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        this.scoreLabel = new JLabel("Score: " + this.score);
+        this.scoreLabel.setForeground(Color.WHITE);
+        this.scoreLabel.setFont(this.font);
+        this.scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         this.contentPane = new JPanel() {
             @Override
@@ -72,5 +79,6 @@ public class GameOverGUI extends JFrame {
 
         this.contentPane.setLayout(new BorderLayout());
         this.contentPane.add(this.gameOverLabel, BorderLayout.CENTER);
+        this.contentPane.add(this.scoreLabel, BorderLayout.SOUTH);
     }
 }
