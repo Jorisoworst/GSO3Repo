@@ -41,10 +41,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainMenuGUI {
     private Clip clip;
-    private Font font, sizedFont = null;
-    private Image bgImage;
-    protected int screenWidth, screenHeight;
+    private Font font, sizedFont;
+    private Image mainMenuScreen;
     private AudioInputStream hover, click;
+    
+    protected int screenWidth, screenHeight;
 
     public MainMenuGUI(User userLoggedIn) {
         try {
@@ -56,32 +57,37 @@ public class MainMenuGUI {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         this.screenWidth = size.width;
         this.screenHeight = size.height;
+        
+        JFrame frame = new JFrame("CO-Pilot Main Menu");
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
 
         try {
-            this.bgImage = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
-            this.bgImage = this.bgImage.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            this.mainMenuScreen = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
+            this.mainMenuScreen = this.mainMenuScreen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            
             // load font
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
             this.font = Font.createFont(Font.TRUETYPE_FONT, is);
             this.font = this.font.deriveFont(Font.PLAIN, 30);
             this.sizedFont = this.font.deriveFont(Font.PLAIN, 32);
-
         } catch (IOException | FontFormatException ex) {
             Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        JFrame frame = new JFrame("CO-Pilot Main Menu");
-        frame.setSize(screenWidth, screenHeight);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        
         JPanel panel = new JPanel();
         frame.add(panel);
         placeComponents(panel, userLoggedIn);
+        
         frame.setVisible(true);
     }
 
     private void placeComponents(JPanel panel, User user) {
-
         panel.setLayout(null);
 
         JButton joinButton = new JButton("JOIN");
@@ -222,7 +228,7 @@ public class MainMenuGUI {
             }
         });
 
-        JLabel bg = new JLabel(new ImageIcon(bgImage));
+        JLabel bg = new JLabel(new ImageIcon(mainMenuScreen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         panel.add(bg);
 

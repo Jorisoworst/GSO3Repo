@@ -1,8 +1,10 @@
 package copilot.view;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -26,16 +28,15 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LaunchGUI {
-    private Clip clip;
-    private Font font, sizedFont = null;
+    private Clip clickClip;
+    private Font font;
     private Image launchScreen;
-    private AudioInputStream launchClick;
+    private AudioInputStream click;
     
     protected int screenWidth, screenHeight;
     
     public static void main(String[] args) {
         LaunchGUI l = new LaunchGUI();
-
     }
 
     public LaunchGUI() {
@@ -45,31 +46,36 @@ public class LaunchGUI {
             System.out.println(e.getMessage());
         }
 
-//        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-//        this.screenWidth = size.width;
-//        this.screenHeight = size.height;
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        this.screenWidth = size.width;
+        this.screenHeight = size.height;
         
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+        JFrame frame = new JFrame("CO-Pilot Launch Screen");
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        
         try {
             this.launchScreen = ImageIO.read(this.getClass().getClassLoader().getResource("launch_screen_copilot.png"));
+            this.launchScreen = this.launchScreen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            
+            // load font
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
             this.font = Font.createFont(Font.TRUETYPE_FONT, is);
+            this.font = this.font.deriveFont(Font.PLAIN, this.screenHeight / 25);
             
-            URL launch = this.getClass().getResource("/sounds/click.wav");
-            this.launchClick = AudioSystem.getAudioInputStream(launch);
-
-            this.clip = AudioSystem.getClip();
-            this.clip.open(launchClick);
-            
+            // load sound
+            URL clickURL = this.getClass().getResource("/sounds/click.wav");
+            this.click = AudioSystem.getAudioInputStream(clickURL);
+            this.clickClip = AudioSystem.getClip();
+            this.clickClip.open(click);
         } catch (FontFormatException | IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
             Logger.getLogger(LaunchGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.font = this.font.deriveFont(Font.PLAIN, 30);
-        this.sizedFont = this.font.deriveFont(Font.PLAIN, 32);
-
-        JFrame frame = new JFrame("CO-Pilot launch screen");
-        frame.setSize(815, 530);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -83,19 +89,17 @@ public class LaunchGUI {
 
         JButton launchButton = new JButton("LAUNCH");
         launchButton.setFont(font);
-        launchButton.setBounds(290, 10, 240, 50);
+        launchButton.setBounds(this.screenWidth / 2 - this.screenWidth / 5 / 2, this.screenHeight / 36, this.screenWidth / 5, this.screenHeight / 9);
         panel.add(launchButton);
-
         
         JLabel bg = new JLabel(new ImageIcon(launchScreen));
-        bg.setBounds(0, 0, 800, 500);
+        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         panel.add(bg);
-        
 
         launchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clip.start();
+                clickClip.start();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 LoginGUI login = new LoginGUI();
                 frameToClose.dispose();
