@@ -5,7 +5,10 @@
  */
 package copilot.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,7 +51,11 @@ public class GameAdministration {
         }
         
         if (this.dbAdmin != null) {
-            this.users = this.dbAdmin.GetUsers();
+            try {
+                this.users = this.dbAdmin.GetUsers();
+            } catch (IOException ex) {
+                Logger.getLogger(GameAdministration.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             this.users = new ArrayList<>();
         }
@@ -139,7 +146,11 @@ public class GameAdministration {
         }
         
         if (this.dbAdmin != null) {
-            this.users = this.dbAdmin.GetUsers();
+            try {
+                this.users = this.dbAdmin.GetUsers();
+            } catch (IOException ex) {
+               return null;
+            }
         
             for (User user : this.users) {
                 if (user.getId() == userId) {
@@ -161,7 +172,11 @@ public class GameAdministration {
         }
         
         if (this.dbAdmin != null) {
-            this.users = this.dbAdmin.GetUsers();
+            try {
+                this.users = this.dbAdmin.GetUsers();
+            } catch (IOException ex) {
+                return null;
+            }
         }
         
         for (User user : this.users) {
@@ -253,7 +268,11 @@ public class GameAdministration {
         }
         
         if (this.dbAdmin != null) {
-            this.users = this.dbAdmin.GetUsers();
+            try {
+                this.users = this.dbAdmin.GetUsers();
+            } catch (IOException ex) {
+                return false;
+            }
 
             if(this.users != null) {
                 for (User user : this.users) {

@@ -10,6 +10,7 @@ import copilot.domain.GameSetting;
 import copilot.domain.Player;
 import copilot.domain.Score;
 import copilot.domain.User;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -60,26 +61,36 @@ public class DatabaseAdministrationTest {
 
     public User AddTestUser()
     {
-        Random random = new Random();
-        int randomInt = random.nextInt(100);
-        User user = new Player("TestUser"+randomInt, "testPassword", "", Calendar.getInstance());
-        user.setDisplayName("TestDisplayName");
-        user.setRegistrationDate(Calendar.getInstance());
-        User resultUser = dbAdmin.AddUser(user);
-        if(resultUser != null)
-        {
-            this.testAccountId = resultUser.getId();
-            return resultUser;
-        }
-        else
-        {
+        try {
+            Random random = new Random();
+            int randomInt = random.nextInt(10000);
+            User user = new Player("TestUser"+randomInt, "testPassword", "", Calendar.getInstance());
+            user.setDisplayName("TestDisplayName");
+            user.setRegistrationDate(Calendar.getInstance());
+            User resultUser = dbAdmin.AddUser(user);
+            if(resultUser != null)
+            {
+                this.testAccountId = resultUser.getId();
+                return resultUser;
+            }
+            else
+            {
+                return null;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
     
     public boolean DeleteTestUser()
     {
-        return dbAdmin.DeleteUser(testAccountId);
+        try {
+            return dbAdmin.DeleteUser(testAccountId);
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     
@@ -96,7 +107,7 @@ public class DatabaseAdministrationTest {
      * Test of DeleteUser method, of class DatabaseAdministration.
      */
     @Test
-    public void testDeleteUser() {
+    public void testDeleteUser() throws IOException {
         User testUser = AddTestUser();
         boolean result = dbAdmin.DeleteUser(testUser.getId());
         assertTrue(result);
@@ -107,22 +118,27 @@ public class DatabaseAdministrationTest {
      */
     @Test
     public void testGetUsers() {
-        //just test if we successfully get users from database.
-        AddTestUser();
-        boolean foundAddedUser = false;
-        List<User> result = dbAdmin.GetUsers();
-        if(result.size() > 0)
-        {
-            for (User usr : result)
+        try {
+            //just test if we successfully get users from database.
+            AddTestUser();
+            boolean foundAddedUser = false;
+            List<User> result = dbAdmin.GetUsers();
+            if(result.size() > 0)
             {
-                if(usr.getId() == testAccountId)
+                for (User usr : result)
                 {
-                    foundAddedUser = true;
+                    if(usr.getId() == testAccountId)
+                    {
+                        foundAddedUser = true;
+                    }
                 }
             }
+            assertTrue(foundAddedUser);
+            DeleteTestUser();
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Error database connection.");
         }
-        assertTrue(foundAddedUser);
-        DeleteTestUser();
         
     }
    
@@ -131,7 +147,7 @@ public class DatabaseAdministrationTest {
      * Test of UpdateUser method, of class DatabaseAdministration.
      */
     @Test
-    public void testUpdateUser() {
+    public void testUpdateUser() throws IOException {
         User testUser = AddTestUser();
         testUser.setDisplayName("testUserUpdated");
         testUser.setIsBanned(true);
@@ -171,8 +187,12 @@ public class DatabaseAdministrationTest {
         
         //then add score
         Score score = new Score(900, user1.getId(), user2.getId(), user3.getId(), user4.getId());
-        return dbAdmin.AddScore(score);
-        
+        try {
+            return dbAdmin.AddScore(score);
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     public void DeleteTestScore()
@@ -184,11 +204,17 @@ public class DatabaseAdministrationTest {
             int user2Id = this.testScoreObj.getUser2id();
             int user3Id = this.testScoreObj.getUser3id();
             int user4Id = this.testScoreObj.getUser4id();
+               try {
             dbAdmin.DeleteScore(testScoreObj.getScoreId());
             dbAdmin.DeleteUser(user1Id);
-            dbAdmin.DeleteUser(user2Id);
+         
+                dbAdmin.DeleteUser(user2Id);
+           
             dbAdmin.DeleteUser(user3Id);
             dbAdmin.DeleteUser(user4Id);
+             } catch (IOException ex) {
+                Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
         }
         
@@ -202,7 +228,10 @@ public class DatabaseAdministrationTest {
         Score score = AddTestScore();
         assertNotNull(score);
         //add asserts to check if user id's are not 0
-        List<Score> allScores = dbAdmin.SelectScore();
+        List<Score> allScores;
+        try {
+            allScores = dbAdmin.SelectScore();
+       
         boolean isAdded = false;
         for (Score sc : allScores)
             {
@@ -219,6 +248,10 @@ public class DatabaseAdministrationTest {
             }
         assertTrue("added score does not exist in list.",isAdded);
         DeleteTestScore();
+         } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+              fail("error making db connection.");
+        }
     }
     
 
@@ -227,8 +260,12 @@ public class DatabaseAdministrationTest {
      */
     @Test
     public void testSelectScore() {
-        List<Score> result = dbAdmin.SelectScore();
-        assertNotNull(result); //if null then exception occured.
+        try {
+            List<Score> result = dbAdmin.SelectScore();
+            assertNotNull(result); //if null then exception occured.
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
@@ -254,7 +291,10 @@ public class DatabaseAdministrationTest {
     @Test
     public void testGetAndSaveGameSetting() {
         
-        GameSetting result = dbAdmin.GetGameSetting();
+        GameSetting result;
+        try {
+            result = dbAdmin.GetGameSetting();
+       
         boolean addesTested = false;
         if(result == null)
         {
@@ -276,6 +316,10 @@ public class DatabaseAdministrationTest {
             //didn't test adding, so will try to resave the current result.
             boolean saved = dbAdmin.SaveGameSetting(result);
             assertTrue(saved);
+        }
+         } catch (IOException ex) {
+            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("error making db connection.");
         }
     }
     

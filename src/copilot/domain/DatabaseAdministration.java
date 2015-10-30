@@ -161,7 +161,10 @@ public class DatabaseAdministration {
                     st.setString(11, "P");
                 }
                 int resultId = st.executeUpdate();
-
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()){
+                    resultId =rs.getInt(1);
+                }
                 user.setId(resultId);
                 return user;
             }
@@ -279,6 +282,10 @@ public class DatabaseAdministration {
                 st.setInt(4, score.getUser3id());
                 st.setInt(5, score.getUser4id());
                 int resultId = st.executeUpdate();
+                 ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()){
+                    resultId =rs.getInt(1);
+                }
                 score.setScoreId(resultId);
                 
                 return score;
