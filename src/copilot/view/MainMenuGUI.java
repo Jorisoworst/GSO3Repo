@@ -243,7 +243,7 @@ public class MainMenuGUI {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 Session session = GameAdministration.getInstance().createSession(user);
                 session.addUser(user);
-                SessionGUI sessionGUI = new SessionGUI(session);
+                SessionGUI sessionGUI = new SessionGUI(session, user);
                 frameToClose.dispose();
             }
         });
