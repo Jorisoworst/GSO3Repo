@@ -13,7 +13,7 @@ import org.dyn4j.geometry.Vector2;
  * @author IndyGames
  */
 public class Bullet extends GameObject {
-    private Vector2 location;
+    private final Vector2 location;
 
     public Bullet(Image image, Vector2 location) {
         super(image);

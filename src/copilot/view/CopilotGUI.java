@@ -53,8 +53,8 @@ public class CopilotGUI extends JFrame {
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
     public static final double NANO_TO_BASE = 1.0e9;
-    public static final double BULLET_FORCE = 2000;
-    public static final double FORCE = 500;
+    public static final double BULLET_FORCE = 20;
+    public static final double FORCE = 5;
     private final GameController gameController;
     private double zebraForce;
     private int fps, lives, score, backgroundX, fpsTimer, fuelTimer, speedTimer, animationTimer;
@@ -172,7 +172,7 @@ public class CopilotGUI extends JFrame {
                 while (!isStopped()) {
                     lastTime = System.nanoTime();
                     gameLoop();
-                    fps = Math.round(1000000000 / (System.nanoTime() - lastTime));
+                    fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     lastTime = System.nanoTime();
                 }
             }
@@ -203,9 +203,12 @@ public class CopilotGUI extends JFrame {
         long time = System.nanoTime();
         long diff = time - this.last;
         this.last = time;
-        double elapsedTime = diff / NANO_TO_BASE;
-        this.world.update(elapsedTime);
-        this.update(elapsedTime);
+        double elapsedTime = diff / (NANO_TO_BASE / 60);
+        if (elapsedTime >= 1) {
+            this.world.update(elapsedTime);
+            this.update(elapsedTime);
+            elapsedTime--;
+        }
     }
 
     /**
@@ -265,9 +268,9 @@ public class CopilotGUI extends JFrame {
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    this.animationTimer += 1 * (elapsedTime * this.fps);
+                    this.animationTimer += elapsedTime;
 
-                    if (this.animationTimer >= this.fps / 5) {
+                    if (this.animationTimer >= 25) {
                         if (obstacle.getImage() == this.obstacleImage2) {
                             obstacle.setImage(this.obstacleImage1);
                         } else {
@@ -303,26 +306,25 @@ public class CopilotGUI extends JFrame {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
-                this.fuelTimer += 1 * (elapsedTime * this.fps);
+                this.fuelTimer += elapsedTime;
 
-                if (this.fuelTimer >= this.fps / 4) {
+                if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
 
-                this.speedTimer += 1 * (elapsedTime * this.fps);
+                this.speedTimer += elapsedTime;
 
-                if (this.speedTimer >= this.fps / 4) {
+                if (this.speedTimer >= 50) {
                     this.zebraForce++;
                     this.speedTimer = 0;
-                    this.score += 1 * (elapsedTime * this.zebraForce);
                 }
 
-                this.fpsTimer += 1 * (elapsedTime * this.fps);
+                this.fpsTimer += elapsedTime;
 
-                if (this.fpsTimer >= this.fps / 2) {
-                    this.fpsTimer = 0;
+                if (this.fpsTimer >= 50) {
                     this.fpsLabel.setText("FPS:" + this.fps);
+                    this.fpsTimer = 0;
                 }
 
                 airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));
@@ -386,6 +388,7 @@ public class CopilotGUI extends JFrame {
                     this.world.removeBody(airplane);
                 }
 
+                this.score += (elapsedTime * this.zebraForce) / 10;
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
                 this.scoreLabel.setText("Score: " + this.score);
@@ -434,7 +437,7 @@ public class CopilotGUI extends JFrame {
                 obstacle.setMass(MassType.FIXED_LINEAR_VELOCITY);
                 obstacle.translate(
                         this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
-                        this.rnd.nextInt(this.screenHeight - (int) (obstacle.getHeight() * 2)) + obstacle.getHeight() + this.scoreLabel.getHeight()
+                        this.rnd.nextInt(this.screenHeight - (int) obstacle.getHeight() - this.scoreLabel.getHeight()) + obstacle.getHeight() + this.scoreLabel.getHeight()
                 );
                 this.world.addBody(obstacle);
                 break;
@@ -446,7 +449,7 @@ public class CopilotGUI extends JFrame {
                 kerosine.setMass(MassType.FIXED_LINEAR_VELOCITY);
                 kerosine.translate(
                         this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
-                        this.rnd.nextInt(this.screenHeight - (int) (kerosine.getHeight() * 2)) + kerosine.getHeight() + this.scoreLabel.getHeight()
+                        this.rnd.nextInt(this.screenHeight - (int) kerosine.getHeight() - this.scoreLabel.getHeight()) + kerosine.getHeight() + this.scoreLabel.getHeight()
                 );
                 this.world.addBody(kerosine);
                 break;
