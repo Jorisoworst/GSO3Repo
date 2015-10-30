@@ -13,11 +13,12 @@ import java.awt.Image;
  * @author IndyGames
  */
 public class Airplane extends GameObject {
+
     private double pitch;
     private int altitude, speed, maxFuelCapacity, fuelAmount;
     private ArrayList<AirplanePart> airplaneParts;
     private int minimumSpeed = -40;
-    
+
     /**
      * Initialize an instance of the Airplane class which extends GameObject
      *
@@ -40,15 +41,11 @@ public class Airplane extends GameObject {
      * @param pitch the pitch to set
      */
     public void setPitch(double pitch) {
-        if(pitch > 90)
-        {
+        if (pitch > 90) {
             this.pitch = 90;
-        }
-        else if(pitch < -90)
-        {
+        } else if (pitch < -90) {
             this.pitch = -90;
-        }
-        else{
+        } else {
             this.pitch = pitch;
         }
     }
@@ -106,7 +103,7 @@ public class Airplane extends GameObject {
      * @param fuelAmount the fuelAmount to set
      */
     public void setFuelAmount(int fuelAmount) {
-        if (fuelAmount < this.maxFuelCapacity && fuelAmount >= 0) {
+        if (fuelAmount <= this.maxFuelCapacity && fuelAmount >= 0) {
             this.fuelAmount = fuelAmount;
         } else if (fuelAmount > this.maxFuelCapacity) {
             this.fuelAmount = this.maxFuelCapacity;
@@ -126,62 +123,53 @@ public class Airplane extends GameObject {
     public void setAirplaneParts(ArrayList<AirplanePart> airplaneParts) {
         this.airplaneParts = airplaneParts;
     }
-    
-	 /**
-     * Method to update the airplane and its airplaneParts
-     * SPEED: determined by the propeller
-     * AIRPLANE PITCH: determined by elevator
-     * ALTITUDE: determined and calculated in this method.
-     * Speed, pitch and fuel all influances the altitude.
+
+    /**
+     * Method to update the airplane and its airplaneParts SPEED: determined by
+     * the propeller AIRPLANE PITCH: determined by elevator ALTITUDE: determined
+     * and calculated in this method. Speed, pitch and fuel all influances the
+     * altitude.
+     *
      * @return a boolean whether updating the airplane went well or not
      */
     public boolean updateAirplane() {
-       
-        
+
         //get the airplane parts
         Elevator elevator = null;
         Propellor propeller = null;
-        for(AirplanePart part : airplaneParts)
-        {            
-            if(part instanceof Elevator)
-            {
+        for (AirplanePart part : airplaneParts) {
+            if (part instanceof Elevator) {
                 elevator = (Elevator) part;
             }
-            if(part instanceof Propellor)
-            {
+            if (part instanceof Propellor) {
                 propeller = (Propellor) part;
             }
         }
-        if(elevator == null || propeller == null)
-        {
+        if (elevator == null || propeller == null) {
             throw new IllegalStateException("Not all airplane parts are configured");
         }
         double fuelConsumption = propeller.getFuelConsumption();
-        this.fuelAmount -= ((int)Math.round(fuelConsumption));
-        
-        
+        this.fuelAmount -= ((int) Math.round(fuelConsumption));
+
         //calculate the lift, to determen the vertical speed.
         //100 = squire feet wing span (could be adjusted)
         //0.002308 = air density at 1000f
         //-40 minimum.... speed? lift? idonno
         //THIS CALCULATION IS NOT CORRECT YET...
-        double cl = 2 * Math.PI * (this.pitch/100);
+        double cl = 2 * Math.PI * (this.pitch / 100);
         double lift = 0.5 * 0.002308 * Math.pow(speed, 2) * 100 * cl;
         int liftInt = (int) Math.round(lift);
-        int verticalSpeed = minimumSpeed + liftInt * 2; 
+        int verticalSpeed = minimumSpeed + liftInt * 2;
         this.altitude = this.altitude + verticalSpeed;
-        
+
         //if there is no fuel :(
-        if(fuelAmount < 0)
-        {
+        if (fuelAmount < 0) {
             fuelAmount = 0;
-        }
-        else
-        {
+        } else {
             //reset values
-            
+
         }
-        
+
         return true;
     }
 }

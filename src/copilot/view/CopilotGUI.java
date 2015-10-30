@@ -54,8 +54,8 @@ public class CopilotGUI extends JFrame {
     public static final boolean FULLSCREEN = true;
     public static final double NANO_TO_BASE = 1.0e9;
     public static final double BULLET_FORCE = 20;
-    private double force, zebraForce, fuelTimer, speedTimer;
-    private int fps, lives, score;
+    private double force, zebraForce;
+    private int fps, lives, score, fuelTimer, speedTimer;
     private Random rnd;
     private Timer timer;
     private JPanel contentPane, labelPanel;
@@ -95,8 +95,8 @@ public class CopilotGUI extends JFrame {
         this.rnd = new Random();
         this.timer = new Timer();
         this.stopped = false;
-        this.zebraForce = 5;
-        this.force = 5;
+        this.zebraForce = 500;
+        this.force = 500;
         this.lives = 3;
         this.score = 0;
         this.fuelTimer = 0;
@@ -239,6 +239,7 @@ public class CopilotGUI extends JFrame {
      * @param elapsedTime the total elapsed time since the last frame.
      */
     protected void update(double elapsedTime) {
+
         String key = this.gameController.KEY_PRESSED;
 
         if (key.equals("ESCAPE")) {
@@ -252,7 +253,7 @@ public class CopilotGUI extends JFrame {
                 if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
                     this.world.removeBody(go);
                 } else {
-                    go.translate(new Vector2(-zebraForce, 0));
+                    go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
                 }
             } else if (go instanceof Bullet) {
                 Bullet bullet = (Bullet) go;
@@ -280,49 +281,49 @@ public class CopilotGUI extends JFrame {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
-                this.fuelTimer++;
+                this.fuelTimer += 1 * (elapsedTime * 100);
 
                 if (this.fuelTimer == 10) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
                 }
-                
-                this.speedTimer++;
-                
+
+                this.speedTimer += 1 * (elapsedTime * 100);
+
                 if (this.speedTimer == 100) {
-                    this.zebraForce++;
+                    this.zebraForce += 1 * Math.round(elapsedTime * 100);
                     this.speedTimer = 0;
                 }
 
                 airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));
 
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
-                this.speedLabel.setText("Speed: " + zebraForce);
+                this.speedLabel.setText("Speed: " + this.zebraForce);
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.fpsLabel.setText("FPS:" + this.fps);
 
                 switch (key) {
                     case "UP": {
                         if (airplane.getFuelAmount() > 0 && airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
-                            airplane.translate(new Vector2(0, -force));
+                            airplane.translate(new Vector2(0, -this.force * elapsedTime));
                         }
                         break;
                     }
                     case "DOWN": {
                         if (airplaneY + airplaneHeight < this.screenHeight) {
-                            airplane.translate(new Vector2(0, force));
+                            airplane.translate(new Vector2(0, this.force * elapsedTime));
                         }
                         break;
                     }
                     case "LEFT": {
                         if (airplaneX > 0) {
-                            airplane.translate(new Vector2(-force, 0));
+                            airplane.translate(new Vector2(-this.force * elapsedTime, 0));
                         }
                         break;
                     }
                     case "RIGHT": {
                         if (airplaneX + airplaneWidth < this.screenWidth) {
-                            airplane.translate(new Vector2(force, 0));
+                            airplane.translate(new Vector2(this.force * elapsedTime, 0));
                         }
                         break;
                     }
@@ -352,7 +353,9 @@ public class CopilotGUI extends JFrame {
                         airplane.setUserData(null);
                         Kerosine kerosine = (Kerosine) o;
                         this.world.removeBody(kerosine);
+                        System.out.println(airplane.getFuelAmount());
                         airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());
+                        System.out.println(airplane.getFuelAmount());
                     }
                 }
 
