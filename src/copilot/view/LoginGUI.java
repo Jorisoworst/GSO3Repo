@@ -140,11 +140,11 @@ public class LoginGUI {
                 GameAdministration admin = GameAdministration.getInstance();
 
                 // HAS TO BE admin.getDatabaseState()
-                if (admin.getDatabaseState()) {
+                if (true) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
                     // HAS TO BE login
-                    if (login) {
+                    if (true) {
                         LoginGUI.clip.stop();
                         User user = admin.getUser(userText.getText());
                         JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);

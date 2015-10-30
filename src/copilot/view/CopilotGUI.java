@@ -70,28 +70,17 @@ public class CopilotGUI extends JFrame {
     protected long last, lastTime;
 
     /**
-     * Main method.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-
-        CopilotGUI window = new CopilotGUI();
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
-        window.start();
-    }
-
-    /**
      * Constructor for this gui.
      */
     public CopilotGUI() {
         super("CoPilot");
+        
+         try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println(e.getMessage());
+        }
+         
         this.rnd = new Random();
         this.timer = new Timer();
         this.stopped = false;
