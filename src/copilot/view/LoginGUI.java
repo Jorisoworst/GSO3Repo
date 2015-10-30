@@ -4,10 +4,12 @@ import copilot.domain.GameAdministration;
 import copilot.domain.Player;
 import copilot.domain.User;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -44,13 +46,14 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author IndyGames
  */
 public class LoginGUI {
-
-    private static Clip clip;
+    private static Clip clickClip, clip;
     private static URL bgMusic;
-    private Font font, sizedFont = null;
+    private Font font, sizedFont;
     private Image loginScreen;
-    private AudioInputStream backMusic;
+    private AudioInputStream backMusic, click;
 
+    protected int screenWidth, screenHeight;
+    
     public LoginGUI() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -58,85 +61,98 @@ public class LoginGUI {
             System.out.println(e.getMessage());
         }
 
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        this.screenWidth = size.width;
+        this.screenHeight = size.height;
+        
+        JFrame frame = new JFrame("CO-Pilot Launch Screen");
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
         try {
             this.loginScreen = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
-            this.loginScreen = this.loginScreen.getScaledInstance(815, 530, 1);
+            this.loginScreen = this.loginScreen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            
+            // load font
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
             this.font = Font.createFont(Font.TRUETYPE_FONT, is);
+            this.font = this.font.deriveFont(Font.PLAIN, this.screenHeight / 50);
+            this.sizedFont = this.font.deriveFont(Font.PLAIN, this.screenHeight / 100);
+            
             // load sound
+            URL clickURL = this.getClass().getResource("/sounds/click.wav");
+            this.click = AudioSystem.getAudioInputStream(clickURL);
+            this.clickClip = AudioSystem.getClip();
+            this.clickClip.open(click);
+            
             URL bgMusic = this.getClass().getResource("/sounds/game_sound.wav");
-
-            //URL hover = this.getClass().getResource("/sounds/game_sound.wav");
-            //URL click = this.getClass().getResource("/sounds/click.wav");
             this.backMusic = AudioSystem.getAudioInputStream(bgMusic);
-
             LoginGUI.clip = AudioSystem.getClip();
-
             LoginGUI.clip.open(backMusic);
             LoginGUI.clip.loop(Clip.LOOP_CONTINUOUSLY);
-
         } catch (FontFormatException | IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
             Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.font = this.font.deriveFont(Font.PLAIN, 15);
-        this.sizedFont = this.font.deriveFont(Font.PLAIN, 32);
-
-        JFrame frame = new JFrame("CO-Pilot Login");
-        frame.setSize(815, 530);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         frame.add(panel);
         placeComponents(panel);
 
         frame.setVisible(true);
-
     }
 
     private void placeComponents(JPanel panel) {
-
         panel.setLayout(null);
 
         JLabel userLabel = new JLabel("Username");
-        userLabel.setBounds(50, 225, 100, 25);
+        userLabel.setBounds(this.screenWidth / 5, (this.screenHeight / 20) * 6, this.screenWidth / 5, this.screenHeight / 5);
         userLabel.setFont(font);
         panel.add(userLabel);
 
         JTextField userText = new JTextField(20);
-        userText.setBounds(50, 250, 160, 25);
+        userText.setBounds(this.screenWidth / 5, (this.screenHeight / 40) * 17, this.screenWidth / 10, this.screenHeight / 40);
+        userText.setFont(sizedFont);
         panel.add(userText);
 
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(50, 285, 100, 25);
+        passwordLabel.setBounds(this.screenWidth / 5, (this.screenHeight / 20) * 8, this.screenWidth / 5, this.screenHeight / 5);
         passwordLabel.setFont(font);
         panel.add(passwordLabel);
 
         JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(50, 310, 160, 25);
+        passwordText.setBounds(this.screenWidth / 5, (this.screenHeight / 40) * 21, this.screenWidth / 10, this.screenHeight / 40);
+        passwordText.setFont(sizedFont);
         panel.add(passwordText);
 
         JButton loginButton = new JButton("log in");
-        loginButton.setBounds(130, 350, 80, 25);
+        loginButton.setBounds(this.screenWidth / 5 + this.screenWidth / 20, (this.screenHeight / 40) * 23, this.screenWidth / 20, this.screenHeight / 40);
+        loginButton.setFont(sizedFont);
         panel.add(loginButton);
 
         JButton registerButton = new JButton("register");
-        registerButton.setBounds(50, 350, 80, 25);
+        registerButton.setBounds(this.screenWidth / 5, (this.screenHeight / 40) * 23, this.screenWidth / 20, this.screenHeight / 40);
+        registerButton.setFont(sizedFont);
         panel.add(registerButton);
 
         JLabel backLogin = new JLabel();
-        backLogin.setBounds(40, 200, 200, 200);
+        backLogin.setBounds((this.screenWidth / 50) * 9, (this.screenHeight / 50) * 18, this.screenWidth / 7, (this.screenHeight / 40) * 12);
         backLogin.setOpaque(true);
         backLogin.setForeground(Color.GRAY);
         panel.add(backLogin);
 
         JLabel bg = new JLabel(new ImageIcon(loginScreen));
-        bg.setBounds(0, 0, 815, 530);
+        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         panel.add(bg);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clickClip.start();
                 GameAdministration admin = GameAdministration.getInstance();
 
                 // HAS TO BE admin.getDatabaseState()
@@ -164,6 +180,7 @@ public class LoginGUI {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clickClip.start();
 
                 try {
                     if (userText.getText().isEmpty() || passwordText.getText().isEmpty()) {
