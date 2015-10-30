@@ -6,8 +6,13 @@
 package copilot.view;
 
 import copilot.domain.Session;
+import copilot.domain.User;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -17,7 +22,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class SessionGUI {
     
-    public SessionGUI(Session session) {
+    public SessionGUI(Session session, User userLoggedIn) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
@@ -31,13 +36,27 @@ public class SessionGUI {
 
         JPanel panel = new JPanel();
         frame.add(panel);
-        placeComponents(panel, session);
+        placeComponents(panel, session, userLoggedIn);
 
         frame.setVisible(true);
     }
     
-    private static void placeComponents(JPanel panel, Session session) {
+    private static void placeComponents(JPanel panel, Session session, User user) {
         panel.setLayout(null);
+        
+        JButton backButton = new JButton("back");
+        backButton.setBounds(610, 10, 160, 50);
+        panel.add(backButton);
+        
+        backButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
+                LobbyGUI lobby = new LobbyGUI(user);                
+                frameToClose.dispose(); 
+            }
+        });
     }
     
 }
