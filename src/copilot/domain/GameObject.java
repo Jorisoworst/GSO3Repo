@@ -15,9 +15,9 @@ import org.dyn4j.dynamics.Body;
  * @author IndyGames
  */
 public abstract class GameObject extends Body {
+
     private double height, width;
     private Image image;
-//    private boolean isDestroyed;
 
     /**
      * Initialize an instance of the GameObject class which is abstract
@@ -30,7 +30,6 @@ public abstract class GameObject extends Body {
         }
 
         this.image = image;
-//        this.isDestroyed = false;
         this.height = this.image.getHeight(null);
         this.width = this.image.getWidth(null);
     }
@@ -49,39 +48,19 @@ public abstract class GameObject extends Body {
         return this.width;
     }
 
-//    /**
-//     * @return isDestroyed
-//     */
-//    public boolean isDestroyed() {
-//        return this.isDestroyed;
-//    }
-//
-//    /**
-//     * Method to call when the GameObject gets destroyd
-//     */
-//    public void destroy() {
-//        this.isDestroyed = true;
-//    }
-//
-//    /**
-//     * Method to call when a collision happened
-//     *
-//     * @param otherGameObject the GameObject which the airplane collides with,
-//     * may not be null
-//     */
-//    public void onCollision(GameObject otherGameObject) {
-//        if (otherGameObject == null) {
-//            throw new IllegalArgumentException("No other GameObject found!");
-//        }
-//
-//        if (Obstacle.class.isInstance(otherGameObject)) {
-//            this.destroy();
-//        } else if (Pickup.class.isInstance(otherGameObject)) {
-//            ((Pickup) otherGameObject).setPickedUp(true);
-//        }
-//
-//        otherGameObject.destroy();
-//    }
+    /**
+     * @return the image
+     */
+    public Image getImage() {
+        return this.image;
+    }
+
+    /**
+     * @param image the image
+     */
+    public void setImage(Image image) {
+        this.image = image;
+    }
 
     /**
      * Render the object

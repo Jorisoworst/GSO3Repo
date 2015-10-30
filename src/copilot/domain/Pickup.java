@@ -12,6 +12,7 @@ import java.awt.Image;
  * @author IndyGames
  */
 public abstract class Pickup extends GameObject {
+
     private boolean isPickedUp;
 
     /**
