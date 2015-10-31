@@ -51,11 +51,11 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final long NANO_TO_BASE = 1000000000;
+    public static final double NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
     public static final int MINIMAL_FPS = 25;
-    public static int TARGET_FPS = 30;
+    public static double TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
     private long last, lastTime;
@@ -197,8 +197,9 @@ public class CopilotGUI {
         this.last = time;
         //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
         testTime += diff;
-        
         if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            System.out.println("DEBUG: testTime for refresh: " + testTime + " , needed time for refresh: " + (NANO_TO_BASE / TARGET_FPS));
+            
             BufferStrategy strategy = this.canvas.getBufferStrategy();
             Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
@@ -212,6 +213,7 @@ public class CopilotGUI {
             this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
+            System.out.println("DEBUG: testTime after is: " + testTime);
         }
     }
 
