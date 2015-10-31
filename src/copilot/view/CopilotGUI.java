@@ -55,7 +55,7 @@ public class CopilotGUI {
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
     public static final int MINIMAL_FPS = 25;
-    public static int TARGET_FPS = 60;
+    public static int TARGET_FPS = 30;
     private final GameController gameController;
     private boolean stopped;
     private long last, lastTime;
