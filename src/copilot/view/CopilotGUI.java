@@ -54,7 +54,7 @@ public class CopilotGUI {
     public static final double NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
-    public static final int MINIMAL_FPS = 25;
+    public static final int MINIMAL_FPS = 20;
     public static double TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
@@ -175,6 +175,9 @@ public class CopilotGUI {
                     lastTime = System.nanoTime();
                     gameLoop();
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
+                    if (fps <= TARGET_FPS && fps >= MINIMAL_FPS) {
+                        TARGET_FPS = fps;
+                    }
                     lastTime = System.nanoTime();
                 }
             }
