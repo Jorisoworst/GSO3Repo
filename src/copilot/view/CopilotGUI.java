@@ -212,7 +212,7 @@ public class CopilotGUI {
             
             System.out.println("DEBUG: testTime for refresh: " + testTime + " , needed time for refresh: " + (NANO_TO_BASE / TARGET_FPS));
             
-            this.world.update(testTime / (NANO_TO_BASE / 60));
+            this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             this.update(testTime / (NANO_TO_BASE / 60));
             testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
             System.out.println("DEBUG: testTime after is: " + testTime);
