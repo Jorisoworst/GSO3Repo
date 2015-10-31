@@ -189,16 +189,7 @@ public class CopilotGUI {
      * and poll for input.
      */
     protected void gameLoop() {
-        BufferStrategy strategy = this.canvas.getBufferStrategy();
-        Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-
-        this.render(g);
-        g.dispose();
-
-        if (!strategy.contentsLost()) {
-            strategy.show();
-        }
-
+   
         Toolkit.getDefaultToolkit().sync();
 
         long time = System.nanoTime();
@@ -208,6 +199,16 @@ public class CopilotGUI {
         testTime += diff;
         
         if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            BufferStrategy strategy = this.canvas.getBufferStrategy();
+            Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+
+            this.render(g);
+            g.dispose();
+            
+            if (!strategy.contentsLost()) {
+            strategy.show();
+            }
+            
             this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
