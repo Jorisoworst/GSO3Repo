@@ -175,9 +175,6 @@ public class CopilotGUI {
                     lastTime = System.nanoTime();
                     gameLoop();
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
-                    if (fps <= TARGET_FPS && fps >= MINIMAL_FPS) {
-                        TARGET_FPS = MINIMAL_FPS;
-                    }
                     lastTime = System.nanoTime();
                 }
             }
@@ -210,7 +207,7 @@ public class CopilotGUI {
         testTime += diff;
         if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
             this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
-            this.update(testTime / (NANO_TO_BASE / 60));
+            this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
         }
     }
