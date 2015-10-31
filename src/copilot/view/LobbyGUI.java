@@ -5,6 +5,7 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
 import copilot.domain.Session;
 import copilot.domain.User;
@@ -125,7 +126,8 @@ public class LobbyGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);                 
+                MainMenuGUI mainMenu = new MainMenuGUI(user);
+                GUIController.playBackgroundMusic();                
                 frameToClose.dispose(); 
             }
         });

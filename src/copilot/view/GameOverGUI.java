@@ -25,8 +25,7 @@ import javax.swing.SwingConstants;
  *
  * @author IndyGames
  */
-public class GameOverGUI {
-
+public class GameOverGUI{
     private final String gameOverText;
     private final int score;
     private JFrame frame;
@@ -65,14 +64,14 @@ public class GameOverGUI {
 
         JLabel gameOverLabel = new JLabel(gameOverText);
         gameOverLabel.setLayout(new BorderLayout());
-        gameOverLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight));
+        gameOverLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight / 2));
         gameOverLabel.setForeground(Color.WHITE);
         gameOverLabel.setFont(this.font);
         gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel scoreLabel = new JLabel("Score: " + this.score);
         scoreLabel.setLayout(new BorderLayout());
-        scoreLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight));
+        scoreLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight / 2));
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(this.font);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -86,7 +85,7 @@ public class GameOverGUI {
         };
 
         this.contentPane.setLayout(new BorderLayout());
-        this.contentPane.add(gameOverLabel, BorderLayout.CENTER);
+        this.contentPane.add(gameOverLabel, BorderLayout.NORTH);
         this.contentPane.add(scoreLabel, BorderLayout.SOUTH);
     }
 }

@@ -5,6 +5,7 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.domain.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +41,7 @@ public class CreditsGUI {
         frame.setVisible(true);
     }
     
-    private static void placeComponents(JPanel panel, User user) {
+    private void placeComponents(JPanel panel, User user) {
         
         panel.setLayout(null); 
         
@@ -53,7 +54,7 @@ public class CreditsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);                 
+                MainMenuGUI mainMenu = new MainMenuGUI(user);          
                 frameToClose.dispose(); 
             }
         });

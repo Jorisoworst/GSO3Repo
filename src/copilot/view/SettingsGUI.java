@@ -5,6 +5,7 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.domain.User;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -74,7 +75,7 @@ public class SettingsGUI {
         frame.setVisible(true);
     }
     
-    private static void placeComponents(JPanel panel, User user) {
+    private void placeComponents(JPanel panel, User user) {
         
         panel.setLayout(null); 
         
@@ -87,7 +88,7 @@ public class SettingsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);                 
+                MainMenuGUI mainMenu = new MainMenuGUI(user);
                 frameToClose.dispose(); 
             }
         });
