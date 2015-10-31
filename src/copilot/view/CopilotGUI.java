@@ -220,7 +220,7 @@ public class CopilotGUI {
             
             this.world.update(testTime / (NANO_TO_BASE / 60));
             this.update(testTime / (NANO_TO_BASE / 60));
-            testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
+            testTime = 0 + (testTime - (NANO_TO_BASE / 60));
             System.out.println("DEBUG: testTime after is: " + testTime);
         }
     }
