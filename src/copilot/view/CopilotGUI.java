@@ -51,11 +51,10 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final double NANO_TO_BASE = 1000000000;
+    public static final long NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
-    public static final int MINIMAL_FPS = 20;
-    public static double TARGET_FPS = 60;
+    public static final int TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
     private long last, lastTime;
@@ -188,8 +187,7 @@ public class CopilotGUI {
      * The method calling the necessary methods to update the game, graphics,
      * and poll for input.
      */
-    protected void gameLoop() {     
-        Toolkit.getDefaultToolkit().sync();
+    protected void gameLoop() {
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
@@ -199,16 +197,19 @@ public class CopilotGUI {
         if (!strategy.contentsLost()) {
             strategy.show();
         }
-            
+
+        Toolkit.getDefaultToolkit().sync();
+
         long time = System.nanoTime();
         double diff = (double)time - (double)this.last;
         this.last = time;
         //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
         testTime += diff;
+        
         if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
             this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
-            testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
+            testTime = 0;
         }
     }
 
@@ -275,7 +276,7 @@ public class CopilotGUI {
                 if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
                     this.world.removeBody(go);
                 } else {
-                    go.translate(new Vector2((-this.zebraForce * elapsedTime) / 2, 0));
+                    go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
                 }
 
                 if (go instanceof Obstacle) {
@@ -346,13 +347,25 @@ public class CopilotGUI {
                 switch (key) {
                     case "UP": {
                         if (airplane.getFuelAmount() > 0 && airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
-                            airplane.translate(new Vector2(0, (-FORCE * elapsedTime) / 2));
+                            airplane.translate(new Vector2(0, -FORCE * elapsedTime));
                         }
                         break;
                     }
                     case "DOWN": {
                         if (airplaneY + airplaneHeight < this.screenHeight) {
-                            airplane.translate(new Vector2(0, (FORCE * elapsedTime) / 2));
+                            airplane.translate(new Vector2(0, FORCE * elapsedTime));
+                        }
+                        break;
+                    }
+                    case "LEFT": {
+                        if (airplaneX > 0) {
+                            airplane.translate(new Vector2(-FORCE * elapsedTime, 0));
+                        }
+                        break;
+                    }
+                    case "RIGHT": {
+                        if (airplaneX + airplaneWidth < this.screenWidth) {
+                            airplane.translate(new Vector2(FORCE * elapsedTime, 0));
                         }
                         break;
                     }
@@ -395,7 +408,7 @@ public class CopilotGUI {
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
                 this.speedLabel.setText("Speed: " + this.zebraForce);
-                this.backgroundX -= (elapsedTime * this.zebraForce) / 2;
+                this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
                 if (!this.world.containsBody(airplane)) {
                     this.stop();
