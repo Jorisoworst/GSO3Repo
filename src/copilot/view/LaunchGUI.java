@@ -47,18 +47,17 @@ public class LaunchGUI {
         }
 
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
+        this.screenWidth = 800;
+        this.screenHeight = 500;
         
         JFrame frame = new JFrame("CO-Pilot Launch Screen");
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(this.screenWidth, this.screenHeight);
         frame.setUndecorated(true);
         frame.setResizable(false);
-        frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        
+                
         try {
             this.launchScreen = ImageIO.read(this.getClass().getClassLoader().getResource("launch_screen_copilot.png"));
             this.launchScreen = this.launchScreen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
