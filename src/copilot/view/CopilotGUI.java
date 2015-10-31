@@ -51,13 +51,13 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final double NANO_TO_BASE = 1000000000;
+    public static final long NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
-    public static final double TARGET_FPS = 60;
+    public static final int TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
-    private double last, lastTime;
+    private long last, lastTime;
     private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
     private Canvas canvas;
     private World world;
@@ -67,6 +67,8 @@ public class CopilotGUI {
     private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2, kerosineImage;
     private Font font;
+    
+    private double testTime = 0;
 
     /**
      * Constructor for this gui.
@@ -198,12 +200,17 @@ public class CopilotGUI {
 
         Toolkit.getDefaultToolkit().sync();
 
-        double time = System.nanoTime();
-        double diff = time - this.last;
+        long time = System.nanoTime();
+        double diff = (double)time - (double)this.last;
         this.last = time;
-        double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
-        this.world.update(elapsedTime);
-        this.update(elapsedTime);
+        //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
+        testTime += diff;
+        
+        if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            testTime = 0;
+        }
     }
 
     /**
@@ -252,8 +259,8 @@ public class CopilotGUI {
 
         this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
         
-        if (this.spawnTimer >= 75) {
-            if ((rnd.nextInt(5) + 1) % 5 == 0) {
+        if (this.spawnTimer >= 150) {
+            if ((rnd.nextInt(10) + 1) % 10 == 0) {
                 spawnObject("P");
             } else {
                 spawnObject("O");
