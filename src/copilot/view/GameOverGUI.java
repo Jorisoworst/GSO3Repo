@@ -7,10 +7,10 @@ package copilot.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +32,13 @@ public class GameOverGUI {
     private JFrame frame;
     private JPanel contentPane;
     private Font font;
+    private int screenWidth, screenHeight;
 
     public GameOverGUI(int score) {
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        this.screenWidth = size.width;
+        this.screenHeight = size.height;
+        
         this.frame = new JFrame("CoPilot - Game Over");
         this.gameOverText = "Game Over";
         this.score = score;
@@ -60,12 +65,14 @@ public class GameOverGUI {
 
         JLabel gameOverLabel = new JLabel(gameOverText);
         gameOverLabel.setLayout(new BorderLayout());
+        gameOverLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight));
         gameOverLabel.setForeground(Color.WHITE);
         gameOverLabel.setFont(this.font);
         gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel scoreLabel = new JLabel("Score: " + this.score);
         scoreLabel.setLayout(new BorderLayout());
+        scoreLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight));
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(this.font);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);

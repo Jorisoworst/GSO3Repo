@@ -32,8 +32,7 @@ public class LaunchGUI {
     private Font font;
     private Image launchScreen;
     private AudioInputStream click;
-    
-    protected int screenWidth, screenHeight;
+    private int screenWidth, screenHeight;
     
     public static void main(String[] args) {
         LaunchGUI l = new LaunchGUI();
