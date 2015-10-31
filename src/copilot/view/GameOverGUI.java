@@ -31,7 +31,6 @@ public class GameOverGUI {
     private final int score;
     private JFrame frame;
     private JPanel contentPane;
-    private JLabel gameOverLabel, scoreLabel;
     private Font font;
 
     public GameOverGUI(JFrame copilotGUI, int score) {
@@ -48,7 +47,7 @@ public class GameOverGUI {
         this.frame.pack();
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
-        this.frame.setLayout(new GridBagLayout());
+        this.frame.setLayout(new BorderLayout());
     }
 
     private void createGUI() {
@@ -60,15 +59,17 @@ public class GameOverGUI {
             Logger.getLogger(LaunchGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.gameOverLabel = new JLabel(gameOverText);
-        this.gameOverLabel.setForeground(Color.WHITE);
-        this.gameOverLabel.setFont(this.font);
-        this.gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel gameOverLabel = new JLabel(gameOverText);
+        gameOverLabel.setLayout(new BorderLayout());
+        gameOverLabel.setForeground(Color.WHITE);
+        gameOverLabel.setFont(this.font);
+        gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        this.scoreLabel = new JLabel("Score: " + this.score);
-        this.scoreLabel.setForeground(Color.WHITE);
-        this.scoreLabel.setFont(this.font);
-        this.scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel scoreLabel = new JLabel("Score: " + this.score);
+        scoreLabel.setLayout(new BorderLayout());
+        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setFont(this.font);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         this.contentPane = new JPanel() {
             @Override
@@ -79,7 +80,7 @@ public class GameOverGUI {
         };
 
         this.contentPane.setLayout(new BorderLayout());
-        this.contentPane.add(this.gameOverLabel, BorderLayout.CENTER);
-        this.contentPane.add(this.scoreLabel, BorderLayout.SOUTH);
+        this.contentPane.add(gameOverLabel, BorderLayout.CENTER);
+        this.contentPane.add(scoreLabel, BorderLayout.SOUTH);
     }
 }
