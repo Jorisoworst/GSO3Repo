@@ -50,7 +50,7 @@ import org.dyn4j.geometry.Vector2;
 public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
-    public static final boolean FULLSCREEN = true;
+    public static final boolean FULLSCREEN = false;
     public static final double NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
@@ -220,7 +220,7 @@ public class CopilotGUI {
             
             this.world.update(testTime / (NANO_TO_BASE / 60));
             this.update(testTime / (NANO_TO_BASE / 60));
-            testTime = 0 + (testTime - (NANO_TO_BASE / 60));
+            testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
             System.out.println("DEBUG: testTime after is: " + testTime);
         }
     }
@@ -516,7 +516,7 @@ public class CopilotGUI {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this.frame, this.score);
+        GameOverGUI goGUI = new GameOverGUI(this.score);
         this.frame.dispose();
     }
 

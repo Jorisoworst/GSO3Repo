@@ -33,13 +33,12 @@ public class GameOverGUI {
     private JPanel contentPane;
     private Font font;
 
-    public GameOverGUI(JFrame copilotGUI, int score) {
+    public GameOverGUI(int score) {
         this.frame = new JFrame("CoPilot - Game Over");
         this.gameOverText = "Game Over";
         this.score = score;
         this.createGUI();
         this.frame.setContentPane(this.contentPane);
-        this.frame.setPreferredSize(copilotGUI.getPreferredSize());
         this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.frame.setUndecorated(true);
         this.frame.setResizable(false);
