@@ -177,6 +177,12 @@ public class CopilotGUI {
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     if (fps <= TARGET_FPS && fps >= MINIMAL_FPS) {
                         TARGET_FPS = fps;
+                    } else if (fps >= TARGET_FPS) {
+                        if (fps <= 60) {
+                            TARGET_FPS = fps;
+                        } else {
+                            TARGET_FPS = 60;
+                        }
                     }
                     lastTime = System.nanoTime();
                 }
@@ -191,7 +197,8 @@ public class CopilotGUI {
      * The method calling the necessary methods to update the game, graphics,
      * and poll for input.
      */
-    protected void gameLoop() {
+    protected void gameLoop() {     
+        Toolkit.getDefaultToolkit().sync();
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
@@ -201,15 +208,14 @@ public class CopilotGUI {
         if (!strategy.contentsLost()) {
             strategy.show();
         }
-        
-        Toolkit.getDefaultToolkit().sync();
-
+            
         long time = System.nanoTime();
         double diff = (double)time - (double)this.last;
         this.last = time;
         //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
         testTime += diff;
         if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            
             System.out.println("DEBUG: testTime for refresh: " + testTime + " , needed time for refresh: " + (NANO_TO_BASE / TARGET_FPS));
             
             this.world.update(testTime / (NANO_TO_BASE / 60));
