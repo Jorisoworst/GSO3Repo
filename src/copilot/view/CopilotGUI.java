@@ -50,7 +50,7 @@ import org.dyn4j.geometry.Vector2;
 public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
-    public static final boolean FULLSCREEN = false;
+    public static final boolean FULLSCREEN = true;
     public static final double NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
@@ -176,13 +176,7 @@ public class CopilotGUI {
                     gameLoop();
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     if (fps <= TARGET_FPS && fps >= MINIMAL_FPS) {
-                        TARGET_FPS = fps;
-                    } else if (fps >= TARGET_FPS) {
-                        if (fps <= 60) {
-                            TARGET_FPS = fps;
-                        } else {
-                            TARGET_FPS = 60;
-                        }
+                        TARGET_FPS = MINIMAL_FPS;
                     }
                     lastTime = System.nanoTime();
                 }
