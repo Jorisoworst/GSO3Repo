@@ -54,10 +54,10 @@ public class CopilotGUI {
     public static final long NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
-    public static final int TARGET_FPS = 60;
     public static final int MINIMAL_FPS = 25;
+    public static int TARGET_FPS = 60;
     private final GameController gameController;
-    private boolean stopped, fpsPreffered;
+    private boolean stopped;
     private long last, lastTime;
     private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
     private Canvas canvas;
@@ -85,7 +85,6 @@ public class CopilotGUI {
 
         this.rnd = new Random();
         this.stopped = false;
-        this.fpsPreffered = true;
         this.zebraForce = FORCE;
         this.lives = 3;
         this.score = 0;
@@ -175,14 +174,6 @@ public class CopilotGUI {
                 while (!isStopped()) {
                     lastTime = System.nanoTime();
                     gameLoop();
-                    
-                    if (fps == 0) {
-                        fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
-                        
-                        if (fps >= 60) {
-                            fpsPreffered = true;
-                        } 
-                    }
                     fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));
                     lastTime = System.nanoTime();
                 }
@@ -216,18 +207,10 @@ public class CopilotGUI {
         //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
         testTime += diff;
         
-        if (fpsPreffered) {
-            if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
-                this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
-                this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
-                testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
-            }
-        } else {
-            if (testTime >= (NANO_TO_BASE / MINIMAL_FPS)) {
-                this.world.update(testTime / (NANO_TO_BASE / MINIMAL_FPS));
-                this.update(testTime / (NANO_TO_BASE / MINIMAL_FPS));
-                testTime = 0 + (testTime - (NANO_TO_BASE / MINIMAL_FPS));
-            }
+        if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            testTime = 0 + (testTime - (NANO_TO_BASE / TARGET_FPS));
         }
     }
 
@@ -426,7 +409,7 @@ public class CopilotGUI {
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
                 this.speedLabel.setText("Speed: " + this.zebraForce);
-                this.backgroundX -= elapsedTime * (this.zebraForce / 2);
+                this.backgroundX -= (elapsedTime * this.zebraForce) / 2;
 
                 if (!this.world.containsBody(airplane)) {
                     this.stop();
