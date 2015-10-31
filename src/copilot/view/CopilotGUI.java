@@ -278,7 +278,7 @@ public class CopilotGUI {
                 if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
                     this.world.removeBody(go);
                 } else {
-                    go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
+                    go.translate(new Vector2((-this.zebraForce * elapsedTime) / 2, 0));
                 }
 
                 if (go instanceof Obstacle) {
@@ -349,25 +349,13 @@ public class CopilotGUI {
                 switch (key) {
                     case "UP": {
                         if (airplane.getFuelAmount() > 0 && airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
-                            airplane.translate(new Vector2(0, -FORCE * elapsedTime));
+                            airplane.translate(new Vector2(0, (-FORCE * elapsedTime) / 2));
                         }
                         break;
                     }
                     case "DOWN": {
                         if (airplaneY + airplaneHeight < this.screenHeight) {
-                            airplane.translate(new Vector2(0, FORCE * elapsedTime));
-                        }
-                        break;
-                    }
-                    case "LEFT": {
-                        if (airplaneX > 0) {
-                            airplane.translate(new Vector2(-FORCE * elapsedTime, 0));
-                        }
-                        break;
-                    }
-                    case "RIGHT": {
-                        if (airplaneX + airplaneWidth < this.screenWidth) {
-                            airplane.translate(new Vector2(FORCE * elapsedTime, 0));
+                            airplane.translate(new Vector2(0, (FORCE * elapsedTime) / 2));
                         }
                         break;
                     }
