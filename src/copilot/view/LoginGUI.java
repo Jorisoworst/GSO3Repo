@@ -124,7 +124,6 @@ public class LoginGUI {
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 GameAdministration admin = GameAdministration.getInstance();
-//                GUIController.stopBackgroundMusic();
                 // HAS TO BE admin.getDatabaseState()
                 if (true) {
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
