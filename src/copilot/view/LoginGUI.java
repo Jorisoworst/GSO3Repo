@@ -136,7 +136,7 @@ public class LoginGUI {
                         frameToClose.dispose();
                     } else {
                         passwordText.setText(null);
-                        JOptionPane.showMessageDialog(null, "Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Your username and/or password is not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);

@@ -63,7 +63,6 @@ public class LaunchGUI {
         
         JButton launchButton = new JButton("LAUNCH");
         launchButton.setBounds(290, 10, 244, 50);
-//        launchButton.setContentAreaFilled(false);
         launchButton.setFocusPainted(false);
         launchButton.setFont(this.font);
         panel.add(launchButton);

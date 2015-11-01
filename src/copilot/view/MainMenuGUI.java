@@ -233,7 +233,6 @@ public class MainMenuGUI {
             }
         });
         
-        
         JButton singleplayerButton = new JButton("SINGLEPLAYER DEBUG");
         singleplayerButton.setBounds(this.screenWidth - 480, this.screenHeight - 150, 540, 50);
         singleplayerButton.setContentAreaFilled(false);

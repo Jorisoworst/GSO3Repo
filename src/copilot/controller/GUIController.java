@@ -75,9 +75,6 @@ public final class GUIController {
         backgroundClip.stop();
     }
 
-//    /**
-//     * start background movement
-//     */
 //    public void startBackground() {
 //        GUIController.stopped = false;
 //        Thread thread = new Thread() {
