@@ -39,7 +39,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class LoginGUI {
     private final Font font, sizedFont, sizedFont2;
-    private Image screen;
+    private Image screen, logo;
     private int screenWidth, screenHeight;
     
     public LoginGUI() {
@@ -57,7 +57,7 @@ public class LoginGUI {
         
         JFrame frame = new JFrame("CO-Pilot Login Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(this.screenWidth, this.screenHeight);        
+        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setResizable(false);
@@ -65,8 +65,10 @@ public class LoginGUI {
         frame.setLocationRelativeTo(null);
 
         try {
-            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
+            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
             this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            this.logo = ImageIO.read(this.getClass().getClassLoader().getResource("logo.png"));
+            this.logo = this.logo.getScaledInstance(158, 122, 1);
         } catch (IOException ex) {
             GUIController.showExceptionError(ex.toString());
         }
@@ -249,6 +251,10 @@ public class LoginGUI {
         backLogin.setBackground(Color.WHITE);
         panel.add(backLogin);
 
+        JLabel logoImage = new JLabel(new ImageIcon(this.logo));
+        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
+        panel.add(logoImage);
+        
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         panel.add(bg);

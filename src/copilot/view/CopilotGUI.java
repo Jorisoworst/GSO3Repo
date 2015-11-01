@@ -4,6 +4,7 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.controller.GameController;
 import copilot.domain.Airplane;
 import copilot.domain.Bullet;
@@ -163,6 +164,11 @@ public class CopilotGUI {
      * Start rendering the game.
      */
     public void start() {
+        
+        GUIController.playStart();
+        GUIController.playAirplane();
+        GUIController.playGameSound();
+        
         this.last = System.nanoTime();
         this.canvas.setIgnoreRepaint(true);
         this.canvas.createBufferStrategy(2);
@@ -296,7 +302,7 @@ public class CopilotGUI {
                 }
             } else if (go instanceof Bullet) {
                 Bullet bullet = (Bullet) go;
-
+                
                 if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
                     this.world.removeBody(bullet);
                 } else {
@@ -308,6 +314,7 @@ public class CopilotGUI {
                             this.world.removeBody(bullet);
                             this.world.removeBody((Obstacle) o);
                             this.score++;
+                            GUIController.playCollisionBullet();
                         }
                     }
                 }
@@ -321,7 +328,7 @@ public class CopilotGUI {
                 double airplaneY = airplaneTransform.getTranslationY();
 
                 this.fuelTimer += elapsedTime;
-
+                
                 if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
@@ -392,10 +399,12 @@ public class CopilotGUI {
                     if (o instanceof Obstacle) {
                         this.world.removeBody((Obstacle) o);
                         this.lives--;
+                        GUIController.playCollisionBird();
                     } else if (o instanceof Kerosine) {
                         Kerosine kerosine = (Kerosine) o;
                         this.world.removeBody(kerosine);
                         airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());
+                        GUIController.playOilPickUp();
                     }
                 }
 
@@ -516,6 +525,9 @@ public class CopilotGUI {
     }
 
     public void gameOver() {
+        GUIController.playGameOver();
+        GUIController.stopAirplaneSound();
+        GUIController.stopGameSound();
         GameOverGUI goGUI = new GameOverGUI(this.score);
         this.frame.dispose();
     }

@@ -34,7 +34,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainMenuGUI {
     private Font font, sizedFont;
-    private Image screen;
+    private Image screen, logo;
     private int screenWidth, screenHeight;
 
     public MainMenuGUI(User userLoggedIn) {
@@ -50,7 +50,7 @@ public class MainMenuGUI {
         
         JFrame frame = new JFrame("CO-Pilot Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(this.screenWidth, this.screenHeight);        
+        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setResizable(false);
@@ -58,14 +58,16 @@ public class MainMenuGUI {
         frame.setLocationRelativeTo(null);
 
         try {
-            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
+            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
             this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            this.logo = ImageIO.read(this.getClass().getClassLoader().getResource("logo.png"));
+            this.logo = this.logo.getScaledInstance(158, 122, 1);
         } catch (IOException ex) {
             Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        this.font = GUIController.loadFont(this.screenHeight / 36);
-        this.sizedFont = GUIController.loadFont(this.screenHeight / 34);
+        this.font = GUIController.loadFont(30);
+        this.sizedFont = GUIController.loadFont(32);
         
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -87,8 +89,8 @@ public class MainMenuGUI {
         panel.add(logoutButton);
         
         logoutButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-//            LaunchGUI launchGUI = new LaunchGUI();
             GUIController.stopBackgroundMusic();
             LoginGUI loginGUI = new LoginGUI();
             frameToClose.dispose();
@@ -119,6 +121,7 @@ public class MainMenuGUI {
         panel.add(joinButton);        
 
         joinButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             LobbyGUI lobbyGUI = new LobbyGUI(user);
             GUIController.stopBackgroundMusic();
@@ -150,6 +153,7 @@ public class MainMenuGUI {
         panel.add(hostButton);
 
         hostButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             Session session = GameAdministration.getInstance().createSession(user);
             session.addUser(user);
@@ -183,6 +187,7 @@ public class MainMenuGUI {
         panel.add(settingsButton);
 
         settingsButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             SettingsGUI settingsGUI = new SettingsGUI(user);
             frameToClose.dispose();
@@ -213,6 +218,7 @@ public class MainMenuGUI {
         panel.add(creditsButton);
 
         creditsButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             CreditsGUI credits = new CreditsGUI(user);
             frameToClose.dispose();
@@ -233,8 +239,8 @@ public class MainMenuGUI {
             }
         });
         
-        JButton singleplayerButton = new JButton("SINGLEPLAYER DEBUG");
-        singleplayerButton.setBounds(this.screenWidth - 480, this.screenHeight - 150, 540, 50);
+        JButton singleplayerButton = new JButton("SINGLEPLAYER");
+        singleplayerButton.setBounds(40, this.screenHeight - 350, 540, 50);
         singleplayerButton.setContentAreaFilled(false);
         singleplayerButton.setFocusPainted(false);
         singleplayerButton.setFont(this.font);
@@ -242,6 +248,7 @@ public class MainMenuGUI {
         panel.add(singleplayerButton);
         
         singleplayerButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             CopilotGUI game = new CopilotGUI();
             game.start();
@@ -253,17 +260,21 @@ public class MainMenuGUI {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 singleplayerButton.setFont(sizedFont);
-                singleplayerButton.setText(">SINGLEPLAYER DEBUG");
+                singleplayerButton.setText(">SINGLEPLAYER");
                 GUIController.playHover();   
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 singleplayerButton.setFont(font);
-                singleplayerButton.setText("SINGLEPLAYER DEBUG");
+                singleplayerButton.setText("SINGLEPLAYER");
             }
         });
 
+        
+        JLabel logoImage = new JLabel(new ImageIcon(this.logo));
+        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
+        panel.add(logoImage);
         
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);

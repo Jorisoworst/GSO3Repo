@@ -1,8 +1,10 @@
 package copilot.view;
 
 import copilot.controller.GUIController;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -11,14 +13,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LaunchGUI {
-    private final Font font;
+    private final Font font, fontExtraSmall;
     private Image screen;
-    private int screenWidth, screenHeight;
+//    private int screenWidth, screenHeight;
     
     public static void main(String[] args) {
         LaunchGUI launchGUI = new LaunchGUI();
@@ -31,25 +34,25 @@ public class LaunchGUI {
             GUIController.showExceptionError(ex.toString());
         }
         
-        this.screenWidth = 800;
-        this.screenHeight = 500;
+//        this.screenWidth = 815;
+//        this.screenHeight = 530;
         
         JFrame frame = new JFrame("CO-Pilot Launch Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(this.screenWidth, this.screenHeight);
-        frame.setUndecorated(true);
+        frame.setSize(805, 525);
+        //frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
                 
         try {
             this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("launch_screen_copilot.png"));
-            this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
         } catch (IOException ex) {
             GUIController.showExceptionError(ex.toString());
         }
         
         this.font = GUIController.loadFont(25);
-
+        this.fontExtraSmall = GUIController.loadFont(5);
+        
         JPanel panel = new JPanel();
         frame.add(panel);
         placeComponents(panel);
@@ -87,9 +90,13 @@ public class LaunchGUI {
             }
         });
         
+        JLabel copyRightLabel = new JLabel("Build 1.0000 | COPYRIGHT ALL RIGHTS RESERVED | INDYGAMES INC. ", SwingConstants.LEFT);
+        copyRightLabel.setBounds(4, 476, 200, 30);
+        copyRightLabel.setFont(fontExtraSmall);
+        panel.add(copyRightLabel);
         
         JLabel bg = new JLabel(new ImageIcon(this.screen));
-        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
+        bg.setBounds(0, 0, 800, 500);
         panel.add(bg);
     }
 }

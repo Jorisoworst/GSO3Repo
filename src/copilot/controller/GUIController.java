@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
@@ -22,7 +23,7 @@ import javax.swing.JOptionPane;
  */
 public final class GUIController {
 
-    private static Clip backgroundClip;
+    private static Clip backgroundClip, airplaneSound, gameSound;
     private static boolean stopped;
     
     public static Font loadFont(int size) {
@@ -46,7 +47,7 @@ public final class GUIController {
             GUIController.showExceptionError(ex.toString());
         }
     }
-
+    
     public static void playHover() {
         try {
             Clip hover = AudioSystem.getClip();
@@ -74,6 +75,99 @@ public final class GUIController {
     public static void stopBackgroundMusic() {
         backgroundClip.stop();
     }
+    
+    //sounds ingame
+    public static void playCollisionBullet() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Asshole 2.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+     public static void playCollisionBird() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/SFX_SML_EXPLOSION.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+     public static void playAirplane() {
+        try {
+            airplaneSound = AudioSystem.getClip();
+            airplaneSound.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/airplane_sound_2.wav")));
+            FloatControl volume= (FloatControl) airplaneSound.getControl(FloatControl.Type.MASTER_GAIN); 
+            volume.setValue(-20.0f);
+            airplaneSound.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+     public static void stopAirplaneSound() {
+        airplaneSound.stop();
+    }
+     
+     public static void playGameSound() {
+        try {
+            gameSound = AudioSystem.getClip();
+            gameSound.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/SFX_NIGHTCLUB_LOOP.wav")));
+            gameSound.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+     public static void stopGameSound() {
+        gameSound.stop();
+    }
+     
+     public static void playGun() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/singe machine gunshot.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+     
+     public static void playOilPickUp() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/SFX_OILDROP.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+     
+    public static void playStart() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Crowd cheer.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+    public static void playGameOver() {
+        try {
+            Clip click = AudioSystem.getClip();
+            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/game_over.wav")));
+            click.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            GUIController.showExceptionError(ex.toString());
+        }
+    }
+    
+    
 
 //    public void startBackground() {
 //        GUIController.stopped = false;
