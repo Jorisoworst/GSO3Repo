@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
@@ -25,6 +26,9 @@ public final class GUIController {
 
     private static Clip backgroundClip, airplaneSound, gameSound;
     private static boolean stopped;
+    private static Random random = new Random();
+    private static int min = 1;
+    private static int max = 5;
     
     public static Font loadFont(int size) {
         try {
@@ -66,6 +70,8 @@ public final class GUIController {
         try {
             backgroundClip = AudioSystem.getClip();
             backgroundClip.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/main_song.wav")));
+            FloatControl volume= (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN); 
+            volume.setValue(-20.0f);
             backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
             GUIController.showExceptionError(ex.toString());
@@ -79,8 +85,22 @@ public final class GUIController {
     //sounds ingame
     public static void playCollisionBullet() {
         try {
+            int rndNum = random.nextInt(max - min) + min;
             Clip click = AudioSystem.getClip();
-            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Asshole 2.wav")));
+            switch (rndNum){
+                case 1: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Asshole 2.wav")));
+                    break;
+                case 2: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Woaw Jesus.wav")));
+                    break;
+                case 3: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Woaw.wav")));
+                    break;
+                case 4: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Oi 1.wav")));
+                    break;
+                case 5: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/scream.wav")));
+                    break;
+                default: click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Asshole 2.wav")));
+                    break;
+            }
             click.start();
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
             GUIController.showExceptionError(ex.toString());
