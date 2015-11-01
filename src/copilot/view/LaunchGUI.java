@@ -48,7 +48,7 @@ public class LaunchGUI {
             GUIController.showExceptionError(ex.toString());
         }
         
-        this.font = GUIController.loadFont(this.screenHeight / 25);
+        this.font = GUIController.loadFont(25);
 
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -62,7 +62,7 @@ public class LaunchGUI {
 
         
         JButton launchButton = new JButton("LAUNCH");
-        launchButton.setBounds(this.screenWidth / 2 - this.screenWidth / 5 / 2, this.screenHeight / 36, this.screenWidth / 5, this.screenHeight / 9);
+        launchButton.setBounds(290, 10, 244, 50);
 //        launchButton.setContentAreaFilled(false);
         launchButton.setFocusPainted(false);
         launchButton.setFont(this.font);
@@ -78,7 +78,7 @@ public class LaunchGUI {
         launchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                launchButton.setText(">LAUNCH");
+                launchButton.setText("LAUNCH");
                 GUIController.playHover();
             }
 

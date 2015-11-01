@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -70,9 +71,9 @@ public class LoginGUI {
             GUIController.showExceptionError(ex.toString());
         }
         
-        this.font = GUIController.loadFont(this.screenHeight / 50);
-        this.sizedFont = GUIController.loadFont(this.screenHeight / 100);
-        this.sizedFont2 = GUIController.loadFont(this.screenHeight / 35);
+        this.font = GUIController.loadFont(10);
+        this.sizedFont = GUIController.loadFont(12);
+        this.sizedFont2 = GUIController.loadFont(30);
 
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -86,32 +87,81 @@ public class LoginGUI {
 
         
         JLabel userLabel = new JLabel("Username");
-        userLabel.setBounds(this.screenWidth / 5, (this.screenHeight / 20) * 6, this.screenWidth / 5, this.screenHeight / 5);
+        userLabel.setBounds(50, this.screenHeight - (this.screenHeight / 2), 100, 25);
         userLabel.setFont(this.font);
         panel.add(userLabel);
 
         
         JTextField userText = new JTextField(20);
-        userText.setBounds(this.screenWidth / 5, (this.screenHeight / 40) * 17, this.screenWidth / 10, this.screenHeight / 40);
+        userText.setBounds(50, userLabel.getY() + 25, 160, 25);
         userText.setFont(this.sizedFont);
         panel.add(userText);
 
         
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(this.screenWidth / 5, (this.screenHeight / 20) * 8, this.screenWidth / 5, this.screenHeight / 5);
+        passwordLabel.setBounds(50, userText.getY() + 25, 100, 25);
         passwordLabel.setFont(font);
         panel.add(passwordLabel);
 
         
         JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(this.screenWidth / 5, (this.screenHeight / 40) * 21, this.screenWidth / 10, this.screenHeight / 40);
+        passwordText.setBounds(50, passwordLabel.getY() + 25, 160, 25);
         passwordText.setFont(this.sizedFont);
         panel.add(passwordText);
 
         
-        JButton registerButton = new JButton("Register");
-        registerButton.setBounds(this.screenWidth / 6 + this.screenWidth / 36, (this.screenHeight / 40) * 23, this.screenWidth / 17, this.screenHeight / 37);
-        registerButton.setContentAreaFilled(false);
+        
+        JButton loginButton = new JButton("login");
+        loginButton.setHorizontalAlignment(SwingConstants.CENTER);
+        loginButton.setBounds(50, passwordText.getY() + 30, 160, 25);
+        //loginButton.setContentAreaFilled(false);
+        loginButton.setFocusPainted(false);
+        loginButton.setFont(this.sizedFont);
+        panel.add(loginButton);
+        
+        loginButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                GUIController.playClick();
+                GameAdministration admin = GameAdministration.getInstance();
+//                GUIController.stopBackgroundMusic();
+                // HAS TO BE admin.getDatabaseState()
+                if (true) {
+                    boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
+                    
+                    // HAS TO BE login
+                    if (true) {
+                        User user = admin.getUser(userText.getText());
+                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+                        MainMenuGUI mainMenuGUI = new MainMenuGUI(user);
+                        frameToClose.dispose();
+                    } else {
+                        passwordText.setText(null);
+                        JOptionPane.showMessageDialog(null, "Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loginButton.setText(">login");
+                GUIController.playHover();
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loginButton.setText("login");
+            }
+        });
+        
+        JButton registerButton = new JButton("register");
+        registerButton.setHorizontalAlignment(SwingConstants.CENTER);
+        registerButton.setBounds(50, loginButton.getY() + 30, 160, 25);
+        //registerButton.setContentAreaFilled(false);
         registerButton.setFocusPainted(false);
         registerButton.setFont(this.sizedFont);
         panel.add(registerButton);
@@ -155,66 +205,19 @@ public class LoginGUI {
         registerButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                registerButton.setText(">Register");
+                registerButton.setText(">register");
                 GUIController.playHover();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                registerButton.setText("Register");
+                registerButton.setText("register");
             }
         });
 
-        
-        JButton loginButton = new JButton("Login");
-        loginButton.setBounds(this.screenWidth / 6 + this.screenWidth / 17 + this.screenWidth / 36, (this.screenHeight / 40) * 23, this.screenWidth / 17, this.screenHeight / 37);
-        loginButton.setContentAreaFilled(false);
-        loginButton.setFocusPainted(false);
-        loginButton.setFont(this.sizedFont);
-        panel.add(loginButton);
-        
-        loginButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                GUIController.playClick();
-                GameAdministration admin = GameAdministration.getInstance();
-                
-                // HAS TO BE admin.getDatabaseState()
-                if (true) {
-                    boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
-                    
-                    // HAS TO BE login
-                    if (true) {
-                        User user = admin.getUser(userText.getText());
-                        JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                        MainMenuGUI mainMenuGUI = new MainMenuGUI(user);
-                        frameToClose.dispose();
-                    } else {
-                        passwordText.setText(null);
-                        JOptionPane.showMessageDialog(null, "Your information was not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                loginButton.setText(">Login");
-                GUIController.playHover();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                loginButton.setText("Login");
-            }
-        });
-        
         
         JButton quitButton = new JButton("QUIT");
-        quitButton.setBounds(this.screenWidth - this.screenWidth / 200 - this.screenWidth / 10, this.screenHeight - (this.screenHeight / 100) * 99 - this.screenHeight / 40, this.screenWidth / 10, this.screenHeight / 40);
+        quitButton.setBounds(this.screenWidth - 250, 10, 250, 100);
         quitButton.setContentAreaFilled(false);
         quitButton.setFocusPainted(false);
         quitButton.setFont(this.sizedFont2);
@@ -242,7 +245,7 @@ public class LoginGUI {
 
         
         JLabel backLogin = new JLabel();
-        backLogin.setBounds((this.screenWidth / 50) * 9, (this.screenHeight / 50) * 18, this.screenWidth / 7, (this.screenHeight / 40) * 12);
+        backLogin.setBounds(userLabel.getX() - 10, userLabel.getY() - 10, 200, 200);
         backLogin.setOpaque(true);
         backLogin.setBackground(Color.WHITE);
         panel.add(backLogin);

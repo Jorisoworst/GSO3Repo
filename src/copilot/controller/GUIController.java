@@ -5,6 +5,7 @@
  */
 package copilot.controller;
 
+import static copilot.view.CopilotGUI.NANO_TO_BASE;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
@@ -20,7 +21,9 @@ import javax.swing.JOptionPane;
  * @author IndyGames
  */
 public final class GUIController {
+
     private static Clip backgroundClip;
+    private static boolean stopped;
     
     public static Font loadFont(int size) {
         try {
@@ -33,7 +36,7 @@ public final class GUIController {
             return null;
         }
     }
-    
+
     public static void playClick() {
         try {
             Clip click = AudioSystem.getClip();
@@ -43,7 +46,7 @@ public final class GUIController {
             GUIController.showExceptionError(ex.toString());
         }
     }
-    
+
     public static void playHover() {
         try {
             Clip hover = AudioSystem.getClip();
@@ -53,22 +56,44 @@ public final class GUIController {
             GUIController.showExceptionError(ex.toString());
         }
     }
-    
+
     public static void showExceptionError(String error) {
         JOptionPane.showMessageDialog(null, "Something went wrong, please try again, ERROR: " + error, "ALERT", JOptionPane.ERROR_MESSAGE);
     }
-    
+
     public static void playBackgroundMusic() {
         try {
             backgroundClip = AudioSystem.getClip();
-            backgroundClip.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/game_sound.wav")));
+            backgroundClip.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/main_song.wav")));
             backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
             GUIController.showExceptionError(ex.toString());
         }
     }
-    
+
     public static void stopBackgroundMusic() {
         backgroundClip.stop();
     }
+
+//    /**
+//     * start background movement
+//     */
+//    public void startBackground() {
+//        GUIController.stopped = false;
+//        Thread thread = new Thread() {
+//            @Override
+//            public void run() {
+//                while (!isStopped()) {
+//                    
+//                }
+//            }
+//        };
+//
+//        thread.setDaemon(true);
+//        thread.start();
+//    }
+//
+//    public static synchronized boolean isStopped() {
+//        return GUIController.stopped;
+//    }
 }

@@ -89,7 +89,7 @@ public class MainMenuGUI {
         logoutButton.addActionListener((ActionEvent e) -> {
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
 //            LaunchGUI launchGUI = new LaunchGUI();
-//            MainMenuGUI.this.backgroundClip.stop();
+            GUIController.stopBackgroundMusic();
             LoginGUI loginGUI = new LoginGUI();
             frameToClose.dispose();
         });
