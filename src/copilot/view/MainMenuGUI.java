@@ -124,7 +124,6 @@ public class MainMenuGUI {
             GUIController.playClick();
             JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
             LobbyGUI lobbyGUI = new LobbyGUI(user);
-            GUIController.stopBackgroundMusic();
             frameToClose.dispose();
         });
         
