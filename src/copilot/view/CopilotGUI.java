@@ -196,7 +196,7 @@ public class CopilotGUI {
     protected void gameLoop() {
         BufferStrategy strategy = this.canvas.getBufferStrategy();
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-
+        
         this.render(g);
         g.dispose();
 
@@ -225,6 +225,8 @@ public class CopilotGUI {
      * @param g the graphics object to render to
      */
     protected void render(Graphics2D g) {
+        // Die backgroundX wordt steeds verlaagt en dan wordt de image
+        // Steeds 1 pixel naar links getekend met de drawImage methode
         g.drawImage(this.backgroundImage, this.backgroundX, 0, null);
 
         if (this.backgroundX <= 0) {
