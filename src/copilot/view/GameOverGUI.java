@@ -11,12 +11,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -25,32 +23,20 @@ import javax.swing.SwingConstants;
  *
  * @author IndyGames
  */
-public class GameOverGUI{
+public class GameOverGUI extends JPanel {
     private final String gameOverText;
     private final int score;
-    private JFrame frame;
-    private JPanel contentPane;
     private Font font;
     private int screenWidth, screenHeight;
 
-    public GameOverGUI(int score) {
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
-        
-        this.frame = new JFrame("CoPilot - Game Over");
+    public GameOverGUI(int score, int screenWidth, int screenHeight) {
         this.gameOverText = "Game Over";
         this.score = score;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        
+        this.setLayout(new BorderLayout());
         this.createGUI();
-        this.frame.setContentPane(this.contentPane);
-        this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.frame.setUndecorated(true);
-        this.frame.setResizable(false);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.pack();
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setVisible(true);
-        this.frame.setLayout(new BorderLayout());
     }
 
     private void createGUI() {
@@ -75,17 +61,9 @@ public class GameOverGUI{
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(this.font);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        this.contentPane = new JPanel() {
-            @Override
-            public void paintComponent(Graphics g) {
-                g.setColor(Color.BLACK);
-                g.fillRect(0, 0, this.getWidth(), this.getHeight());
-            }
-        };
-
-        this.contentPane.setLayout(new BorderLayout());
-        this.contentPane.add(gameOverLabel, BorderLayout.NORTH);
-        this.contentPane.add(scoreLabel, BorderLayout.SOUTH);
+        
+        this.setLayout(new BorderLayout());
+        this.add(gameOverLabel, BorderLayout.NORTH);
+        this.add(scoreLabel, BorderLayout.SOUTH);
     }
 }

@@ -57,7 +57,7 @@ public class CopilotGUI extends JPanel {
     private Canvas canvas;
     private World world;
     private Random rnd;
-    private JPanel contentPane, labelPanel;
+    private JPanel labelPanel;
     private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2, kerosineImage;
     private Font font;
@@ -107,7 +107,7 @@ public class CopilotGUI extends JPanel {
         }
 
         this.createGUI();
-        this.gameController = new GameController(this.contentPane);
+        this.gameController = new GameController(this);
         this.initializeWorld();
     }
 
@@ -439,8 +439,7 @@ public class CopilotGUI extends JPanel {
      * Create the gui components.
      */
     private void createGUI() {
-        this.contentPane = new JPanel();
-        this.contentPane.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         this.labelPanel = new JPanel();
         this.labelPanel.setLayout(new GridLayout(0, 6));
@@ -471,25 +470,14 @@ public class CopilotGUI extends JPanel {
             lbl.setHorizontalAlignment(SwingConstants.CENTER);
         }
 
-        this.contentPane.add(this.labelPanel, BorderLayout.PAGE_START);
-
-        Dimension size;
-
-        if (FULLSCREEN) {
-            size = Toolkit.getDefaultToolkit().getScreenSize();
-        } else {
-            size = new Dimension(800, 600);
-        }
-
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
+        this.add(this.labelPanel, BorderLayout.PAGE_START);
 
         this.canvas = new Canvas();
-        this.canvas.setPreferredSize(size);
-        this.canvas.setMinimumSize(size);
-        this.canvas.setMaximumSize(size);
+        this.canvas.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight));
+        this.canvas.setMinimumSize(new Dimension(this.screenWidth, this.screenHeight));
+        this.canvas.setMaximumSize(new Dimension(this.screenWidth, this.screenHeight));
 
-        this.contentPane.add(this.canvas, BorderLayout.PAGE_END);
+        this.add(this.canvas, BorderLayout.PAGE_END);
     }
 
     public void gameOver() {

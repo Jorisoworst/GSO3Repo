@@ -8,6 +8,7 @@ package copilot.view;
 import copilot.controller.GUIController;
 import copilot.domain.User;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -29,7 +30,7 @@ public class AllCopilotGUI {
     private static JFrame frame;
     private static JPanel panel;
     private static Image LaunchScreen, logo, screen;
-    private static Font font, sizedFont, sizedFont2, fontExtraSmall;
+    private static Font font, sizedFont, sizedFont2, sizedFont3, sizedFont4, fontExtraSmall;
     private static CardLayout layout;
 
     public static void main(String[] args) {
@@ -67,6 +68,8 @@ public class AllCopilotGUI {
         font = GUIController.loadFont(10);
         sizedFont = GUIController.loadFont(12);
         sizedFont2 = GUIController.loadFont(30);
+        sizedFont3 = GUIController.loadFont(32);
+        sizedFont4 = GUIController.loadFont(64);
         fontExtraSmall = GUIController.loadFont(5);
 
         JPanel panelLaunch = new LaunchGUI(sizedFont2, fontExtraSmall, LaunchScreen);
@@ -87,14 +90,17 @@ public class AllCopilotGUI {
     public static void setPanel(String name, Object extraInformation) {
         switch (name) {
             case "login":
-                JPanel panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);
+                LoginGUI panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);
                 panel.add(panelLogin, "login");
                 frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                frame.dispose();
+                frame.setUndecorated(true);
+                frame.setVisible(true);
                 layout.show(frame.getContentPane(), "login");
                 break;
                 
             case "menu":
-                JPanel panelMenu = new MainMenuGUI((User)extraInformation, screenWidth, screenHeight, font, sizedFont, screen, logo);
+                MainMenuGUI panelMenu = new MainMenuGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);
                 panel.add(panelMenu, "menu");
                 layout.show(frame.getContentPane(), "menu");
                 break;
@@ -112,12 +118,17 @@ public class AllCopilotGUI {
                 break;
                 
             case "game":
-                JPanel panelGame = new CopilotGUI(screenWidth, screenHeight);
+                CopilotGUI panelGame = new CopilotGUI(screenWidth, screenHeight);
                 panel.add(panelGame, "game");
                 layout.show(frame.getContentPane(), "game");
+                panelGame.start();
                 break;
                 
             case "gameover":
+                GameOverGUI panelGameover = new GameOverGUI((int)extraInformation, screenWidth, screenHeight);
+                panelGameover.setBackground(Color.BLACK);
+                panel.add(panelGameover, "gameover");
+                layout.show(frame.getContentPane(), "gameover");
                 break;
         }
     }
