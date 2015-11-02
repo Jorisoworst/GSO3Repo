@@ -65,7 +65,8 @@ public class CopilotGUI {
     private Random rnd;
     private JFrame frame;
     private JPanel contentPane, labelPanel;
-    private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
+    private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
+            fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1,
             obstacleImage2, kerosineImage;
     private Font font;
@@ -172,7 +173,7 @@ public class CopilotGUI {
         this.contentPane.setLayout(new BorderLayout());
 
         this.labelPanel = new JPanel();
-        this.labelPanel.setLayout(new GridLayout(0, 6));
+        this.labelPanel.setLayout(new GridLayout(0, 7));
         this.labelPanel.setBackground(new Color(121, 201, 249));
 
         this.scoreLabel = new JLabel("Score: 0");
@@ -180,6 +181,9 @@ public class CopilotGUI {
 
         this.livesLabel = new JLabel("Lives: 0");
         this.labelPanel.add(this.livesLabel);
+        
+        this.bulletsLabel = new JLabel("Bullets: " + (this.clipSize - this.bulletsFired));
+        this.labelPanel.add(this.bulletsLabel);
 
         this.altLabel = new JLabel("Alt: 0");
         this.labelPanel.add(this.altLabel);
@@ -233,7 +237,7 @@ public class CopilotGUI {
         Rectangle airplaneShape = new Rectangle(airplane.getWidth(), airplane.getHeight());
         airplane.addFixture(airplaneShape);
         airplane.setMass(MassType.NORMAL);
-        airplane.translate(this.screenWidth / 4 - (airplane.getWidth() / 2), this.screenHeight / 2 - (airplane.getHeight()));
+        airplane.translate(this.screenWidth / 4 - airplane.getWidth() / 2, this.screenHeight / 2 - airplane.getHeight());
 
         this.world.addBody(airplane);
     }
@@ -275,7 +279,7 @@ public class CopilotGUI {
         this.diff = (double) this.time - (double) this.last;
         this.last = this.time;
         this.elapsedTime += this.diff;
-        this.targetInterval = (NANO_TO_BASE / TARGET_FPS);
+        this.targetInterval = NANO_TO_BASE / TARGET_FPS;
         this.actualInterval = this.elapsedTime / this.targetInterval;
 
         if (this.elapsedTime >= this.targetInterval) {
@@ -421,7 +425,7 @@ public class CopilotGUI {
                 }
 
                 if (key.endsWith("SPACE") && (this.bulletsFired < this.clipSize)) {
-                    Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY + (airplaneHeight / 2) - 10));
+                    Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY - 10 + airplaneHeight / 2));
                     Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());
                     bullet.addFixture(bulletShape);
                     bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
@@ -563,6 +567,7 @@ public class CopilotGUI {
 
         this.scoreLabel.setText("Score: " + this.score);
         this.livesLabel.setText("Lives: " + this.lives);
+        this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
         this.speedLabel.setText("Speed: " + this.zebraForce);
     }
 
