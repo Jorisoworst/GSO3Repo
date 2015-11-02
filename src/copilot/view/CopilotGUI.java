@@ -22,8 +22,6 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,13 +29,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -48,14 +42,14 @@ import org.dyn4j.geometry.Vector2;
  *
  * @author IndyGames
  */
-public class CopilotGUI {
+public class CopilotGUI extends JPanel {
 
     public static final boolean DEBUG_MODE = false;
-    public static final boolean FULLSCREEN = true;
     public static final long NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
     public static final int TARGET_FPS = 60;
+    
     private final GameController gameController;
     private boolean stopped;
     private long last, lastTime;
@@ -63,26 +57,18 @@ public class CopilotGUI {
     private Canvas canvas;
     private World world;
     private Random rnd;
-    private JFrame frame;
     private JPanel contentPane, labelPanel;
     private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2, kerosineImage;
     private Font font;
-    
     private double testTime = 0;
 
     /**
      * Constructor for this gui.
+     * @param screenWidth
+     * @param screenHeight
      */
-    public CopilotGUI() {
-        this.frame = new JFrame("CoPilot");
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-
+    public CopilotGUI(int screenWidth, int screenHeight) {
         this.rnd = new Random();
         this.stopped = false;
         this.zebraForce = FORCE;
@@ -94,6 +80,8 @@ public class CopilotGUI {
         this.fuelTimer = 0;
         this.speedTimer = 0;
         this.animationTimer = 0;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
 
         try {
             this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
@@ -118,28 +106,8 @@ public class CopilotGUI {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                stop();
-                super.windowClosing(e);
-            }
-        });
-
-        if (FULLSCREEN) {
-            this.frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            this.frame.setUndecorated(true);
-        }
-
         this.createGUI();
         this.gameController = new GameController(this.contentPane);
-        this.frame.setContentPane(this.contentPane);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setResizable(false);
-        this.frame.setVisible(true);
-        this.frame.pack();
         this.initializeWorld();
     }
 
@@ -194,18 +162,6 @@ public class CopilotGUI {
      * and poll for input.
      */
     protected void gameLoop() {
-        BufferStrategy strategy = this.canvas.getBufferStrategy();
-        Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-
-        this.render(g);
-        g.dispose();
-
-        if (!strategy.contentsLost()) {
-            strategy.show();
-        }
-
-        Toolkit.getDefaultToolkit().sync();
-
         long time = System.nanoTime();
         double diff = (double)time - (double)this.last;
         this.last = time;
@@ -217,6 +173,18 @@ public class CopilotGUI {
             this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
             testTime = 0;
         }
+        
+        BufferStrategy strategy = this.canvas.getBufferStrategy();
+        Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+
+        this.render(g);
+        g.dispose();
+
+        if (!strategy.contentsLost()) {
+            strategy.show();
+        }
+        
+        Toolkit.getDefaultToolkit().sync();
     }
 
     /**
@@ -528,8 +496,7 @@ public class CopilotGUI {
         GUIController.playGameOver();
         GUIController.stopAirplaneSound();
         GUIController.stopGameSound();
-        GameOverGUI goGUI = new GameOverGUI(this.score);
-        this.frame.dispose();
+        AllCopilotGUI.setPanel("gameover", this.score);
     }
 
     /**

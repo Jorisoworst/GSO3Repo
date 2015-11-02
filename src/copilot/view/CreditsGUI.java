@@ -105,7 +105,7 @@ public class CreditsGUI {
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);          
+                //MainMenuGUI mainMenu = new MainMenuGUI(user);          
                 frameToClose.dispose(); 
             }
         });

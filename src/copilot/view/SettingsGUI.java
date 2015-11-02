@@ -9,13 +9,11 @@ import copilot.controller.GUIController;
 import copilot.domain.User;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -106,7 +104,7 @@ public class SettingsGUI {
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);          
+                //MainMenuGUI mainMenu = new MainMenuGUI(user);          
                 frameToClose.dispose(); 
             }
         });
@@ -116,7 +114,7 @@ public class SettingsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);
+                //MainMenuGUI mainMenu = new MainMenuGUI(user);
                 frameToClose.dispose(); 
             }
         });

@@ -1,13 +1,9 @@
 package copilot.view;
 
 import copilot.controller.GUIController;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,55 +11,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
-public class LaunchGUI {
+public class LaunchGUI extends JPanel {
     private final Font font, fontExtraSmall;
     private Image screen;
-//    private int screenWidth, screenHeight;
-    
-    public static void main(String[] args) {
-        LaunchGUI launchGUI = new LaunchGUI();
-    }
 
-    public LaunchGUI() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            GUIController.showExceptionError(ex.toString());
-        }
+    public LaunchGUI(Font font, Font fontExtraSmall, Image screen) {
+        this.font = font;
+        this.fontExtraSmall = fontExtraSmall;
+        this.screen = screen;
         
-//        this.screenWidth = 815;
-//        this.screenHeight = 530;
-        
-        JFrame frame = new JFrame("CO-Pilot Launch Screen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(805, 525);
-        //frame.setUndecorated(true);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-                
-        try {
-            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("launch_screen_copilot.png"));
-        } catch (IOException ex) {
-            GUIController.showExceptionError(ex.toString());
-        }
-        
-        this.font = GUIController.loadFont(25);
-        this.fontExtraSmall = GUIController.loadFont(5);
-        
-        JPanel panel = new JPanel();
-        frame.add(panel);
-        placeComponents(panel);
-
-        frame.setVisible(true);
+        placeComponents(this);
     }
 
     private void placeComponents(JPanel panel) {
         panel.setLayout(null);
 
-        
         JButton launchButton = new JButton("LAUNCH");
         launchButton.setBounds(290, 10, 244, 50);
         launchButton.setFocusPainted(false);
@@ -72,9 +35,7 @@ public class LaunchGUI {
 
         launchButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
-            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-            LoginGUI loginGUI = new LoginGUI();
-            frameToClose.dispose();
+            AllCopilotGUI.setPanel("login", null);
         });
 
         launchButton.addMouseListener(new java.awt.event.MouseAdapter() {

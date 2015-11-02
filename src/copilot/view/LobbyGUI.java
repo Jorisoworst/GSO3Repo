@@ -199,7 +199,7 @@ public class LobbyGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);              
+                //MainMenuGUI mainMenu = new MainMenuGUI(user);              
                 frameToClose.dispose(); 
             }
         });
