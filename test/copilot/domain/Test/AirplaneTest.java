@@ -63,7 +63,7 @@ public class AirplaneTest {
         airplane = new Airplane(image);
         elevator = new Elevator(image, airplane, null);
         propellor = new Propellor(image, airplane, null);
-        gun = new Gun(image, airplane, null);
+        gun = new Gun(image, airplane, null, 0, 0, 0);
         fuel = new Fuel(image, airplane, null);
 
         ArrayList<AirplanePart> parts = new ArrayList<>();

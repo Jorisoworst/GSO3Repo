@@ -109,6 +109,9 @@ public class CopilotGUI {
         this.initializeWorld();
     }
 
+    /**
+     * Initialize all variables
+     */
     private void initializeVariables() {
         this.rnd = new Random();
         this.stopped = false;
@@ -133,6 +136,9 @@ public class CopilotGUI {
         this.clipSize = 15; // TODO
     }
 
+    /**
+     * Load and initialize all resources
+     */
     private void loadResources() {
         try {
             this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
@@ -233,7 +239,7 @@ public class CopilotGUI {
     }
 
     /**
-     * Start rendering the game.
+     * Start the game.
      */
     public void start() {
         GUIController.playStart();
@@ -289,54 +295,6 @@ public class CopilotGUI {
         }
 
         Toolkit.getDefaultToolkit().sync();
-    }
-
-    /**
-     * Renders the gameobjects.
-     *
-     * @param g the graphics object to render to
-     */
-    protected void render(Graphics2D g) {
-        g.drawImage(this.backgroundImage, this.backgroundX, 0, null);
-
-        if (this.backgroundX <= 0) {
-            g.drawImage(this.backgroundImage, this.backgroundX + this.backgroundImage.getWidth(null), 0, null);
-
-            if (this.backgroundX <= -this.backgroundImage.getWidth(null)) {
-                this.backgroundX = 0;
-            }
-        }
-
-        for (int i = 0; i < this.world.getBodyCount(); i++) {
-            GameObject go = (GameObject) this.world.getBody(i);
-            go.render(g);
-
-            if (DEBUG_MODE) {
-                Vector2 gameObjectLocation = go.getTransform().getTranslation();
-                Double gameObjectWidth = go.getWidth();
-                Double gameObjectHeight = go.getHeight();
-                Double gameObjectX = gameObjectLocation.x;
-                Double gameObjectY = gameObjectLocation.y;
-                g.setColor(Color.MAGENTA);
-                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth.intValue(), gameObjectHeight.intValue());
-            }
-        }
-
-        if (this.bulletsFired >= 10) {
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(50, this.screenHeight - 100, 400, 50);
-
-            g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(50, this.screenHeight - 100, 4 * this.reloadProgress, 50);
-
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(10));
-            g.drawRect(50, this.screenHeight - 100, 400, 50);
-
-            g.setColor(Color.WHITE);
-            g.setFont(this.font);
-            g.drawString("Reloading...", 195, this.screenHeight - 55);
-        }
     }
 
     /**
@@ -495,9 +453,6 @@ public class CopilotGUI {
 
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
-                this.scoreLabel.setText("Score: " + this.score);
-                this.livesLabel.setText("Lives: " + this.lives);
-                this.speedLabel.setText("Speed: " + this.zebraForce);
                 this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
                 if (!this.world.containsBody(airplane)) {
@@ -548,12 +503,67 @@ public class CopilotGUI {
         }
     }
 
-    public void gameOver() {
+    /**
+     * End the current game and show the game over screen.
+     */
+    private void gameOver() {
         GUIController.playGameOver();
         GUIController.stopAirplaneSound();
         GUIController.stopGameSound();
         GameOverGUI goGUI = new GameOverGUI(this.score);
         this.frame.dispose();
+    }
+
+    /**
+     * Renders the gameobjects.
+     *
+     * @param g the graphics object to render to
+     */
+    protected void render(Graphics2D g) {
+        g.drawImage(this.backgroundImage, this.backgroundX, 0, null);
+
+        if (this.backgroundX <= 0) {
+            g.drawImage(this.backgroundImage, this.backgroundX + this.backgroundImage.getWidth(null), 0, null);
+
+            if (this.backgroundX <= -this.backgroundImage.getWidth(null)) {
+                this.backgroundX = 0;
+            }
+        }
+
+        for (int i = 0; i < this.world.getBodyCount(); i++) {
+            GameObject go = (GameObject) this.world.getBody(i);
+            go.render(g);
+
+            if (DEBUG_MODE) {
+                Vector2 gameObjectLocation = go.getTransform().getTranslation();
+                Double gameObjectWidth = go.getWidth();
+                Double gameObjectHeight = go.getHeight();
+                Double gameObjectX = gameObjectLocation.x;
+                Double gameObjectY = gameObjectLocation.y;
+                g.setColor(Color.MAGENTA);
+                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth.intValue(), gameObjectHeight.intValue());
+            }
+        }
+
+        if (this.bulletsFired >= this.clipSize) {
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect(50, this.screenHeight - 100, 400, 50);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(50, this.screenHeight - 100, 4 * this.reloadProgress, 50);
+
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(10));
+            g.drawRect(50, this.screenHeight - 100, 400, 50);
+
+            g.setColor(Color.WHITE);
+            g.setFont(this.font);
+            g.drawString("Reloading...", 195, this.screenHeight - 55);
+        }
+
+        this.scoreLabel.setText("Score: " + this.score);
+        this.livesLabel.setText("Lives: " + this.lives);
+        this.speedLabel.setText("Speed: " + this.zebraForce);
     }
 
     /**
