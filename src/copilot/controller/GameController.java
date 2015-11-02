@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.controller;
 
 import java.awt.event.ActionEvent;
@@ -26,30 +21,49 @@ import org.dyn4j.dynamics.contact.ContactConstraint;
  */
 public class GameController implements CollisionListener {
 
-    public JPanel panel;
-    public String KEY_PRESSED;
+    private final JPanel panel;
+    private final String[] keyIdentifiers;
+    private final Integer[] keyValues;
+    private String keyPressed;
 
     public GameController(JPanel panel) {
         this.panel = panel;
-        
+        this.keyIdentifiers = new String[]{
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT",
+            "SPACE",
+            "ESCAPE"
+        };
+
+        this.keyValues = new Integer[]{
+            KeyEvent.VK_W/*VK_UP*/,
+            KeyEvent.VK_S/*VK_DOWN*/,
+            KeyEvent.VK_A/*VK_LEFT*/,
+            KeyEvent.VK_D/*VK_RIGHT*/,
+            KeyEvent.VK_SPACE,
+            KeyEvent.VK_ESCAPE
+        };
+
         InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = panel.getActionMap();
+        int limit = this.keyIdentifiers.length;
 
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "RightArrow");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "LeftArrow");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "UpArrow");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "DownArrow");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "Space");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        
-        am.put("RightArrow", new KeyAction("RightArrow"));
-        am.put("LeftArrow", new KeyAction("LeftArrow"));
-        am.put("UpArrow", new KeyAction("UpArrow"));
-        am.put("DownArrow", new KeyAction("DownArrow"));
-        am.put("Space", new KeyAction("Space"));
-        am.put("Escape", new KeyAction("Escape"));
+        for (int i = 0; i < limit; i++) {
+            im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0), this.keyIdentifiers[i]);
+            am.put(this.keyIdentifiers[i], new KeyAction(this.keyIdentifiers[i]));
+        }
 
-        KEY_PRESSED = "NONE";
+        String releasedIdentifier = "";
+
+        for (int i = 0; i < limit - 1; i++) {
+            releasedIdentifier = this.keyIdentifiers[i] + "_RELEASED";
+            im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0, true), releasedIdentifier);
+            am.put(releasedIdentifier, new KeyAction(releasedIdentifier));
+        }
+
+        this.keyPressed = "NONE";
     }
 
     @Override
@@ -77,6 +91,20 @@ public class GameController implements CollisionListener {
         return false;
     }
 
+    /**
+     * @return the keyPressed
+     */
+    public String getKeyPressed() {
+        return keyPressed;
+    }
+
+    /**
+     * @param keyPressed the keyPressed to set
+     */
+    public void setKeyPressed(String keyPressed) {
+        this.keyPressed = keyPressed;
+    }
+
     public class KeyAction extends AbstractAction {
 
         public KeyAction(String name) {
@@ -86,35 +114,37 @@ public class GameController implements CollisionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           switch (getValue(Action.NAME).toString()) {
-                case "UpArrow": {
-                    KEY_PRESSED = "UP";
+            String inputKey = getValue(Action.NAME).toString();
+
+            switch (inputKey) {
+                case "UP":
+                case "DOWN": {
+                    if (getKeyPressed().equals("SPACE")) {
+                        setKeyPressed(inputKey + "_" + getKeyPressed());
+                    } else if (getKeyPressed().endsWith("_SPACE")) {
+                        setKeyPressed(getKeyPressed());
+                    } else {
+                        setKeyPressed(inputKey);
+                    }
                     break;
                 }
-                case "DownArrow": {
-                    KEY_PRESSED = "DOWN";
+                case "SPACE": {
+                    if (getKeyPressed().equals("UP")
+                            || getKeyPressed().equals("DOWN")) {
+                        setKeyPressed(getKeyPressed() + "_" + inputKey);
+                    } else if (getKeyPressed().endsWith("_SPACE")) {
+                        setKeyPressed(getKeyPressed());
+                    } else {
+                        setKeyPressed(inputKey);
+                    }
                     break;
                 }
-                case "LeftArrow": {
-//                    KEY_PRESSED = "LEFT";
-                    KEY_PRESSED = "NONE";
-                    break;
-                }
-                case "RightArrow": {    
-//                    KEY_PRESSED = "RIGHT";
-                    KEY_PRESSED = "NONE";
-                    break;
-                }
-                case "Space": {
-                    KEY_PRESSED = "SPACE";
-                    break;
-                }
-                case "Escape": {
-                    KEY_PRESSED = "ESCAPE";
+                case "ESCAPE": {
+                    setKeyPressed(inputKey);
                     break;
                 }
                 default: {
-                    KEY_PRESSED = "NONE";
+                    setKeyPressed("NONE");
                     break;
                 }
             }
