@@ -5,26 +5,19 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
 import copilot.domain.Session;
 import copilot.domain.User;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,45 +33,41 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author IndyGames
  */
 public class MainMenuGUI {
-    private Clip clip;
     private Font font, sizedFont;
-    private Image mainMenuScreen;
-    private AudioInputStream hover, click;
-    
-    protected int screenWidth, screenHeight;
+    private Image screen, logo;
+    private int screenWidth, screenHeight;
 
     public MainMenuGUI(User userLoggedIn) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            GUIController.showExceptionError(ex.toString());
         }
-
+        
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         this.screenWidth = size.width;
         this.screenHeight = size.height;
         
         JFrame frame = new JFrame("CO-Pilot Main Menu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setResizable(false);
         frame.pack();
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
         try {
-            this.mainMenuScreen = ImageIO.read(this.getClass().getClassLoader().getResource("bg_menu.png"));
-            this.mainMenuScreen = this.mainMenuScreen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
-            
-            // load font
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
-            this.font = Font.createFont(Font.TRUETYPE_FONT, is);
-            this.font = this.font.deriveFont(Font.PLAIN, 30);
-            this.sizedFont = this.font.deriveFont(Font.PLAIN, 32);
-        } catch (IOException | FontFormatException ex) {
+            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
+            this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
+            this.logo = ImageIO.read(this.getClass().getClassLoader().getResource("logo.png"));
+            this.logo = this.logo.getScaledInstance(158, 122, 1);
+        } catch (IOException ex) {
             Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.font = GUIController.loadFont(30);
+        this.sizedFont = GUIController.loadFont(32);
         
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -89,236 +78,205 @@ public class MainMenuGUI {
 
     private void placeComponents(JPanel panel, User user) {
         panel.setLayout(null);
-
-        JButton joinButton = new JButton("JOIN");
-        joinButton.setHorizontalAlignment(SwingConstants.LEFT);
-        joinButton.setBounds(40, screenHeight - 300, 240, 50);
-        joinButton.setFont(font);
-        joinButton.setContentAreaFilled(false);
-        panel.add(joinButton);
-
-        joinButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                joinButton.setFont(sizedFont);
-                joinButton.setText(">JOIN");
-                loadSound();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                joinButton.setFont(font);
-                joinButton.setText("JOIN");
-                stopSound();
-            }
-        });
-
-        JButton hostButton = new JButton("HOST");
-        hostButton.setHorizontalAlignment(SwingConstants.LEFT);
-        hostButton.setBounds(40, screenHeight - 250, 240, 50);
-        hostButton.setFont(font);
-        hostButton.setContentAreaFilled(false);
-        panel.add(hostButton);
-
-        hostButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                hostButton.setFont(sizedFont);
-                hostButton.setText(">HOST");
-                loadSound();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                hostButton.setFont(font);
-                hostButton.setText("HOST");
-                stopSound();
-            }
-        });
-
-        JButton settingsButton = new JButton("SETTINGS");
-        settingsButton.setHorizontalAlignment(SwingConstants.LEFT);
-        settingsButton.setBounds(40, screenHeight - 200, 240, 50);
-        settingsButton.setFont(font);
-        settingsButton.setContentAreaFilled(false);
-        panel.add(settingsButton);
-
-        settingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                settingsButton.setFont(sizedFont);
-                settingsButton.setText(">SETTINGS");
-                loadSound();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                settingsButton.setFont(font);
-                settingsButton.setText("SETTINGS");
-                stopSound();
-            }
-        });
-
-        JButton creditsButton = new JButton("CREDITS");
-        creditsButton.setHorizontalAlignment(SwingConstants.LEFT);
-        creditsButton.setBounds(40, screenHeight - 150, 240, 50);
-        creditsButton.setFont(font);
-        creditsButton.setContentAreaFilled(false);
-        panel.add(creditsButton);
-
-        creditsButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                creditsButton.setFont(sizedFont);
-                creditsButton.setText(">CREDITS");
-                loadSound();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                creditsButton.setFont(font);
-                creditsButton.setText("CREDITS");
-                stopSound();
-            }
-        });
         
-        JButton debugButton = new JButton("SINGLEPLAYER DEBUG");
-        debugButton.setHorizontalAlignment(SwingConstants.LEFT);
-        debugButton.setBounds(this.screenWidth - 480, screenHeight - 150, 540, 50);
-        debugButton.setFont(font);
-        debugButton.setContentAreaFilled(false);
-        panel.add(debugButton);
-
-        debugButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                debugButton.setFont(sizedFont);
-                debugButton.setText(">SINGLEPLAYER DEBUG");
-                loadSound();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                debugButton.setFont(font);
-                debugButton.setText("SINGLEPLAYER DEBUG");
-                stopSound();
-            }
-        });
-
+        
         JButton logoutButton = new JButton("LOGOUT");
-        logoutButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        logoutButton.setBounds(this.screenWidth - 280, 10, 240, 50);
-        logoutButton.setFont(font);
+        logoutButton.setBounds(this.screenWidth - 280, 40, 240, 50);
         logoutButton.setContentAreaFilled(false);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setFont(this.font);
+        logoutButton.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(logoutButton);
+        
+        logoutButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            GUIController.stopBackgroundMusic();
+            LoginGUI loginGUI = new LoginGUI();
+            frameToClose.dispose();
+        });
 
         logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 logoutButton.setFont(sizedFont);
                 logoutButton.setText(">LOGOUT");
-                loadSound();
+                GUIController.playHover();                
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 logoutButton.setFont(font);
                 logoutButton.setText("LOGOUT");
-                stopSound();
-            }
-        });
-
-        JLabel bg = new JLabel(new ImageIcon(mainMenuScreen));
-        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
-        panel.add(bg);
-
-        joinButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                LobbyGUI lobby = new LobbyGUI(user);
-                frameToClose.dispose();
-            }
-        });
-
-        hostButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                Session session = GameAdministration.getInstance().createSession(user);
-                session.addUser(user);
-                SessionGUI sessionGUI = new SessionGUI(session, user);
-                frameToClose.dispose();
-            }
-        });
-
-        settingsButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                SettingsGUI settings = new SettingsGUI(user);
-                frameToClose.dispose();
-            }
-        });
-
-        creditsButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                CreditsGUI credits = new CreditsGUI(user);
-                frameToClose.dispose();
             }
         });
         
-        debugButton.addActionListener(new ActionListener() {
+        
+        JButton joinButton = new JButton("JOIN");
+        joinButton.setBounds(40, this.screenHeight - 300, 240, 50);
+        joinButton.setContentAreaFilled(false);
+        joinButton.setFocusPainted(false);
+        joinButton.setFont(this.font);
+        joinButton.setHorizontalAlignment(SwingConstants.LEFT);
+        panel.add(joinButton);        
+
+        joinButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            LobbyGUI lobbyGUI = new LobbyGUI(user);
+            frameToClose.dispose();
+        });
+        
+        joinButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                joinButton.setFont(sizedFont);
+                joinButton.setText(">JOIN");
+                GUIController.playHover();      
+            }
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                CopilotGUI game = new CopilotGUI();
-                game.start();
-                frameToClose.dispose();
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                joinButton.setFont(font);
+                joinButton.setText("JOIN");
             }
         });
 
-        logoutButton.addActionListener(new ActionListener() {
+        
+        JButton hostButton = new JButton("HOST");
+        hostButton.setBounds(40, this.screenHeight - 250, 240, 50);
+        hostButton.setContentAreaFilled(false);
+        hostButton.setFocusPainted(false);
+        hostButton.setFont(this.font);
+        hostButton.setHorizontalAlignment(SwingConstants.LEFT);
+        panel.add(hostButton);
+
+        hostButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            Session session = GameAdministration.getInstance().createSession(user);
+            session.addUser(user);
+            SessionGUI sessionGUI = new SessionGUI(session, user);
+            GUIController.stopBackgroundMusic();
+            frameToClose.dispose();
+        });
+        
+        hostButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                hostButton.setFont(sizedFont);
+                hostButton.setText(">HOST");
+                GUIController.playHover();  
+            }
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                LaunchGUI logon = new LaunchGUI();
-                frameToClose.dispose();
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                hostButton.setFont(font);
+                hostButton.setText("HOST");
             }
         });
-    }
 
-    public void loadSound() {
-        try {
-            this.hover = AudioSystem.getAudioInputStream(this.getClass().getResource("/sounds/hover.wav"));
-            this.clip = AudioSystem.getClip();
-            this.clip.open(this.hover);
-            this.clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+        
+        JButton settingsButton = new JButton("SETTINGS");
+        settingsButton.setBounds(40, this.screenHeight - 200, 240, 50);
+        settingsButton.setContentAreaFilled(false);
+        settingsButton.setFocusPainted(false);
+        settingsButton.setFont(this.font);
+        settingsButton.setHorizontalAlignment(SwingConstants.LEFT);
+        panel.add(settingsButton);
 
-    public void stopSound() {
-        try {
-            this.clip.flush();
-            this.clip.drain();
-            this.clip.stop();
-            this.clip.close();
-            //this.hover.reset();
-            this.hover.close();
-            
-            //this.hover = null;
-        } catch (IOException ex) {
-            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        settingsButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            SettingsGUI settingsGUI = new SettingsGUI(user);
+            frameToClose.dispose();
+        });
+
+        settingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                settingsButton.setFont(sizedFont);
+                settingsButton.setText(">SETTINGS");
+                GUIController.playHover();  
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                settingsButton.setFont(font);
+                settingsButton.setText("SETTINGS");
+            }
+        });
+
+        
+        JButton creditsButton = new JButton("CREDITS");
+        creditsButton.setBounds(40, this.screenHeight - 150, 240, 50);
+        creditsButton.setContentAreaFilled(false);
+        creditsButton.setFocusPainted(false);
+        creditsButton.setFont(this.font);
+        creditsButton.setHorizontalAlignment(SwingConstants.LEFT);
+        panel.add(creditsButton);
+
+        creditsButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            CreditsGUI credits = new CreditsGUI(user);
+            frameToClose.dispose();
+        });
+
+        creditsButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                creditsButton.setFont(sizedFont);
+                creditsButton.setText(">CREDITS");
+                GUIController.playHover();  
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                creditsButton.setFont(font);
+                creditsButton.setText("CREDITS");
+            }
+        });
+        
+        JButton singleplayerButton = new JButton("SINGLEPLAYER");
+        singleplayerButton.setBounds(40, this.screenHeight - 350, 540, 50);
+        singleplayerButton.setContentAreaFilled(false);
+        singleplayerButton.setFocusPainted(false);
+        singleplayerButton.setFont(this.font);
+        singleplayerButton.setHorizontalAlignment(SwingConstants.LEFT);
+        panel.add(singleplayerButton);
+        
+        singleplayerButton.addActionListener((ActionEvent e) -> {
+            GUIController.playClick();
+            JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            CopilotGUI game = new CopilotGUI();
+            game.start();
+            GUIController.stopBackgroundMusic();
+            frameToClose.dispose();
+        });
+
+        singleplayerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                singleplayerButton.setFont(sizedFont);
+                singleplayerButton.setText(">SINGLEPLAYER");
+                GUIController.playHover();   
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                singleplayerButton.setFont(font);
+                singleplayerButton.setText("SINGLEPLAYER");
+            }
+        });
+
+        
+        JLabel logoImage = new JLabel(new ImageIcon(this.logo));
+        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
+        panel.add(logoImage);
+        
+        JLabel bg = new JLabel(new ImageIcon(this.screen));
+        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
+        panel.add(bg);
     }
 }

@@ -4,6 +4,7 @@
  */
 package copilot.view;
 
+import copilot.controller.GUIController;
 import copilot.controller.GameController;
 import copilot.domain.Airplane;
 import copilot.domain.Bullet;
@@ -34,6 +35,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
@@ -50,15 +52,14 @@ public class CopilotGUI {
 
     public static final boolean DEBUG_MODE = false;
     public static final boolean FULLSCREEN = true;
-    public static final double NANO_TO_BASE = 1.0e9;
-    public static final double BULLET_FORCE = 25;
-    public static final double FORCE = 7;
+    public static final long NANO_TO_BASE = 1000000000;
+    public static final int BULLET_FORCE = 25;
+    public static final int FORCE = 7;
     public static final int TARGET_FPS = 60;
     private final GameController gameController;
     private boolean stopped;
-    private double zebraForce;
     private long last, lastTime;
-    private int screenWidth, screenHeight, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
+    private int screenWidth, screenHeight, zebraForce, fps, lives, score, backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer, animationTimer;
     private Canvas canvas;
     private World world;
     private Random rnd;
@@ -67,6 +68,8 @@ public class CopilotGUI {
     private JLabel scoreLabel, livesLabel, altLabel, speedLabel, fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1, obstacleImage2, kerosineImage;
     private Font font;
+    
+    private double testTime = 0;
 
     /**
      * Constructor for this gui.
@@ -161,6 +164,11 @@ public class CopilotGUI {
      * Start rendering the game.
      */
     public void start() {
+        
+        GUIController.playStart();
+        GUIController.playAirplane();
+        GUIController.playGameSound();
+        
         this.last = System.nanoTime();
         this.canvas.setIgnoreRepaint(true);
         this.canvas.createBufferStrategy(2);
@@ -199,12 +207,16 @@ public class CopilotGUI {
         Toolkit.getDefaultToolkit().sync();
 
         long time = System.nanoTime();
-        long diff = time - this.last;
+        double diff = (double)time - (double)this.last;
         this.last = time;
-        double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
-
-        this.world.update(elapsedTime);
-        this.update(elapsedTime);
+        //double elapsedTime = diff / (NANO_TO_BASE / TARGET_FPS);
+        testTime += diff;
+        
+        if (testTime >= (NANO_TO_BASE / TARGET_FPS)) {
+            this.world.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            this.update(testTime / (NANO_TO_BASE / TARGET_FPS));
+            testTime = 0;
+        }
     }
 
     /**
@@ -252,9 +264,9 @@ public class CopilotGUI {
         }
 
         this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
-
-        if (this.spawnTimer >= 75) {
-            if ((rnd.nextInt(5) + 1) % 5 == 0) {
+        
+        if (this.spawnTimer >= 150) {
+            if ((rnd.nextInt(10) + 1) % 10 == 0) {
                 spawnObject("P");
             } else {
                 spawnObject("O");
@@ -290,7 +302,7 @@ public class CopilotGUI {
                 }
             } else if (go instanceof Bullet) {
                 Bullet bullet = (Bullet) go;
-
+                
                 if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
                     this.world.removeBody(bullet);
                 } else {
@@ -302,6 +314,7 @@ public class CopilotGUI {
                             this.world.removeBody(bullet);
                             this.world.removeBody((Obstacle) o);
                             this.score++;
+                            GUIController.playCollisionBullet();
                         }
                     }
                 }
@@ -315,7 +328,7 @@ public class CopilotGUI {
                 double airplaneY = airplaneTransform.getTranslationY();
 
                 this.fuelTimer += elapsedTime;
-
+                
                 if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
                     this.fuelTimer = 0;
@@ -386,10 +399,12 @@ public class CopilotGUI {
                     if (o instanceof Obstacle) {
                         this.world.removeBody((Obstacle) o);
                         this.lives--;
+                        GUIController.playCollisionBird();
                     } else if (o instanceof Kerosine) {
                         Kerosine kerosine = (Kerosine) o;
                         this.world.removeBody(kerosine);
                         airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());
+                        GUIController.playOilPickUp();
                     }
                 }
 
@@ -401,7 +416,7 @@ public class CopilotGUI {
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
                 this.scoreLabel.setText("Score: " + this.score);
                 this.livesLabel.setText("Lives: " + this.lives);
-                this.speedLabel.setText("Speed: " + (int) this.zebraForce);
+                this.speedLabel.setText("Speed: " + this.zebraForce);
                 this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
                 if (!this.world.containsBody(airplane)) {
@@ -447,7 +462,7 @@ public class CopilotGUI {
                     this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,
                     randomY
             );
-
+            
             this.world.addBody(go);
         }
     }
@@ -510,7 +525,10 @@ public class CopilotGUI {
     }
 
     public void gameOver() {
-        GameOverGUI goGUI = new GameOverGUI(this.frame, this.score);
+        GUIController.playGameOver();
+        GUIController.stopAirplaneSound();
+        GUIController.stopGameSound();
+        GameOverGUI goGUI = new GameOverGUI(this.score);
         this.frame.dispose();
     }
 

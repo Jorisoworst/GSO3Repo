@@ -7,10 +7,11 @@ package copilot.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -24,22 +25,24 @@ import javax.swing.SwingConstants;
  *
  * @author IndyGames
  */
-public class GameOverGUI {
-
+public class GameOverGUI{
     private final String gameOverText;
     private final int score;
     private final JFrame frame;
     private JPanel contentPane;
-    private JLabel gameOverLabel, scoreLabel;
     private Font font;
+    private int screenWidth, screenHeight;
 
-    public GameOverGUI(JFrame copilotGUI, int score) {
+    public GameOverGUI(int score) {
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        this.screenWidth = size.width;
+        this.screenHeight = size.height;
+        
         this.frame = new JFrame("CoPilot - Game Over");
         this.gameOverText = "Game Over";
         this.score = score;
         this.createGUI();
         this.frame.setContentPane(this.contentPane);
-        this.frame.setPreferredSize(copilotGUI.getPreferredSize());
         this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.frame.setUndecorated(true);
         this.frame.setResizable(false);
@@ -47,7 +50,7 @@ public class GameOverGUI {
         this.frame.pack();
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
-        this.frame.setLayout(new GridBagLayout());
+        this.frame.setLayout(new BorderLayout());
     }
 
     private void createGUI() {
@@ -59,15 +62,19 @@ public class GameOverGUI {
             Logger.getLogger(LaunchGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.gameOverLabel = new JLabel(gameOverText);
-        this.gameOverLabel.setForeground(Color.WHITE);
-        this.gameOverLabel.setFont(this.font);
-        this.gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel gameOverLabel = new JLabel(gameOverText);
+        gameOverLabel.setLayout(new BorderLayout());
+        gameOverLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight / 2));
+        gameOverLabel.setForeground(Color.WHITE);
+        gameOverLabel.setFont(this.font);
+        gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        this.scoreLabel = new JLabel("Score: " + this.score);
-        this.scoreLabel.setForeground(Color.WHITE);
-        this.scoreLabel.setFont(this.font);
-        this.scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel scoreLabel = new JLabel("Score: " + this.score);
+        scoreLabel.setLayout(new BorderLayout());
+        scoreLabel.setPreferredSize(new Dimension(this.screenWidth, this.screenHeight / 2));
+        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setFont(this.font);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         this.contentPane = new JPanel() {
             @Override
@@ -78,7 +85,7 @@ public class GameOverGUI {
         };
 
         this.contentPane.setLayout(new BorderLayout());
-        this.contentPane.add(this.gameOverLabel, BorderLayout.CENTER);
-        this.contentPane.add(this.scoreLabel, BorderLayout.SOUTH);
+        this.contentPane.add(gameOverLabel, BorderLayout.NORTH);
+        this.contentPane.add(scoreLabel, BorderLayout.SOUTH);
     }
 }
