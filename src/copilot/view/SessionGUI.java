@@ -10,51 +10,30 @@ import copilot.domain.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
  * @author IndyGames
  */
-public class SessionGUI {
+public class SessionGUI extends JPanel {
     
     public SessionGUI(Session session, User userLoggedIn) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-        
-        JFrame frame = new JFrame("CO-Pilot Session");
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-        JPanel panel = new JPanel();
-        frame.add(panel);
-        placeComponents(panel, session, userLoggedIn);
-
-        frame.setVisible(true);
+        placeComponents(session, userLoggedIn);
     }
     
-    private static void placeComponents(JPanel panel, Session session, User user) {
-        panel.setLayout(null);
+    private void placeComponents(Session session, User user) {
+        this.setLayout(null);
         
         JButton backButton = new JButton("back");
         backButton.setBounds(610, 10, 160, 50);
-        panel.add(backButton);
+        this.add(backButton);
         
         backButton.addActionListener(new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                LobbyGUI lobby = new LobbyGUI(user);                
-                frameToClose.dispose(); 
+                AllCopilotGUI.setPanel("lobby", user);
             }
         });
     }

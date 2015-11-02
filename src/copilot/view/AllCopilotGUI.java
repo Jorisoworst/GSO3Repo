@@ -6,6 +6,7 @@
 package copilot.view;
 
 import copilot.controller.GUIController;
+import copilot.domain.Session;
 import copilot.domain.User;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -92,10 +93,13 @@ public class AllCopilotGUI {
             case "login":
                 LoginGUI panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);
                 panel.add(panelLogin, "login");
-                frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                frame.dispose();
-                frame.setUndecorated(true);
-                frame.setVisible(true);
+                
+                if (!(frame.getExtendedState() == JFrame.MAXIMIZED_BOTH)) {
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    frame.dispose();
+                    frame.setUndecorated(true);
+                    frame.setVisible(true);
+                }
                 layout.show(frame.getContentPane(), "login");
                 break;
                 
@@ -106,15 +110,27 @@ public class AllCopilotGUI {
                 break;
                 
             case "lobby":
+                LobbyGUI panelLobby = new LobbyGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);
+                panel.add(panelLobby, "lobby");
+                layout.show(frame.getContentPane(), "lobby");
                 break;
                 
             case "session":
+                SessionGUI panelSession = new SessionGUI((Session)extraInformation, (User)extraInformation);
+                panel.add(panelSession, "session");
+                layout.show(frame.getContentPane(), "session");
                 break;
                 
             case "settings":
+                SettingsGUI panelSettings = new SettingsGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);
+                panel.add(panelSettings, "settings");
+                layout.show(frame.getContentPane(), "settings");
                 break;
                 
             case "credits":
+                CreditsGUI panelCredits = new CreditsGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);
+                panel.add(panelCredits, "credits");
+                layout.show(frame.getContentPane(), "credits");
                 break;
                 
             case "game":

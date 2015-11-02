@@ -31,58 +31,30 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author IndyGames
  */
-public class CreditsGUI {
+public class CreditsGUI extends JPanel {
     
     private Font font, sizedFont;
     private Image screen, logo;
     private int screenWidth, screenHeight;
     
-    public CreditsGUI(User userLoggedIn) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-        
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
-        
-        JFrame frame = new JFrame("CO-Pilot Credits");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true);
-        frame.setLocationRelativeTo(null);
-
-        try {
-            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
-            this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
-            this.logo = ImageIO.read(this.getClass().getClassLoader().getResource("logo.png"));
-            this.logo = this.logo.getScaledInstance(158, 122, 1);
-        } catch (IOException ex) {
-            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        this.font = GUIController.loadFont(30);
-        this.sizedFont = GUIController.loadFont(32);
-        
-        JPanel panel = new JPanel();
-        frame.add(panel);
-        placeComponents(panel, userLoggedIn);
-
-        frame.setVisible(true);
+    public CreditsGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {
+        this.screenHeight = screenHeight;
+        this.screenWidth = screenWidth;
+        this.font = font;
+        this.sizedFont = sizedFont;
+        this.screen = screen;
+        this.logo = logo;
+        placeComponents(userLoggedIn);
     }
     
-    private void placeComponents(JPanel panel, User user) {
-        
-        panel.setLayout(null); 
+    private void placeComponents(User user) {
+        this.setLayout(null); 
         
         JButton backButton = new JButton("BACK");
         backButton.setFont(font);
         backButton.setBounds(40, this.screenHeight - 60, 160, 40);
         backButton.setContentAreaFilled(false);
-        panel.add(backButton);
+        this.add(backButton);
         
         backButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -104,55 +76,53 @@ public class CreditsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                //MainMenuGUI mainMenu = new MainMenuGUI(user);          
-                frameToClose.dispose(); 
+                AllCopilotGUI.setPanel("menu", user);
             }
         });
         
         JLabel gameBroughtLabel = new JLabel("MADE BY");
         gameBroughtLabel.setBounds(this.screenWidth / 2 - 68, 180, 300, 80);
         gameBroughtLabel.setFont(sizedFont);
-        panel.add(gameBroughtLabel);
+        this.add(gameBroughtLabel);
         
         JLabel indyLabel = new JLabel("INDY", SwingConstants.CENTER);
         indyLabel.setBounds(gameBroughtLabel.getX(), gameBroughtLabel.getY() + 55, 150, 150);
         indyLabel.setFont(font);
         
-        panel.add(indyLabel);
+        this.add(indyLabel);
         
         JLabel jonneLabel = new JLabel("JONNE", SwingConstants.CENTER);
         jonneLabel.setBounds(gameBroughtLabel.getX(), indyLabel.getY() + 55, 150, 150);
         jonneLabel.setFont(font);
-        panel.add(jonneLabel);
+        this.add(jonneLabel);
         
         JLabel jorisLabel = new JLabel("JORIS", SwingConstants.CENTER);
         jorisLabel.setBounds(gameBroughtLabel.getX(), jonneLabel.getY() + 55, 150, 150);
         jorisLabel.setFont(font);
-        panel.add(jorisLabel);
+        this.add(jorisLabel);
   
         JLabel markLabel = new JLabel("MARK", SwingConstants.CENTER);
         markLabel.setBounds(gameBroughtLabel.getX(), jorisLabel.getY() + 55, 150, 150);
         markLabel.setFont(font);
-        panel.add(markLabel);
+        this.add(markLabel);
 
         JLabel nielsLabel = new JLabel("NIELS", SwingConstants.CENTER);
         nielsLabel.setBounds(gameBroughtLabel.getX(), markLabel.getY() + 55, 150, 150);
         nielsLabel.setFont(font);
-        panel.add(nielsLabel);
+        this.add(nielsLabel);
         
         JLabel ruudLabel = new JLabel("RUUD", SwingConstants.CENTER);
         ruudLabel.setBounds(gameBroughtLabel.getX(), nielsLabel.getY() + 55, 150, 150);
         ruudLabel.setFont(font);
-        panel.add(ruudLabel);
+        this.add(ruudLabel);
         
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
-        panel.add(logoImage);
+        this.add(logoImage);
         
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
-        panel.add(bg);
+        this.add(bg);
         
     }
 }
