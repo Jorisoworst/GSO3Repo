@@ -33,7 +33,7 @@ public class SessionGUI extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                AllCopilotGUI.setPanel("lobby", user);
+                AllCopilotGUI.setPanel("lobby", user, null);
             }
         });
     }

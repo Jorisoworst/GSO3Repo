@@ -54,7 +54,7 @@ public class MainMenuGUI extends JPanel {
         logoutButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
             GUIController.stopBackgroundMusic();
-            AllCopilotGUI.setPanel("login", null);
+            AllCopilotGUI.setPanel("login", null, null);
         });
 
         logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -83,7 +83,7 @@ public class MainMenuGUI extends JPanel {
 
         joinButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
-            AllCopilotGUI.setPanel("lobby", user);
+            AllCopilotGUI.setPanel("lobby", user, null);
         });
         
         joinButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -114,7 +114,7 @@ public class MainMenuGUI extends JPanel {
             Session session = GameAdministration.getInstance().createSession(user);
             session.addUser(user);
             GUIController.stopBackgroundMusic();
-            AllCopilotGUI.setPanel("session", session);
+            AllCopilotGUI.setPanel("session", user, session);
         });
         
         hostButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,7 +143,7 @@ public class MainMenuGUI extends JPanel {
 
         settingsButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
-            AllCopilotGUI.setPanel("settings", user);
+            AllCopilotGUI.setPanel("settings", user, null);
         });
 
         settingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -171,7 +171,7 @@ public class MainMenuGUI extends JPanel {
 
         creditsButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
-            AllCopilotGUI.setPanel("credits", null);
+            AllCopilotGUI.setPanel("credits", null, null);
         });
 
         creditsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -200,7 +200,7 @@ public class MainMenuGUI extends JPanel {
         singleplayerButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
             GUIController.stopBackgroundMusic();
-            AllCopilotGUI.setPanel("game", null);
+            AllCopilotGUI.setPanel("game", null, null);
         });
 
         singleplayerButton.addMouseListener(new java.awt.event.MouseAdapter() {

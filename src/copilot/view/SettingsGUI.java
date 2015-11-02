@@ -67,7 +67,7 @@ public class SettingsGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
-                AllCopilotGUI.setPanel("menu", user);
+                AllCopilotGUI.setPanel("menu", user, null);
             }
         });
         

@@ -484,7 +484,7 @@ public class CopilotGUI extends JPanel {
         GUIController.playGameOver();
         GUIController.stopAirplaneSound();
         GUIController.stopGameSound();
-        AllCopilotGUI.setPanel("gameover", this.score);
+        AllCopilotGUI.setPanel("gameover", null, this.score);
     }
 
     /**

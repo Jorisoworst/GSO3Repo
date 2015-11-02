@@ -88,7 +88,7 @@ public class AllCopilotGUI {
         layout.show(frame.getContentPane(), "launch");
     }
 
-    public static void setPanel(String name, Object extraInformation) {
+    public static void setPanel(String name, Object extraInformation, Object extraInformation2) {
         switch (name) {
             case "login":
                 LoginGUI panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);
@@ -116,7 +116,7 @@ public class AllCopilotGUI {
                 break;
                 
             case "session":
-                SessionGUI panelSession = new SessionGUI((Session)extraInformation, (User)extraInformation);
+                SessionGUI panelSession = new SessionGUI((Session)extraInformation2, (User)extraInformation);
                 panel.add(panelSession, "session");
                 layout.show(frame.getContentPane(), "session");
                 break;
@@ -141,7 +141,7 @@ public class AllCopilotGUI {
                 break;
                 
             case "gameover":
-                GameOverGUI panelGameover = new GameOverGUI((int)extraInformation, screenWidth, screenHeight);
+                GameOverGUI panelGameover = new GameOverGUI((User)extraInformation, (int)extraInformation2, screenWidth, screenHeight, sizedFont4);
                 panelGameover.setBackground(Color.BLACK);
                 panel.add(panelGameover, "gameover");
                 layout.show(frame.getContentPane(), "gameover");

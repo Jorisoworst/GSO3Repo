@@ -91,7 +91,7 @@ public class LoginGUI extends JPanel {
                     // HAS TO BE login
                     if (true) {
                         User user = admin.getUser(userText.getText());
-                        AllCopilotGUI.setPanel("menu", user);
+                        AllCopilotGUI.setPanel("menu", user, null);
                     } else {
                         passwordText.setText(null);
                         JOptionPane.showMessageDialog(null, "Your username and/or password is not correct, try again or create an account", "ALERT", JOptionPane.ERROR_MESSAGE);

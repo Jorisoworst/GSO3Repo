@@ -6,11 +6,9 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 public class LaunchGUI extends JPanel {
     private final Font font, fontExtraSmall;
@@ -35,7 +33,7 @@ public class LaunchGUI extends JPanel {
 
         launchButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
-            AllCopilotGUI.setPanel("login", null);
+            AllCopilotGUI.setPanel("login", null, null);
         });
 
         launchButton.addMouseListener(new java.awt.event.MouseAdapter() {

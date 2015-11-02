@@ -161,7 +161,7 @@ public class LobbyGUI extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                AllCopilotGUI.setPanel("menu", user);
+                AllCopilotGUI.setPanel("menu", user, null);
             }
         });
         
