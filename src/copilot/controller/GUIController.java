@@ -24,9 +24,9 @@ import javax.swing.JOptionPane;
 public final class GUIController {
 
     private static Clip backgroundClip, airplaneSound, gameSound;
-    private static Random random = new Random();
-    private static int min = 1;
-    private static int max = 5;
+    private static final Random random = new Random();
+    private static final int min = 1;
+    private static final int max = 5;
     private static int countKill, countHit = 0;
     
     public static Font loadFont(int size) {
