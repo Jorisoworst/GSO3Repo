@@ -8,14 +8,21 @@ package copilot.controller;
 import static copilot.view.frame.CopilotGUI.NANO_TO_BASE;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Image;
+import java.awt.Panel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,12 +32,11 @@ import javax.swing.JOptionPane;
 public final class GUIController {
 
     private static Clip backgroundClip, airplaneSound, gameSound;
-    private static boolean stopped;
     private static Random random = new Random();
     private static int min = 1;
     private static int max = 5;
     private static int countKill, countHit = 0;
-
+    
     public static Font loadFont(int size) {
         try {
             InputStream is = GUIController.class.getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
@@ -221,22 +227,4 @@ public final class GUIController {
         }
     }
 
-//    public void startBackground() {
-//        GUIController.stopped = false;
-//        Thread thread = new Thread() {
-//            @Override
-//            public void run() {
-//                while (!isStopped()) {
-//                    
-//                }
-//            }
-//        };
-//
-//        thread.setDaemon(true);
-//        thread.start();
-//    }
-//
-//    public static synchronized boolean isStopped() {
-//        return GUIController.stopped;
-//    }
 }
