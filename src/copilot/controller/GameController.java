@@ -120,7 +120,7 @@ public class GameController implements CollisionListener {
                     if (getKeyPressed().equals("SPACE")) {
                         setKeyPressed(inputKey + "_" + getKeyPressed());
                     } else if (getKeyPressed().endsWith("_SPACE")) {
-                        setKeyPressed(getKeyPressed());
+                        setKeyPressed(inputKey + "_SPACE");
                     } else {
                         setKeyPressed(inputKey);
                     }
@@ -130,9 +130,7 @@ public class GameController implements CollisionListener {
                     if (getKeyPressed().equals("UP")
                             || getKeyPressed().equals("DOWN")) {
                         setKeyPressed(getKeyPressed() + "_" + inputKey);
-                    } else if (getKeyPressed().endsWith("_SPACE")) {
-                        setKeyPressed(getKeyPressed());
-                    } else {
+                    } else if (!getKeyPressed().endsWith("_SPACE")) {
                         setKeyPressed(inputKey);
                     }
                     break;
