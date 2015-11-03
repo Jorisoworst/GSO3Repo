@@ -17,40 +17,55 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author IndyGames
  */
 public class DatabaseAdministration {
+
     private Connection conn;
-    
+
+    /**
+     * Constructor for the DatabaseAdministration class.
+     *
+     * @throws Exception
+     */
     public DatabaseAdministration() throws Exception {
-        if(!initConnection()) {
+        if (!initConnection()) {
             throw new Exception("initializing database failed.");
         }
         closeConnection();
     }
-    
-    private boolean initConnection() throws FileNotFoundException, IOException
-    {
+
+    /**
+     * Initilialize the connection to the database.
+     *
+     * @return True if the connection was succesfully established, false if not
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    private boolean initConnection() throws FileNotFoundException, IOException {
         try {
             Properties props = new Properties();
+
             try (FileInputStream in = new FileInputStream("database.properties")) {
                 props.load(in);
             }
-            
-            Class.forName (props.getProperty("driver")).newInstance();
-            this.conn = DriverManager.getConnection (
-                    props.getProperty("url"), 
-                    props.getProperty("username"), 
+
+            Class.forName(props.getProperty("driver")).newInstance();
+            this.conn = DriverManager.getConnection(
+                    props.getProperty("url"),
+                    props.getProperty("username"),
                     props.getProperty("password"));
-            
+
             return true;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
             System.out.println(ex.getMessage());
             return false;
-        }    
+        }
     }
 
+    /**
+     * Close the connection to the database.
+     */
     private void closeConnection() {
         try {
             this.conn.close();
@@ -59,11 +74,17 @@ public class DatabaseAdministration {
             System.out.println(ex.getMessage());
         }
     }
-    
+
+    /**
+     * Get all the user from the database.
+     *
+     * @return All the users from the database
+     * @throws IOException
+     */
     public ArrayList<User> GetUsers() throws IOException {
         ArrayList<User> users = new ArrayList<>();
         String query = "SELECT * FROM user";
-        
+
         try {
             if (initConnection()) {
                 Statement st = conn.createStatement();
@@ -73,7 +94,8 @@ public class DatabaseAdministration {
                     int accountId = rs.getInt("Id");
                     Date bday = rs.getDate("DateOfBirth");
                     Calendar calBirthday = null;
-                    if(bday != null) {
+
+                    if (bday != null) {
                         calBirthday = Calendar.getInstance();
                         calBirthday.setTime(bday);
                     }
@@ -86,16 +108,18 @@ public class DatabaseAdministration {
                     int personalBest = rs.getInt("PersonalBest");
                     Date registrationDate = rs.getDate("RegistrationDate");
                     Calendar calRegistrationDate = null;
-                    if(registrationDate != null) {
+
+                    if (registrationDate != null) {
                         calRegistrationDate = Calendar.getInstance();
                         calRegistrationDate.setTime(bday);
                     }
 
                     String username = rs.getString("Username");
                     String userType = rs.getString("UserType");
-                    
+
                     //a,m,p
                     User user = null;
+
                     switch (userType) {
                         case "A":
                             user = new Administrator(username, password, displayName, calBirthday);
@@ -107,8 +131,8 @@ public class DatabaseAdministration {
                             user = new Player(username, password, displayName, calBirthday);
                             break;
                     }
-                    
-                    if(user != null) {
+
+                    if (user != null) {
                         user.setExperiencePoints(experiencePoint);
                         user.setId(accountId);
                         user.setLevel(level);
@@ -126,12 +150,20 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return users;
     }
-    
-    public User AddUser(User user) throws IOException {   
+
+    /**
+     * Add a new user to the database.
+     *
+     * @param user The user to be added
+     * @return The user that was added
+     * @throws IOException
+     */
+    public User AddUser(User user) throws IOException {
         String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiencePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Report, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
         try {
             if (initConnection()) {
                 PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -145,33 +177,42 @@ public class DatabaseAdministration {
                 st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
                 st.setInt(9, user.getReports());
                 st.setString(10, user.getUsername());
-                
-                if(user instanceof Administrator) {
+
+                if (user instanceof Administrator) {
                     st.setString(11, "A");
-                }
-                else if(user instanceof Moderator) {
+                } else if (user instanceof Moderator) {
                     st.setString(11, "M");
-                }
-                else {
+                } else {
                     st.setString(11, "P");
                 }
+
                 int resultId = st.executeUpdate();
                 ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()){
-                    resultId =rs.getInt(1);
+
+                if (rs.next()) {
+                    resultId = rs.getInt(1);
                 }
+
                 user.setId(resultId);
+
                 return user;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeConnection();
-        }       
-        
+        }
+
         return null;
     }
-    
+
+    /**
+     * Update an existing user from the database.
+     *
+     * @param user The user to be updated
+     * @return True if the update was succesful, false if not
+     * @throws IOException
+     */
     public boolean UpdateUser(User user) throws IOException {
         String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiencePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
                 + " RegistrationDate = ?, Report = ?, Username = ?, UserType = ? WHERE Id = ?";
@@ -188,19 +229,18 @@ public class DatabaseAdministration {
                 st.setDate(8, new java.sql.Date(user.getRegistrationDate().getTimeInMillis()));
                 st.setInt(9, user.getReports());
                 st.setString(10, user.getUsername());
-                
-                if(user instanceof Administrator) {
+
+                if (user instanceof Administrator) {
                     st.setString(11, "A");
-                }
-                else if(user instanceof Moderator) {
+                } else if (user instanceof Moderator) {
                     st.setString(11, "M");
-                }
-                else {
+                } else {
                     st.setString(11, "P");
                 }
+
                 st.setInt(12, user.getId());
                 st.executeUpdate();
-                
+
                 return true;
             }
         } catch (SQLException ex) {
@@ -208,10 +248,17 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return false;
     }
-    
+
+    /**
+     * Delete an existing user from the database.
+     *
+     * @param userId The user id of the user to be deleted
+     * @return True if the deletion was succesful, false if not
+     * @throws IOException
+     */
     public boolean DeleteUser(int userId) throws IOException {
         try {
             if (initConnection()) {
@@ -219,7 +266,7 @@ public class DatabaseAdministration {
                 PreparedStatement st = conn.prepareStatement(query);
                 st.setInt(1, userId);
                 st.executeUpdate();
-                
+
                 return true;
             }
         } catch (SQLException ex) {
@@ -227,47 +274,59 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return false;
     }
-    
+
+    /**
+     * Get a highscore from the database.
+     *
+     * @return The score
+     * @throws IOException
+     */
     public ArrayList<Score> SelectScore() throws IOException {
         ArrayList<Score> scores = new ArrayList<>();
-        
         String query = "SELECT * FROM score";
+
         try {
             if (initConnection()) {
                 try (Statement st = conn.createStatement()) {
                     ResultSet rs = st.executeQuery(query);
-                    
-                    while (rs.next())
-                    {
+
+                    while (rs.next()) {
                         int scoreId = rs.getInt("Id");
                         int score = rs.getInt("Score");
                         int user1 = rs.getInt("User_1");
                         int user2 = rs.getInt("User_2");
                         int user3 = rs.getInt("User_3");
                         int user4 = rs.getInt("User_4");
-                        
-                        Score scoreObj = new Score(score,user1,user2,user3,user4);
+
+                        Score scoreObj = new Score(score, user1, user2, user3, user4);
                         scoreObj.setScoreId(scoreId);
                         scores.add(scoreObj);
                     }
                 }
                 return scores;
             }
-        }
-        catch(SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeConnection();
         }
-        
+
         return null;
     }
-    
+
+    /**
+     * Add a highscore from the database.
+     *
+     * @param score The score to be added
+     * @return The score that was added
+     * @throws IOException
+     */
     public Score AddScore(Score score) throws IOException {
         String query = "INSERT INTO score (Score, User_1, User_2, User_3, User_4) VALUES(?,?,?,?,?)";
+
         try {
             if (initConnection()) {
                 PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -277,12 +336,14 @@ public class DatabaseAdministration {
                 st.setInt(4, score.getUser3id());
                 st.setInt(5, score.getUser4id());
                 int resultId = st.executeUpdate();
-                 ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()){
-                    resultId =rs.getInt(1);
+                ResultSet rs = st.getGeneratedKeys();
+
+                if (rs.next()) {
+                    resultId = rs.getInt(1);
                 }
+
                 score.setScoreId(resultId);
-                
+
                 return score;
             }
         } catch (SQLException ex) {
@@ -290,12 +351,20 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return null;
     }
-    
+
+    /**
+     * Update a highscore from the database.
+     *
+     * @param score The score to be updated
+     * @return True if the update was succesful, false if not
+     * @throws IOException
+     */
     public boolean UpdateScore(Score score) throws IOException {
         String query = "UPDATE score SET Score = ?, User_1 =?, User_2 = ?, User_3 = ?, User_4 = ?";
+
         try {
             if (initConnection()) {
                 PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -305,7 +374,7 @@ public class DatabaseAdministration {
                 st.setInt(4, score.getUser3id());
                 st.setInt(5, score.getUser4id());
                 st.executeUpdate();
-                
+
                 return true;
             }
         } catch (SQLException ex) {
@@ -313,18 +382,25 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return false;
     }
-    
+
+    /**
+     * Delete a highscore from the database.
+     *
+     * @param scoreId The score id of the score to be deleted
+     * @return True if the deletion was succesful, false if not
+     * @throws IOException
+     */
     public boolean DeleteScore(int scoreId) throws IOException {
-         try {
+        try {
             if (initConnection()) {
                 String query = "DELETE FROM score WHERE Id = ?";
                 PreparedStatement st = conn.prepareStatement(query);
                 st.setInt(1, scoreId);
                 st.executeUpdate();
-                
+
                 return true;
             }
         } catch (SQLException ex) {
@@ -332,23 +408,31 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-         
+
         return false;
     }
-    
+
+    /**
+     * Get a game setting from the database.
+     *
+     * @return The game setting
+     * @throws IOException
+     */
     public GameSetting GetGameSetting() throws IOException {
         GameSetting gameSettings = null;
         String query = "SELECT * FROM gameSetting";
+
         try {
             if (initConnection()) {
                 try (Statement st = conn.createStatement()) {
                     ResultSet rs = st.executeQuery(query);
-                    
+
                     while (rs.next()) {
                         double levelUp = rs.getDouble("LevelUp");
                         int maxFuel = rs.getInt("MaxFuelCapacity");
                         int maxUser = rs.getInt("MaxUser");
                         int requiredExp = rs.getInt("RequiredExperiencePoint");
+
                         gameSettings = new GameSetting();
                         gameSettings.setLevelUp(levelUp);
                         gameSettings.setMaxFuelCapacity(maxFuel);
@@ -357,29 +441,38 @@ public class DatabaseAdministration {
                     }
                 }
             }
-        }
-        catch(SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseAdministration.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeConnection();
         }
-        
+
         return gameSettings;
     }
-    
+
+    /**
+     * Save a game setting to the database.
+     *
+     * @param gameSetting The game setting to be added
+     * @return True if the insert was succesful, false if not
+     * @throws IOException
+     */
     public boolean SaveGameSetting(GameSetting gameSetting) throws IOException {
         String trunQuery = "TRUNCATE TABLE gamesetting";
         String query = "INSERT INTO gamesetting VALUES(?,?,?,?)";
+
         try {
             if (initConnection()) {
                 Statement s = conn.createStatement();
                 s.executeUpdate(trunQuery);
+                
                 PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 st.setDouble(1, gameSetting.getLevelUp());
                 st.setInt(2, gameSetting.getMaxFuelCapacity());
                 st.setInt(3, gameSetting.getMaxUser());
                 st.setInt(4, gameSetting.getRequiredExperiencePoints());
                 st.executeUpdate();
+                
                 return true;
             }
         } catch (SQLException ex) {
@@ -387,7 +480,7 @@ public class DatabaseAdministration {
         } finally {
             closeConnection();
         }
-        
+
         return false;
     }
 }

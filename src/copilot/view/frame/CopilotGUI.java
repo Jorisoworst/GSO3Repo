@@ -35,7 +35,6 @@ import org.dyn4j.geometry.Transform;
 import org.dyn4j.geometry.Vector2;
 
 /**
- *
  * @author IndyGames
  */
 public class CopilotGUI extends JPanel {
@@ -76,7 +75,7 @@ public class CopilotGUI extends JPanel {
         this.font = font;
         this.initializeVariables();
         this.loadResources();
-        this.createGUI();
+        this.placeComponents();
         this.gameController = new GameController(this);
         this.initializeWorld();
     }
@@ -127,16 +126,15 @@ public class CopilotGUI extends JPanel {
 
             this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource("fuel.png"));
             this.kerosineImage = this.kerosineImage.getScaledInstance(80, 80, 1);
-
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * Create the gui components.
+     * Place the gui components.
      */
-    private void createGUI() {
+    private void placeComponents() {
         this.setLayout(new BorderLayout());
 
         this.labelPanel = new JPanel();
@@ -164,6 +162,7 @@ public class CopilotGUI extends JPanel {
         this.fpsLabel = new JLabel("FPS: " + this.fps);
         this.labelPanel.add(this.fpsLabel);
 
+        // Set the Font, TextColor and the TextAlignment for each JLabel on the labelPanel
         for (Component comp : this.labelPanel.getComponents()) {
             JLabel lbl = (JLabel) comp;
             lbl.setFont(this.font);
@@ -173,13 +172,16 @@ public class CopilotGUI extends JPanel {
 
         this.add(this.labelPanel, BorderLayout.PAGE_START);
 
+        // Create the size of the canvas
         Dimension size = new Dimension(this.screenWidth, this.screenHeight);
 
+        // Create a canvas to paint to 
         this.canvas = new Canvas();
         this.canvas.setPreferredSize(size);
         this.canvas.setMinimumSize(size);
         this.canvas.setMaximumSize(size);
 
+        // Add the Canvas to the JFrame (this)
         this.add(this.canvas, BorderLayout.PAGE_END);
     }
 
@@ -187,10 +189,18 @@ public class CopilotGUI extends JPanel {
      * Creates game objects and adds them to the world.
      */
     private void initializeWorld() {
+        // Create the world
         this.world = new World();
+
+        // Set the gravity to positive
+        // since (0, 0) is the top left instead of bottom left
         this.world.setGravity(new Vector2(0.0, 9.81));
+
+        // Add the game controller as the collision listener
         this.world.addListener(this.gameController);
 
+        // Create the Airplane GameObject and set it's default values
+        // such as Mass, Translation (position) and it's Fixture (hit detection box)
         GameObject airplane = new Airplane(this.airplaneImage);
         Rectangle airplaneShape = new Rectangle(airplane.getWidth(), airplane.getHeight());
         airplane.addFixture(airplaneShape);
@@ -208,13 +218,21 @@ public class CopilotGUI extends JPanel {
         GUIController.playAirplane();
         GUIController.playGameSound();
 
+        // Initialize the last update time
         this.last = System.nanoTime();
+        // Don't allow AWT to paint the canvas since we are
         this.canvas.setIgnoreRepaint(true);
+        // Enable double buffering (the JFrame has to be
+        // visible before this can be done)
         this.canvas.createBufferStrategy(2);
 
+        // Run a separate thread to do active rendering
+        // because we don't want to do it on the EDT
         Thread thread = new Thread() {
             @Override
             public void run() {
+                // Perform an infinite loop for the game loop
+                // and calculate the current fps
                 while (!isStopped()) {
                     lastTime = System.nanoTime();
                     gameLoop();
@@ -224,7 +242,10 @@ public class CopilotGUI extends JPanel {
             }
         };
 
+        // Set the game loop thread to a daemon thread so that
+        // it cannot stop the JVM from exiting
         thread.setDaemon(true);
+        // Start the game loop
         thread.start();
     }
 
@@ -233,29 +254,43 @@ public class CopilotGUI extends JPanel {
      * and poll for input.
      */
     protected void gameLoop() {
+        // Get the current time
         this.time = System.nanoTime();
+
+        // Get the elapsed time from the last iteration
         this.diff = (double) this.time - (double) this.last;
+
+        // Set the last time
         this.last = this.time;
         this.elapsedTime += this.diff;
         this.targetInterval = NANO_TO_BASE / TARGET_FPS;
         this.actualInterval = this.elapsedTime / this.targetInterval;
 
+        // Update the world with the actual interval
         if (this.elapsedTime >= this.targetInterval) {
             this.world.update(this.actualInterval);
             this.update(this.actualInterval);
             this.elapsedTime = 0;
         }
 
+        // Blit/flip the buffer
         BufferStrategy strategy = this.canvas.getBufferStrategy();
+
+        // Get the graphics object to render to
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
+        // Render anything about the game (will render the World objects)
         this.render(g);
+
+        // Dispose of the graphics object
         g.dispose();
 
         if (!strategy.contentsLost()) {
             strategy.show();
         }
 
+        // Sync the display on some systems.
+        // (on Linux, this fixes event queue problems)
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -265,17 +300,22 @@ public class CopilotGUI extends JPanel {
      * @param elapsedTime the total elapsed time since the last frame.
      */
     protected void update(double elapsedTime) {
+        // Get the last key presses done by the user
         String key = this.gameController.getKeyPressed();
 
-        if (key.equals("ESCAPE")) {
+        // If the user hit escape, the game will stop
+        if (key.equals("ESCAPE") || key.equals("ESCAPE_RELEASED")) {
             this.gameController.setKeyPressed("NONE");
             this.stop();
             AllCopilotGUI.setPanel("menu", null, null);
-//            System.exit(0);
         }
 
+        // Increase the spawn timer with the elapsed time and the zebra force
+        // to make the game more difficult the further you get
         this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
 
+        // If the spawn timer reaches 150 or more, spawn a random GameObject
+        // (10% chance for Kerosine, 90% chance for Obstacle)
         if (this.spawnTimer >= 150) {
             if ((rnd.nextInt(10) + 1) % 10 == 0) {
                 spawnObject("P");
@@ -283,24 +323,35 @@ public class CopilotGUI extends JPanel {
                 spawnObject("O");
             }
 
+            // Reset the spawn timer
             this.spawnTimer = 0;
         }
 
+        // Update every Body (GameObject) in the World
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
 
+            // If the Body is an Obstacle or a Kerosine object,
+            // move them left with the speed of zebra force multiplied by
+            // the elapsed time
             if (go instanceof Obstacle || go instanceof Kerosine) {
+
+                // Check if the GameObject is within bounds
                 if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
                     this.world.removeBody(go);
                 } else {
                     go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
                 }
 
+                // Change the image of the Obstacle to simulate an animation
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
+                    // Increase the animation timer with the elapsed time
                     this.animationTimer += elapsedTime;
 
+                    // If the animation timer reaches 25 or more,
+                    // change the image of the Obstacle
                     if (this.animationTimer >= 25) {
                         if (obstacle.getImage() == this.obstacleImage2) {
                             obstacle.setImage(this.obstacleImage1);
@@ -308,18 +359,26 @@ public class CopilotGUI extends JPanel {
                             obstacle.setImage(this.obstacleImage2);
                         }
 
+                        // Reset the animation timer
                         this.animationTimer = 0;
                     }
                 }
             } else if (go instanceof Bullet) {
+                // If the Body is a Bullet object, move them left with the speed
+                // of bullet force, multiplied by the elapsed time
                 Bullet bullet = (Bullet) go;
 
+                // Check if the Bullet is within bounds
                 if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
                     this.world.removeBody(bullet);
                 } else {
                     bullet.translate(new Vector2(BULLET_FORCE * elapsedTime, 0));
+
+                    // Get the User Data from the Bullet (for collision detection)
                     Object o = bullet.getUserData();
 
+                    // If the Bullet collided with an Obstacle,
+                    // remove them both from the World
                     if (o != null) {
                         if (o instanceof Obstacle) {
                             this.world.removeBody(bullet);
@@ -330,6 +389,8 @@ public class CopilotGUI extends JPanel {
                     }
                 }
             } else if (go instanceof Airplane) {
+                // If the Body is an Airplane object, get the Translation
+                // (position) and the Width and Height
                 Airplane airplane = (Airplane) go;
                 double airplaneWidth = airplane.getWidth();
                 double airplaneHeight = airplane.getHeight();
@@ -338,32 +399,56 @@ public class CopilotGUI extends JPanel {
                 double airplaneX = airplaneTransform.getTranslationX();
                 double airplaneY = airplaneTransform.getTranslationY();
 
+                // Increase the fuel timer with the elapsed time
                 this.fuelTimer += elapsedTime;
 
+                // If the fuel timer reaches 25 or more,
+                // lower the fuel amount of the Airplane
                 if (this.fuelTimer >= 25) {
                     airplane.setFuelAmount(airplane.getFuelAmount() - 1);
+
+                    // Reset the fuel timer
                     this.fuelTimer = 0;
                 }
 
+                // Increase the speed timer with the elapsed time
                 this.speedTimer += elapsedTime;
 
+                // If the speed timer reaches 500 or more,
+                // increase the zebra force to make the game go faster
+                // and increase the score with the elapsed time mulitplied by
+                // the zebra force divided by 7
                 if (this.speedTimer >= 500) {
                     this.zebraForce++;
                     this.score += elapsedTime * (this.zebraForce / 7);
+
+                    // Reset the speed timer
                     this.speedTimer = 0;
                 }
 
+                // Increase the fps timer with the elapsed time
                 this.fpsTimer += elapsedTime;
 
+                // If the fps timer reaches 50 or more,
+                // update the fps label
                 if (this.fpsTimer >= 50) {
                     this.fpsLabel.setText("FPS: " + this.fps);
+
+                    // Reset the fps timer
                     this.fpsTimer = 0;
                 }
 
+                // If the amount of bullets fired is equal to or more than
+                // the clip size, the reload timer starts and increases
+                // with the elapsed time
                 if (this.bulletsFired >= this.clipSize) {
                     this.reloadTimer += elapsedTime;
+
+                    // Calculate the reloading progress
                     this.reloadProgress = 100 / this.reloadCooldown * this.reloadTimer;
 
+                    // If the reloading progress is greather than or equal to
+                    // the reload cooldown, reset all the corresponding variables
                     if (this.reloadTimer >= this.reloadCooldown) {
                         this.bulletsFired = 0;
                         this.reloadTimer = 0;
@@ -371,40 +456,60 @@ public class CopilotGUI extends JPanel {
                     }
                 }
 
+                // Update the altitude for the Airplane
+                // (the screen height - the y coordinate of the Airplane)
                 airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));
 
+                // If the user pressed up (W) on the keyboard,
+                // move the Airplane up as long as the Airplane is within bounds
                 if (key.startsWith("UP")) {
                     if (airplane.getFuelAmount() > 0 && airplaneY - (this.scoreLabel.getHeight() * 1.5) > 0) {
                         airplane.translate(new Vector2(0, -FORCE * elapsedTime));
                     }
                 }
 
+                // If the user pressed down (S) on the keyboard,
+                // move the Airplane down as long as the Airplane is within bounds
                 if (key.startsWith("DOWN")) {
                     if (airplaneY + airplaneHeight < this.screenHeight) {
                         airplane.translate(new Vector2(0, FORCE * elapsedTime));
                     }
                 }
 
+                // If the user pressed spacebar on the keyboard and the player
+                // has ammo left, create a new Bullet object and set it's default values
+                // such as Mass, Translation (position) and it's Fixture (hit detection box)
                 if (key.endsWith("SPACE") && (this.bulletsFired < this.clipSize)) {
                     Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY - 10 + airplaneHeight / 2));
                     Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());
                     bullet.addFixture(bulletShape);
                     bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
                     bullet.translate(bullet.getLocation());
+
+                    // Add the Bullet to the World
                     this.world.addBody(bullet);
+
+                    // Increase the amount of Bullets fired
                     this.bulletsFired++;
                 }
 
+                // Get the User Data from the Airplane (for collision detection)
                 Object o = airplane.getUserData();
 
                 if (o != null) {
                     airplane.setUserData(null);
 
                     if (o instanceof Obstacle) {
+                        // If the Airplane collided with an Obstacle, lower the amount
+                        // of lives, remove the Obstacle from the World and reset the User Data
+                        // of the Airplane
                         this.world.removeBody((Obstacle) o);
                         this.lives--;
                         GUIController.playCollisionBird();
                     } else if (o instanceof Kerosine) {
+                        // If the Airplane collided with a Kerosine, increase the fuel
+                        // amount, remove the Kerosine from the World and reset the User Data
+                        // of the Airplane
                         Kerosine kerosine = (Kerosine) o;
                         this.world.removeBody(kerosine);
                         airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());
@@ -412,14 +517,21 @@ public class CopilotGUI extends JPanel {
                     }
                 }
 
+                // Check if the Airplane crashed or if the player is out of lives
+                // and remove the Airplane from the World
                 if (this.lives <= 0 || airplaneY >= this.screenHeight) {
                     this.world.removeBody(airplane);
                 }
 
+                // Update the JLabels with the corresponding text
                 this.fuelLabel.setText("Fuel: " + airplane.getFuelAmount());
                 this.altLabel.setText("Alt: " + airplane.getAltitude());
+
+                // Move the background to the left (a bit less than the rest)
                 this.backgroundX -= elapsedTime * (this.zebraForce / 2);
 
+                // If the World doesn't have an Airplane object, the player
+                // is game over
                 if (!this.world.containsBody(airplane)) {
                     this.stop();
                     this.gameOver();
@@ -434,8 +546,10 @@ public class CopilotGUI extends JPanel {
      * @param type object type to spawn
      */
     public void spawnObject(String type) {
+        // Create an empty GameObject
         GameObject go = null;
 
+        // Check whether the GameObject has to be an Obstacle or Kerosine
         switch (type) {
             case "O": {
                 go = new Obstacle(this.obstacleImage1);
@@ -447,6 +561,7 @@ public class CopilotGUI extends JPanel {
             }
         }
 
+        // Spawn the GameObject on a random location within the bounds
         if (go != null) {
             int randomY = this.rnd.nextInt(this.screenHeight - this.scoreLabel.getHeight() - (int) go.getHeight());
 
@@ -456,6 +571,8 @@ public class CopilotGUI extends JPanel {
                 randomY = this.scoreLabel.getHeight();
             }
 
+            // Create the Fixture (hit detection box) for the GameObject
+            // and set the Mass and Translation (location)
             Rectangle objShape = new Rectangle(go.getWidth(), go.getHeight());
             go.addFixture(objShape);
             go.setMass(MassType.FIXED_LINEAR_VELOCITY);
@@ -464,6 +581,7 @@ public class CopilotGUI extends JPanel {
                     randomY
             );
 
+            // Add it to the World
             this.world.addBody(go);
         }
     }
@@ -484,20 +602,26 @@ public class CopilotGUI extends JPanel {
      * @param g the graphics object to render to
      */
     protected void render(Graphics2D g) {
+        // Draw over everything with the background
         g.drawImage(this.backgroundImage, this.backgroundX, 0, null);
 
+        // Draw a second background to the right of the previous one
         if (this.backgroundX <= 0) {
             g.drawImage(this.backgroundImage, this.backgroundX + this.backgroundImage.getWidth(null), 0, null);
 
+            // If the previous background is out of bounds,
+            // draw a new one to the right of the second one
             if (this.backgroundX <= -this.backgroundImage.getWidth(null)) {
                 this.backgroundX = 0;
             }
         }
 
+        // Draw every Body (GameObject) in the World
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
             go.render(g);
 
+            // Draw the hit boxes in Debug Mode
             if (DEBUG_MODE) {
                 Vector2 gameObjectLocation = go.getTransform().getTranslation();
                 Double gameObjectWidth = go.getWidth();
@@ -509,6 +633,7 @@ public class CopilotGUI extends JPanel {
             }
         }
 
+        // Draw the reloading porgress bar
         if (this.bulletsFired >= this.clipSize) {
             g.setColor(Color.DARK_GRAY);
             g.fillRect(50, this.screenHeight - 100, 400, 50);
@@ -525,6 +650,7 @@ public class CopilotGUI extends JPanel {
             g.drawString("Reloading...", 195, this.screenHeight - 55);
         }
 
+        // Update all the JLabels with the corresponding text
         this.scoreLabel.setText("Score: " + this.score);
         this.livesLabel.setText("Lives: " + this.lives);
         this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));

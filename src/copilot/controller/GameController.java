@@ -24,9 +24,12 @@ public class GameController implements CollisionListener {
     private final String[] keyIdentifiers;
     private final Integer[] keyValues;
     private String keyPressed;
-
+    
+    //Create a new game controller with Jpanel to observe.
     public GameController(JPanel panel) {
         
+        
+        //Add keys to the Dictionary.
         this.keyIdentifiers = new String[]{
             "UP",
             "DOWN",
@@ -35,7 +38,9 @@ public class GameController implements CollisionListener {
             "SPACE",
             "ESCAPE"
         };
-
+        
+        
+        //Add the corresponding values to the Dictionary keys.
         this.keyValues = new Integer[]{
             KeyEvent.VK_W/*VK_UP*/,
             KeyEvent.VK_S/*VK_DOWN*/,
@@ -44,27 +49,37 @@ public class GameController implements CollisionListener {
             KeyEvent.VK_SPACE,
             KeyEvent.VK_ESCAPE
         };
-
+        
+        
+        //Create the inputmap and get the actionmap.
         InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = panel.getActionMap();
         int limit = this.keyIdentifiers.length;
 
+        //Set all pressed the keys in the dictionary.
         for (int i = 0; i < limit; i++) {
             im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0), this.keyIdentifiers[i]);
             am.put(this.keyIdentifiers[i], new KeyAction(this.keyIdentifiers[i]));
         }
-
+        
+        //Identify key with a releaseIdentifier (this means this key becomes a 
+        //temporary release key and then gets added to the actionmap and inputmap below).
         String releasedIdentifier = "";
-
+        
+        
+        //Set all the released keys in the dictionary.
         for (int i = 0; i < limit - 1; i++) {
             releasedIdentifier = this.keyIdentifiers[i] + "_RELEASED";
             im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0, true), releasedIdentifier);
             am.put(releasedIdentifier, new KeyAction(releasedIdentifier));
         }
 
+        //The standard keyPressed value is NONE (so no unwanted movement occurs).
         this.keyPressed = "NONE";
     }
 
+    //Check if one body collides with the other body and then return if the 
+    //result is positive or negative.
     @Override
     public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2) {
         if (body1 != null && body2 != null) {
@@ -104,17 +119,23 @@ public class GameController implements CollisionListener {
         this.keyPressed = keyPressed;
     }
 
+    //This is the key Action class which returns the abstract action that occurs 
+    //(for example a keypress).
     public class KeyAction extends AbstractAction {
 
+        //A key action (for example the "Up" Key).
         public KeyAction(String name) {
             putValue(Action.NAME, name);
             putValue(ACTION_COMMAND_KEY, "Command: " + name);
         }
-
+        
+        //If a key is pressed then perform a certain action based on that key.
         @Override
         public void actionPerformed(ActionEvent e) {
             String inputKey = getValue(Action.NAME).toString();
-
+            
+            //Check if the key corresponds to the wanted result and then set 
+            //the pressed key to that designated value.
             switch (inputKey) {
                 case "UP":
                 case "DOWN": {

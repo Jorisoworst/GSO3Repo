@@ -17,13 +17,17 @@ import javax.swing.JOptionPane;
  * @author IndyGames
  */
 public final class GUIController {
-
     private static Clip backgroundClip, airplaneSound, gameSound;
     private static final Random random = new Random();
     private static final int min = 1;
     private static final int max = 5;
     private static int countKill, countHit = 0;
     
+    /**
+     * Load the font for the game.
+     * @param size the size for the new font
+     * @return the loaded font
+     */
     public static Font loadFont(int size) {
         try {
             InputStream is = GUIController.class.getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
@@ -36,6 +40,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play the click sound.
+     */
     public static void playClick() {
         try {
             Clip click = AudioSystem.getClip();
@@ -46,6 +53,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play the hover sound.
+     */
     public static void playHover() {
         try {
             Clip hover = AudioSystem.getClip();
@@ -56,10 +66,17 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Show an error message with the given error.
+     * @param error the error that needs to be shown
+     */
     public static void showExceptionError(String error) {
         JOptionPane.showMessageDialog(null, "Something went wrong, please try again, ERROR: " + error, "ALERT", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Load an loop the background music.
+     */
     public static void playBackgroundMusic() {
         try {
             backgroundClip = AudioSystem.getClip();
@@ -72,11 +89,16 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Stop the background music.
+     */
     public static void stopBackgroundMusic() {
         backgroundClip.stop();
     }
 
-    //sounds ingame
+    /**
+     * Load a random collision sound and play it.
+     */
     public static void playCollisionBullet() {
         try {
             int rndNum = random.nextInt(max - min) + min;
@@ -103,18 +125,22 @@ public final class GUIController {
             }
             countKill++;
             click.start();
+            
+            // If the player(s) killed 5 enemy's the kill frenzy sound is going to play
             if (countKill >= 5) {
                 Clip kill = AudioSystem.getClip();
                 kill.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Kill frenzy.wav")));
                 kill.start();
                 countKill = 0;
             }
-
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
             GUIController.showExceptionError(ex.toString());
         }
     }
 
+    /**
+     * Load a random explosion sound and play it.
+     */
     public static void playCollisionBird() {
         try {
             Clip hit = AudioSystem.getClip();
@@ -144,6 +170,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play the airplane sound.
+     */
     public static void playAirplane() {
         try {
             airplaneSound = AudioSystem.getClip();
@@ -156,10 +185,16 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Stop the airplane sound.
+     */
     public static void stopAirplaneSound() {
         airplaneSound.stop();
     }
 
+    /**
+     * Load and play the game sound.
+     */
     public static void playGameSound() {
         try {
             gameSound = AudioSystem.getClip();
@@ -170,10 +205,16 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Stop the game sound.
+     */
     public static void stopGameSound() {
         gameSound.stop();
     }
 
+    /**
+     * Load and play gun sound.
+     */
     public static void playGun() {
         try {
             Clip click = AudioSystem.getClip();
@@ -184,6 +225,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play oil pickup sound.
+     */
     public static void playOilPickUp() {
         try {
             Clip click = AudioSystem.getClip();
@@ -194,6 +238,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play the start game sound.
+     */
     public static void playStart() {
         try {
             Clip click = AudioSystem.getClip();
@@ -204,6 +251,9 @@ public final class GUIController {
         }
     }
 
+    /**
+     * Load and play the game over sound.
+     */
     public static void playGameOver() {
         try {
             Clip click = AudioSystem.getClip();
@@ -213,5 +263,4 @@ public final class GUIController {
             GUIController.showExceptionError(ex.toString());
         }
     }
-
 }
