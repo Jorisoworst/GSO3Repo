@@ -5,24 +5,16 @@
  */
 package copilot.controller;
 
-import static copilot.view.frame.CopilotGUI.NANO_TO_BASE;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Image;
-import java.awt.Panel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**

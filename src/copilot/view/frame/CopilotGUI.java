@@ -46,13 +46,14 @@ public class CopilotGUI extends JPanel {
     public static final int FORCE = 7;
     public static final int TARGET_FPS = 60;
     private final GameController gameController;
+    private final Font font;
+    private final int screenWidth, screenHeight;
     private boolean stopped;
     private double elapsedTime, targetInterval, diff, actualInterval;
     private long last, lastTime, time;
-    private int screenWidth, screenHeight, zebraForce, fps, lives, score,
-            backgroundX, spawnTimer, fpsTimer, fuelTimer, speedTimer,
-            animationTimer, bulletsFired, clipSize, reloadTimer, reloadProgress,
-            reloadCooldown;
+    private int zebraForce, fps, lives, score, backgroundX, spawnTimer,
+            fpsTimer, fuelTimer, speedTimer, animationTimer, bulletsFired,
+            clipSize, reloadTimer, reloadProgress, reloadCooldown;
     private Canvas canvas;
     private World world;
     private Random rnd;
@@ -61,19 +62,20 @@ public class CopilotGUI extends JPanel {
             fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1,
             obstacleImage2, kerosineImage;
-    private Font font;
 
     /**
      * Constructor for this gui.
+     *
+     * @param screenWidth the screenwidth
+     * @param screenHeight the screenheight
+     * @param font the font
      */
     public CopilotGUI(int screenWidth, int screenHeight, Font font) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
-        
         this.initializeVariables();
         this.loadResources();
-        
         this.createGUI();
         this.gameController = new GameController(this);
         this.initializeWorld();
@@ -146,7 +148,7 @@ public class CopilotGUI extends JPanel {
 
         this.livesLabel = new JLabel("Lives: 0");
         this.labelPanel.add(this.livesLabel);
-        
+
         this.bulletsLabel = new JLabel("Bullets: " + (this.clipSize - this.bulletsFired));
         this.labelPanel.add(this.bulletsLabel);
 
@@ -172,7 +174,7 @@ public class CopilotGUI extends JPanel {
         this.add(this.labelPanel, BorderLayout.PAGE_START);
 
         Dimension size = new Dimension(this.screenWidth, this.screenHeight);
-        
+
         this.canvas = new Canvas();
         this.canvas.setPreferredSize(size);
         this.canvas.setMinimumSize(size);
