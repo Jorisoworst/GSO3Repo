@@ -28,7 +28,6 @@ public class GameController implements CollisionListener {
     //Create a new game controller with Jpanel to observe.
     public GameController(JPanel panel) {
         
-        
         //Add keys to the Dictionary.
         this.keyIdentifiers = new String[]{
             "UP",

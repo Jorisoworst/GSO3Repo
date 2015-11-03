@@ -70,6 +70,7 @@ public class CopilotGUI extends JPanel {
      * @param font the font
      */
     public CopilotGUI(int screenWidth, int screenHeight, Font font) {
+        
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;

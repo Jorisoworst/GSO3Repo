@@ -29,6 +29,7 @@ public class DatabaseAdministration {
      * @throws Exception
      */
     public DatabaseAdministration() throws Exception {
+        
         if (!initConnection()) {
             throw new Exception("initializing database failed.");
         }
