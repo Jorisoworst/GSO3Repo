@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.controller.GameController;
@@ -11,6 +11,7 @@ import copilot.domain.Bullet;
 import copilot.domain.GameObject;
 import copilot.domain.Kerosine;
 import copilot.domain.Obstacle;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;

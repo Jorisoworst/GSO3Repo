@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.domain.Session;
 import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;

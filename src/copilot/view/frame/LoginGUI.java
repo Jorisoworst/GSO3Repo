@@ -1,9 +1,10 @@
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
 import copilot.domain.Player;
 import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;

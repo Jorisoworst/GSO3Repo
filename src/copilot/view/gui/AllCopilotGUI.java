@@ -3,8 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.gui;
 
+import copilot.view.frame.CopilotGUI;
+import copilot.view.frame.LobbyGUI;
+import copilot.view.frame.LaunchGUI;
+import copilot.view.frame.CreditsGUI;
+import copilot.view.frame.MainMenuGUI;
+import copilot.view.frame.LoginGUI;
+import copilot.view.frame.SettingsGUI;
+import copilot.view.frame.GameOverGUI;
+import copilot.view.frame.SessionGUI;
 import copilot.controller.GUIController;
 import copilot.domain.Session;
 import copilot.domain.User;

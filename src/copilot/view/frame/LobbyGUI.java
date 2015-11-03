@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
 import copilot.domain.Session;
 import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;

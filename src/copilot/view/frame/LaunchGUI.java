@@ -1,6 +1,7 @@
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;

@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
