@@ -125,13 +125,13 @@ public final class GUIController {
             countKill++;
             click.start();
             
-            // If the player(s) killed 5 enemy's the kill frenzy sound is going to play
-            if (countKill >= 5) {
-                Clip kill = AudioSystem.getClip();
-                kill.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Kill frenzy.wav")));
-                kill.start();
-                countKill = 0;
-            }
+            // If the player(s) killed 5 enemy's the kill frenzy sound is going to play //TODO  
+//            if (countKill >= 5) {
+//                Clip kill = AudioSystem.getClip();
+//                kill.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Kill frenzy.wav")));
+//                kill.start();
+//                countKill = 0;
+//            }
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
             GUIController.showExceptionError(ex.toString());
         }

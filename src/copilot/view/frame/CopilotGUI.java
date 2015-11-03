@@ -30,6 +30,10 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -75,6 +79,9 @@ public class CopilotGUI extends JPanel {
     private Image[] explosionFrames, birdFrames, bloodFrames, killStreakImages;
     private List<Animation> animations;
     private Sprite explosionSpriteSheet, bloodSpriteSheet;
+
+    private Clip ouble_Kill, extermination, killimanjaro, killing_Frenzy, killing_Spree, killionaire, killjoy, killpocalypse,
+            killtacular, killtastrophe, killtrocity, overkill, perfection, rampage, running_Riot, triple_Kill, untouchable;
 
     /**
      * Initializes an instance of the CopilotGUI
@@ -166,7 +173,31 @@ public class CopilotGUI extends JPanel {
 
             this.invincibleImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/08.png"));
             this.invincibleImage = this.invincibleImage.getScaledInstance(100, 100, 1);
+
+            //Sounds
+            this.killing_Spree = AudioSystem.getClip();
+            this.killing_Spree.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Killing_Spree!.wav")));
+
+            this.killing_Frenzy = AudioSystem.getClip();
+            this.killing_Frenzy.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Killing_Frenzy!.wav")));
+
+            this.running_Riot = AudioSystem.getClip();
+            this.running_Riot.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Running_Riot!.wav")));
+
+            this.rampage = AudioSystem.getClip();
+            this.rampage.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Rampage!.wav")));
+
+            this.untouchable = AudioSystem.getClip();
+            this.untouchable.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Untouchable!.wav")));
+
+            this.perfection = AudioSystem.getClip();
+            this.perfection.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Perfection!.wav")));
+
         } catch (IOException ex) {
+            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LineUnavailableException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -798,26 +829,32 @@ public class CopilotGUI extends JPanel {
         switch (this.totalKillCount / 5) {
             case 1: {
                 medal = this.killSpreeImage;
+                this.killing_Spree.start();
                 break;
             }
             case 2: {
                 medal = this.killFrenzyImage;
+                this.killing_Frenzy.start();
                 break;
             }
             case 3: {
                 medal = this.runningRiotImage;
+                this.running_Riot.start();
                 break;
             }
             case 4: {
                 medal = this.rampageImage;
+                this.rampage.start();
                 break;
             }
             case 5: {
                 medal = this.untouchableImage;
+                this.untouchable.start();
                 break;
             }
             case 6: {
                 medal = this.invincibleImage;
+                this.perfection.start();
                 break;
             }
         }
