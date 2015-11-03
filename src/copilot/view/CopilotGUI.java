@@ -386,7 +386,7 @@ public class CopilotGUI {
 
                 this.speedTimer += elapsedTime;
 
-                if (this.speedTimer >= 100) {
+                if (this.speedTimer >= 500) {
                     this.zebraForce++;
                     this.score += elapsedTime * (this.zebraForce / 7);
                     this.speedTimer = 0;
