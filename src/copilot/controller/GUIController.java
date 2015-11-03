@@ -5,8 +5,7 @@
  */
 package copilot.controller;
 
-import static copilot.view.CopilotGUI.NANO_TO_BASE;
-import copilot.view.MainMenuGUI;
+import static copilot.view.frame.CopilotGUI.NANO_TO_BASE;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;

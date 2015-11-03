@@ -26,6 +26,7 @@ public class Airplane extends GameObject {
      */
     public Airplane(Image image) {
         super(image);
+        this.airplaneParts = new ArrayList();
         this.maxFuelCapacity = 100;
         this.fuelAmount = this.maxFuelCapacity;
     }
@@ -122,6 +123,19 @@ public class Airplane extends GameObject {
      */
     public void setAirplaneParts(ArrayList<AirplanePart> airplaneParts) {
         this.airplaneParts = airplaneParts;
+    }
+
+    /**
+     * @return the gun
+     */
+    public Gun getGun() {
+        for (AirplanePart ap : this.airplaneParts) {
+            if (ap instanceof Gun) {
+                return (Gun) ap;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -8,7 +8,7 @@ package copilot.domain.Test;
 import copilot.domain.Airplane;
 import copilot.domain.Obstacle;
 import copilot.domain.Kerosine;
-import copilot.view.CopilotGUI;
+import copilot.view.frame.CopilotGUI;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

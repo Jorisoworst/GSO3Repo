@@ -3,109 +3,73 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
 import copilot.domain.Session;
 import copilot.domain.User;
-import java.awt.Dimension;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
  * @author IndyGames
  */
-public class LobbyGUI {
+public class LobbyGUI extends JPanel {
     
     private Font font, sizedFont;
     private Image screen, logo;
     private int screenWidth, screenHeight;
     
-    public LobbyGUI(User userLoggedIn) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-        
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
-        
-        JFrame frame = new JFrame("CO-Pilot Lobby");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true);
-        frame.setLocationRelativeTo(null);
-
-        try {
-            this.screen = ImageIO.read(this.getClass().getClassLoader().getResource("bg.png"));
-            this.screen = this.screen.getScaledInstance(this.screenWidth, this.screenHeight, 1);
-            this.logo = ImageIO.read(this.getClass().getClassLoader().getResource("logo.png"));
-            this.logo = this.logo.getScaledInstance(158, 122, 1);
-        } catch (IOException ex) {
-            Logger.getLogger(MainMenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        this.font = GUIController.loadFont(30);
-        this.sizedFont = GUIController.loadFont(32);
-        
-        JPanel panel = new JPanel();
-        frame.add(panel);
-        placeComponents(panel, userLoggedIn);
-
-        frame.setVisible(true);
+    public LobbyGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.font = font;
+        this.sizedFont = sizedFont;
+        this.screen = screen;
+        this.logo = logo;
+        placeComponents(userLoggedIn);
     }
     
-    private void placeComponents(JPanel panel, User user) {
-        panel.setLayout(null);
+    private void placeComponents(User user) {
+        this.setLayout(null);
 
         JLabel usersLabel = new JLabel("users");
         usersLabel.setBounds(125, 50, 50, 14);
-        panel.add(usersLabel);
+        this.add(usersLabel);
         
         DefaultListModel modelUsers = new DefaultListModel();
         JList users = new JList(modelUsers);
         users.setBounds(10, 70, 300, 500);
-        panel.add(users);
+        this.add(users);
         
         JLabel sessionsLabel = new JLabel("sessions");
         sessionsLabel.setBounds(500, 50, 80, 14);
-        panel.add(sessionsLabel);
+        this.add(sessionsLabel);
         
         DefaultListModel modelSessions = new DefaultListModel();
         JList sessions = new JList(modelSessions);
         sessions.setBounds(340, 70, this.screenWidth - 350, this.screenHeight - 130);
-        panel.add(sessions);
+        this.add(sessions);
         
         JButton joinButton = new JButton("JOIN");
         joinButton.setFont(font);
         joinButton.setHorizontalAlignment(SwingConstants.LEFT);
         joinButton.setBounds(40, this.screenHeight - 150, 150, 60);
         joinButton.setContentAreaFilled(false);
-        panel.add(joinButton);
+        this.add(joinButton);
         
         joinButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -136,7 +100,7 @@ public class LobbyGUI {
         refreshButton.setHorizontalAlignment(SwingConstants.LEFT);
         refreshButton.setBounds(40, this.screenHeight - 200, 240, 60);
         refreshButton.setContentAreaFilled(false);
-        panel.add(refreshButton);
+        this.add(refreshButton);
         
         refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -177,7 +141,7 @@ public class LobbyGUI {
         backButton.setHorizontalAlignment(SwingConstants.LEFT);
         backButton.setBounds(40, this.screenHeight - 100, 160, 60);
         backButton.setContentAreaFilled(false);
-        panel.add(backButton);
+        this.add(backButton);
         
         backButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -198,9 +162,7 @@ public class LobbyGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frameToClose = (JFrame) SwingUtilities.getWindowAncestor(panel);  
-                MainMenuGUI mainMenu = new MainMenuGUI(user);              
-                frameToClose.dispose(); 
+                AllCopilotGUI.setPanel("menu", user, null);
             }
         });
         
@@ -219,10 +181,10 @@ public class LobbyGUI {
 
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
-        panel.add(logoImage);
+        this.add(logoImage);
         
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
-        panel.add(bg);
+        this.add(bg);
     }
 }

@@ -11,7 +11,7 @@ import copilot.domain.Elevator;
 import copilot.domain.Fuel;
 import copilot.domain.Gun;
 import copilot.domain.Propellor;
-import copilot.view.CopilotGUI;
+import copilot.view.frame.CopilotGUI;
 import java.util.ArrayList;
 import java.awt.Image;
 import java.io.File;
@@ -63,7 +63,7 @@ public class AirplaneTest {
         airplane = new Airplane(image);
         elevator = new Elevator(image, airplane, null);
         propellor = new Propellor(image, airplane, null);
-        gun = new Gun(image, airplane, null);
+        gun = new Gun(image, airplane, null, 0, 0, 0);
         fuel = new Fuel(image, airplane, null);
 
         ArrayList<AirplanePart> parts = new ArrayList<>();
