@@ -5,7 +5,6 @@
  */
 package copilot.controller;
 
-import static copilot.view.frame.CopilotGUI.NANO_TO_BASE;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
@@ -25,7 +24,6 @@ import javax.swing.JOptionPane;
 public final class GUIController {
 
     private static Clip backgroundClip, airplaneSound, gameSound;
-    private static boolean stopped;
     private static Random random = new Random();
     private static int min = 1;
     private static int max = 5;
