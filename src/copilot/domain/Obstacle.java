@@ -1,5 +1,6 @@
 package copilot.domain;
 
+import copilot.view.anim.Animation;
 import java.awt.Image;
 
 /**
@@ -7,14 +8,16 @@ import java.awt.Image;
  */
 public class Obstacle extends GameObject {
 
+    private Animation animation;
     private boolean isDestructable;
 
     /**
      * Initialize an instance of the Obstacle class which extends GameObject
+     *
      * @param image the image, may not be null
      */
     public Obstacle(Image image) {
-        
+
         super(image);
         this.isDestructable = false;
     }
@@ -31,5 +34,19 @@ public class Obstacle extends GameObject {
      */
     public void setDestructable(boolean isDestructable) {
         this.isDestructable = isDestructable;
+    }
+
+    /**
+     * @return the animation
+     */
+    public Animation getAnimation() {
+        return this.animation;
+    }
+
+    /**
+     * @param animation the animation to set
+     */
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
     }
 }

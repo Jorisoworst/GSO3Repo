@@ -7,6 +7,8 @@ import copilot.domain.Bullet;
 import copilot.domain.GameObject;
 import copilot.domain.Kerosine;
 import copilot.domain.Obstacle;
+import copilot.view.anim.Animation;
+import copilot.view.anim.Sprite;
 import copilot.view.gui.AllCopilotGUI;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -20,7 +22,10 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,22 +64,29 @@ public class CopilotGUI extends JPanel {
     private JPanel labelPanel;
     private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
             fuelLabel, fpsLabel;
-    private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1,
-            obstacleImage2, kerosineImage;
+    private Image airplaneImage, backgroundImage, bulletImage,
+            kerosineImage, obstacleImage1, obstacleImage2;
+
+    // Animation
+    private BufferedImage explosionImage, bloodImage;
+    private Image[] explosionFrames, birdFrames, bloodFrames;
+    private List<Animation> animations;
+    private Sprite explosionSpriteSheet, bloodSpriteSheet;
 
     /**
-     * Initializes an instance of the CopilotGUI 
+     * Initializes an instance of the CopilotGUI
+     *
      * @param screenWidth the screenwidth
      * @param screenHeight the screenheight
      * @param font the font
      */
     public CopilotGUI(int screenWidth, int screenHeight, Font font) {
-        
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
         this.initializeVariables();
         this.loadResources();
+        this.setupAnimations();
         this.placeComponents();
         this.gameController = new GameController(this);
         this.initializeWorld();
@@ -105,6 +117,9 @@ public class CopilotGUI extends JPanel {
         this.reloadCooldown = 50;
         this.bulletsFired = 0;
         this.clipSize = 15; // TODO
+
+        // Animation
+        this.animations = new ArrayList<>();
     }
 
     /**
@@ -126,8 +141,51 @@ public class CopilotGUI extends JPanel {
 
             this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource("fuel.png"));
             this.kerosineImage = this.kerosineImage.getScaledInstance(80, 80, 1);
+
+            this.explosionImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/explosion-sprite.png"));
+            this.bloodImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/blood.png"));
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Setup all the possible animations.
+     */
+    private void setupAnimations() { // TODO make this more efficient
+        this.explosionSpriteSheet = new Sprite(this.explosionImage, 96);
+
+        int a = 0;
+        int x = this.explosionImage.getWidth() / 96;
+        int y = this.explosionImage.getHeight() / 96;
+
+        this.explosionFrames = new Image[x * y];
+
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++) {
+                this.explosionFrames[a] = this.explosionSpriteSheet.getSprite(j, i);
+                a++;
+            }
+        }
+
+        this.birdFrames = new Image[]{
+            this.obstacleImage1,
+            this.obstacleImage2
+        };
+
+        this.bloodSpriteSheet = new Sprite(this.bloodImage, 512);
+
+        a = 0;
+        x = this.bloodImage.getWidth() / 512;
+        y = this.bloodImage.getHeight() / 512;
+
+        this.bloodFrames = new Image[x * y];
+
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++) {
+                this.bloodFrames[a] = this.bloodSpriteSheet.getSprite(j, i).getScaledInstance(96, 96, 0);
+                a++;
+            }
         }
     }
 
@@ -300,6 +358,17 @@ public class CopilotGUI extends JPanel {
      * @param elapsedTime the total elapsed time since the last frame.
      */
     protected void update(double elapsedTime) {
+        // Animation
+        for (int i = 0; i < this.animations.size(); i++) {
+            Animation a = this.animations.get(i);
+
+            if (!a.isStopped()) {
+                a.update();
+            } else {
+                this.animations.remove(a);
+            }
+        }
+
         // Get the last key presses done by the user
         String key = this.gameController.getKeyPressed();
 
@@ -343,25 +412,13 @@ public class CopilotGUI extends JPanel {
                     go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
                 }
 
-                // Change the image of the Obstacle to simulate an animation
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    // Increase the animation timer with the elapsed time
-                    this.animationTimer += elapsedTime;
-
-                    // If the animation timer reaches 25 or more,
-                    // change the image of the Obstacle
-                    if (this.animationTimer >= 25) {
-                        if (obstacle.getImage() == this.obstacleImage2) {
-                            obstacle.setImage(this.obstacleImage1);
-                        } else {
-                            obstacle.setImage(this.obstacleImage2);
-                        }
-
-                        // Reset the animation timer
-                        this.animationTimer = 0;
-                    }
+                    // Animation
+                    Animation bird = obstacle.getAnimation();
+                    bird.setX((int) go.getTransform().getTranslationX());
+                    bird.setY((int) go.getTransform().getTranslationY());
                 }
             } else if (go instanceof Bullet) {
                 // If the Body is a Bullet object, move them left with the speed
@@ -381,8 +438,21 @@ public class CopilotGUI extends JPanel {
                     // remove them both from the World
                     if (o != null) {
                         if (o instanceof Obstacle) {
+                            Obstacle obstacle = (Obstacle) o;
+
+                            // Animation
+                            obstacle.getAnimation().stop();
+
+                            Animation blood = new Animation(this.bloodFrames, 3);
+                            blood.setLooping(false);
+                            blood.setX((int) obstacle.getTransform().getTranslationX());
+                            blood.setY((int) obstacle.getTransform().getTranslationY());
+                            blood.start();
+
+                            this.animations.add(blood);
+
                             this.world.removeBody(bullet);
-                            this.world.removeBody((Obstacle) o);
+                            this.world.removeBody(obstacle);
                             this.score++;
                             GUIController.playCollisionBullet();
                         }
@@ -503,7 +573,20 @@ public class CopilotGUI extends JPanel {
                         // If the Airplane collided with an Obstacle, lower the amount
                         // of lives, remove the Obstacle from the World and reset the User Data
                         // of the Airplane
-                        this.world.removeBody((Obstacle) o);
+                        Obstacle obstacle = (Obstacle) o;
+
+                        // Animation
+                        obstacle.getAnimation().stop();
+
+                        Animation explosion = new Animation(this.explosionFrames, 1);
+                        explosion.setLooping(false);
+                        explosion.setX((int) obstacle.getTransform().getTranslationX());
+                        explosion.setY((int) obstacle.getTransform().getTranslationY());
+                        explosion.start();
+
+                        this.animations.add(explosion);
+
+                        this.world.removeBody(obstacle);
                         this.lives--;
                         GUIController.playCollisionBird();
                     } else if (o instanceof Kerosine) {
@@ -553,6 +636,17 @@ public class CopilotGUI extends JPanel {
         switch (type) {
             case "O": {
                 go = new Obstacle(this.obstacleImage1);
+                Obstacle obstacle = (Obstacle) go;
+
+                // Animation
+                Animation bird = new Animation(this.birdFrames, 5);
+                bird.setLooping(true);
+                bird.setX((int) obstacle.getTransform().getTranslationX());
+                bird.setY((int) obstacle.getTransform().getTranslationY());
+                bird.start();
+
+                obstacle.setAnimation(bird);
+                this.animations.add(bird);
                 break;
             }
             case "P": {
@@ -619,7 +713,10 @@ public class CopilotGUI extends JPanel {
         // Draw every Body (GameObject) in the World
         for (int i = 0; i < this.world.getBodyCount(); i++) {
             GameObject go = (GameObject) this.world.getBody(i);
-            go.render(g);
+
+            if (!(go instanceof Obstacle)) {
+                go.render(g);
+            }
 
             // Draw the hit boxes in Debug Mode
             if (DEBUG_MODE) {
@@ -655,6 +752,13 @@ public class CopilotGUI extends JPanel {
         this.livesLabel.setText("Lives: " + this.lives);
         this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
         this.speedLabel.setText("Speed: " + this.zebraForce);
+
+        // Animation
+        for (Animation a : this.animations) {
+            if (!a.isStopped()) {
+                g.drawImage(a.getSprite(), a.getX(), a.getY(), null);
+            }
+        }
     }
 
     /**

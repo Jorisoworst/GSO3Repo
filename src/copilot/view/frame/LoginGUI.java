@@ -37,6 +37,7 @@ public class LoginGUI extends JPanel {
 
     /**
      * Initializes an instance of the LoginGUI Panel
+     *
      * @param screenHeight the height of the screen
      * @param screenWidth the width of the screen
      * @param font the smallest font used
@@ -46,7 +47,7 @@ public class LoginGUI extends JPanel {
      * @param logo the logo image
      */
     public LoginGUI(int screenHeight, int screenWidth, Font font, Font sizedFont, Font sizedFont2, Image screen, Image logo) {
-        
+
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.font = font;
@@ -62,7 +63,6 @@ public class LoginGUI extends JPanel {
      * used to place all the components to the panel
      */
     private void placeComponents() {
-        
         this.setLayout(null);
 
         // add a username label
@@ -103,10 +103,10 @@ public class LoginGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 GameAdministration admin = GameAdministration.getInstance();
-                
+
                 // check the database connection
                 if (admin.getDatabaseState()) {
-                    
+
                     // check the login and login or give a message
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
@@ -124,7 +124,7 @@ public class LoginGUI extends JPanel {
         });
 
         loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            
+
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 loginButton.setText(">login");
