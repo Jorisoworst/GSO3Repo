@@ -50,7 +50,7 @@ public class UserTest {
     public void tearDown() {
     }
 
-    /*
+    /**
      * Test from Player constructor in class Player.
      */
     @Test
@@ -107,7 +107,7 @@ public class UserTest {
         }
     }
 
-    /*
+    /**
      * Test from Moderator constructor in class Moderator.
      */
     @Test
@@ -164,7 +164,7 @@ public class UserTest {
         }
     }
 
-    /*
+    /**
      * Test from Administrator constructor in class Administrator.
      */
     @Test
@@ -221,7 +221,7 @@ public class UserTest {
         }
     }
     
-    /*
+    /**
      * Test from banUser method in class Moderator.
      */
     @Test
@@ -248,7 +248,7 @@ public class UserTest {
         }
     }
     
-    /*
+    /**
      * Test from reportPlayer method in class Player.
      */
     @Test
