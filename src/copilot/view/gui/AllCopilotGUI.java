@@ -40,7 +40,7 @@ public class AllCopilotGUI {
     private static JFrame frame;
     private static JPanel panel;
     private static Image LaunchScreen, logo, screen;
-    private static Font font, sizedFont, sizedFont2, sizedFont3, sizedFont4, fontExtraSmall;
+    private static Font font, sizedFont, sizedFont2, sizedFont3, sizedFont4, sizedFont5, fontExtraSmall;
     private static CardLayout layout;
 
     public static void main(String[] args) {
@@ -80,6 +80,7 @@ public class AllCopilotGUI {
         sizedFont2 = GUIController.loadFont(30);
         sizedFont3 = GUIController.loadFont(32);
         sizedFont4 = GUIController.loadFont(64);
+        sizedFont5 = GUIController.loadFont(20);
         fontExtraSmall = GUIController.loadFont(5);
 
         JPanel panelLaunch = new LaunchGUI(sizedFont2, fontExtraSmall, LaunchScreen);
@@ -143,7 +144,7 @@ public class AllCopilotGUI {
                 break;
                 
             case "game":
-                CopilotGUI panelGame = new CopilotGUI(screenWidth, screenHeight);
+                CopilotGUI panelGame = new CopilotGUI(screenWidth, screenHeight, sizedFont5);
                 panel.add(panelGame, "game");
                 layout.show(frame.getContentPane(), "game");
                 panelGame.start();
