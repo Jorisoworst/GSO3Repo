@@ -57,7 +57,8 @@ public class CopilotGUI extends JPanel {
     private long last, lastTime, time;
     private int zebraForce, fps, lives, score, backgroundX, spawnTimer,
             fpsTimer, fuelTimer, speedTimer, animationTimer, bulletsFired,
-            clipSize, reloadTimer, reloadProgress, reloadCooldown;
+            clipSize, reloadTimer, reloadProgress, reloadCooldown,
+            totalKillCount;
     private Canvas canvas;
     private World world;
     private Random rnd;
@@ -65,11 +66,13 @@ public class CopilotGUI extends JPanel {
     private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
             fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage,
-            kerosineImage, obstacleImage1, obstacleImage2;
+            kerosineImage, obstacleImage1, obstacleImage2, killSpreeImage,
+            killFrenzyImage, runningRiotImage, rampageImage, untouchableImage,
+            invincibleImage;
 
     // Animation
     private BufferedImage explosionImage, bloodImage;
-    private Image[] explosionFrames, birdFrames, bloodFrames;
+    private Image[] explosionFrames, birdFrames, bloodFrames, killStreakImages;
     private List<Animation> animations;
     private Sprite explosionSpriteSheet, bloodSpriteSheet;
 
@@ -106,6 +109,7 @@ public class CopilotGUI extends JPanel {
         this.targetInterval = 0;
         this.elapsedTime = 0;
         this.score = 0;
+        this.totalKillCount = 0;
         this.backgroundX = 0;
         this.spawnTimer = 0;
         this.fpsTimer = 0;
@@ -144,6 +148,24 @@ public class CopilotGUI extends JPanel {
 
             this.explosionImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/explosion-sprite.png"));
             this.bloodImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/blood.png"));
+
+            this.killSpreeImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/03.png"));
+            this.killSpreeImage = this.killSpreeImage.getScaledInstance(100, 100, 1);
+
+            this.killFrenzyImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/04.png"));
+            this.killFrenzyImage = this.killFrenzyImage.getScaledInstance(100, 100, 1);
+
+            this.runningRiotImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/05.png"));
+            this.runningRiotImage = this.runningRiotImage.getScaledInstance(100, 100, 1);
+
+            this.rampageImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/06.png"));
+            this.rampageImage = this.rampageImage.getScaledInstance(100, 100, 1);
+
+            this.untouchableImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/07.png"));
+            this.untouchableImage = this.untouchableImage.getScaledInstance(100, 100, 1);
+
+            this.invincibleImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/08.png"));
+            this.invincibleImage = this.invincibleImage.getScaledInstance(100, 100, 1);
         } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -168,11 +190,6 @@ public class CopilotGUI extends JPanel {
             }
         }
 
-        this.birdFrames = new Image[]{
-            this.obstacleImage1,
-            this.obstacleImage2
-        };
-
         this.bloodSpriteSheet = new Sprite(this.bloodImage, 512);
 
         a = 0;
@@ -187,6 +204,20 @@ public class CopilotGUI extends JPanel {
                 a++;
             }
         }
+
+        this.birdFrames = new Image[]{
+            this.obstacleImage1,
+            this.obstacleImage2
+        };
+
+        this.killStreakImages = new Image[]{
+            this.killSpreeImage,
+            this.killFrenzyImage,
+            this.runningRiotImage,
+            this.rampageImage,
+            this.untouchableImage,
+            this.invincibleImage
+        };
     }
 
     /**
@@ -454,6 +485,7 @@ public class CopilotGUI extends JPanel {
                             this.world.removeBody(bullet);
                             this.world.removeBody(obstacle);
                             this.score++;
+                            this.totalKillCount++;
                             GUIController.playCollisionBullet();
                         }
                     }
@@ -588,6 +620,7 @@ public class CopilotGUI extends JPanel {
 
                         this.world.removeBody(obstacle);
                         this.lives--;
+                        this.totalKillCount = 0;
                         GUIController.playCollisionBird();
                     } else if (o instanceof Kerosine) {
                         // If the Airplane collided with a Kerosine, increase the fuel
@@ -758,6 +791,39 @@ public class CopilotGUI extends JPanel {
             if (!a.isStopped()) {
                 g.drawImage(a.getSprite(), a.getX(), a.getY(), null);
             }
+        }
+
+        Image medal = null;
+
+        switch (this.totalKillCount / 5) {
+            case 1: {
+                medal = this.killSpreeImage;
+                break;
+            }
+            case 2: {
+                medal = this.killFrenzyImage;
+                break;
+            }
+            case 3: {
+                medal = this.runningRiotImage;
+                break;
+            }
+            case 4: {
+                medal = this.rampageImage;
+                break;
+            }
+            case 5: {
+                medal = this.untouchableImage;
+                break;
+            }
+            case 6: {
+                medal = this.invincibleImage;
+                break;
+            }
+        }
+
+        if (medal != null) {
+            g.drawImage(medal, this.screenWidth - 100, this.screenHeight - 100, null);
         }
     }
 
