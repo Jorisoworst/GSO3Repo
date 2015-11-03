@@ -48,11 +48,11 @@ import org.dyn4j.geometry.Vector2;
  */
 public class CopilotGUI extends JPanel {
 
-    public static final boolean DEBUG_MODE = false;
-    public static final long NANO_TO_BASE = 1000000000;
-    public static final int BULLET_FORCE = 25;
-    public static final int FORCE = 7;
-    public static final int TARGET_FPS = 60;
+    private static final boolean DEBUG_MODE = false;
+    private static final long NANO_TO_BASE = 1000000000;
+    private static final int BULLET_FORCE = 25;
+    private static final int FORCE = 7;
+    private static final int TARGET_FPS = 60;
     private final GameController gameController;
     private final Font font;
     private final int screenWidth, screenHeight;
@@ -60,9 +60,8 @@ public class CopilotGUI extends JPanel {
     private double elapsedTime, targetInterval, diff, actualInterval;
     private long last, lastTime, time;
     private int zebraForce, fps, lives, score, backgroundX, spawnTimer,
-            fpsTimer, fuelTimer, speedTimer, animationTimer, bulletsFired,
-            clipSize, reloadTimer, reloadProgress, reloadCooldown,
-            totalKillCount;
+            fpsTimer, fuelTimer, speedTimer, bulletsFired, clipSize,
+            reloadTimer, reloadProgress, reloadCooldown, totalKillCount;
     private Canvas canvas;
     private World world;
     private Random rnd;
@@ -74,14 +73,16 @@ public class CopilotGUI extends JPanel {
             killFrenzyImage, runningRiotImage, rampageImage, untouchableImage,
             invincibleImage;
 
-    // Animation
+    // Animations
     private BufferedImage explosionImage, bloodImage;
     private Image[] explosionFrames, birdFrames, bloodFrames, killStreakImages;
     private List<Animation> animations;
-    private Sprite explosionSpriteSheet, bloodSpriteSheet;
 
-    private Clip ouble_Kill, extermination, killimanjaro, killing_Frenzy, killing_Spree, killionaire, killjoy, killpocalypse,
-            killtacular, killtastrophe, killtrocity, overkill, perfection, rampage, running_Riot, triple_Kill, untouchable;
+    // Sounds
+    private Clip double_Kill, extermination, killimanjaro, killing_Frenzy,
+            killing_Spree, killionaire, killjoy, killpocalypse, killtacular,
+            killtastrophe, killtrocity, overkill, perfection, rampage,
+            running_Riot, triple_Kill, untouchable;
 
     /**
      * Initializes an instance of the CopilotGUI
@@ -96,7 +97,6 @@ public class CopilotGUI extends JPanel {
         this.font = font;
         this.initializeVariables();
         this.loadResources();
-        this.setupAnimations();
         this.placeComponents();
         this.gameController = new GameController(this);
         this.initializeWorld();
@@ -122,14 +122,13 @@ public class CopilotGUI extends JPanel {
         this.fpsTimer = 0;
         this.fuelTimer = 0;
         this.speedTimer = 0;
-        this.animationTimer = 0;
         this.reloadTimer = 0;
         this.reloadProgress = 0;
         this.reloadCooldown = 50;
         this.bulletsFired = 0;
         this.clipSize = 15; // TODO
 
-        // Animation
+        // Animations
         this.animations = new ArrayList<>();
     }
 
@@ -174,7 +173,24 @@ public class CopilotGUI extends JPanel {
             this.invincibleImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/08.png"));
             this.invincibleImage = this.invincibleImage.getScaledInstance(100, 100, 1);
 
-            //Sounds
+            this.explosionFrames = this.setupAnimation(this.explosionImage, 96);
+            this.bloodFrames = this.setupAnimation(this.bloodImage, 512);
+
+            this.birdFrames = new Image[]{
+                this.obstacleImage1,
+                this.obstacleImage2
+            };
+
+            this.killStreakImages = new Image[]{
+                this.killSpreeImage,
+                this.killFrenzyImage,
+                this.runningRiotImage,
+                this.rampageImage,
+                this.untouchableImage,
+                this.invincibleImage
+            };
+
+            // Sounds
             this.killing_Spree = AudioSystem.getClip();
             this.killing_Spree.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Killing_Spree!.wav")));
 
@@ -193,11 +209,7 @@ public class CopilotGUI extends JPanel {
             this.perfection = AudioSystem.getClip();
             this.perfection.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Perfection!.wav")));
 
-        } catch (IOException ex) {
-            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedAudioFileException ex) {
-            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (LineUnavailableException ex) {
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -205,50 +217,28 @@ public class CopilotGUI extends JPanel {
     /**
      * Setup all the possible animations.
      */
-    private void setupAnimations() { // TODO make this more efficient
-        this.explosionSpriteSheet = new Sprite(this.explosionImage, 96);
+    private Image[] setupAnimation(BufferedImage image, int tileSize) {
+        Sprite spriteSheet = new Sprite(image, tileSize);
 
-        int a = 0;
-        int x = this.explosionImage.getWidth() / 96;
-        int y = this.explosionImage.getHeight() / 96;
+        int frameCounter = 0;
+        int horizontalFrames = image.getWidth() / tileSize;
+        int verticalFrames = image.getHeight() / tileSize;
 
-        this.explosionFrames = new Image[x * y];
+        Image[] animationFrames = new Image[horizontalFrames * verticalFrames];
 
-        for (int i = 0; i < y; i++) {
-            for (int j = 0; j < x; j++) {
-                this.explosionFrames[a] = this.explosionSpriteSheet.getSprite(j, i);
-                a++;
+        for (int i = 0; i < verticalFrames; i++) {
+            for (int j = 0; j < horizontalFrames; j++) {
+                if (tileSize > 96) {
+                    animationFrames[frameCounter] = spriteSheet.getSprite(j, i).getScaledInstance(96, 96, 0);
+                } else {
+                    animationFrames[frameCounter] = spriteSheet.getSprite(j, i);
+                }
+
+                frameCounter++;
             }
         }
 
-        this.bloodSpriteSheet = new Sprite(this.bloodImage, 512);
-
-        a = 0;
-        x = this.bloodImage.getWidth() / 512;
-        y = this.bloodImage.getHeight() / 512;
-
-        this.bloodFrames = new Image[x * y];
-
-        for (int i = 0; i < y; i++) {
-            for (int j = 0; j < x; j++) {
-                this.bloodFrames[a] = this.bloodSpriteSheet.getSprite(j, i).getScaledInstance(96, 96, 0);
-                a++;
-            }
-        }
-
-        this.birdFrames = new Image[]{
-            this.obstacleImage1,
-            this.obstacleImage2
-        };
-
-        this.killStreakImages = new Image[]{
-            this.killSpreeImage,
-            this.killFrenzyImage,
-            this.runningRiotImage,
-            this.rampageImage,
-            this.untouchableImage,
-            this.invincibleImage
-        };
+        return animationFrames;
     }
 
     /**
@@ -420,7 +410,7 @@ public class CopilotGUI extends JPanel {
      * @param elapsedTime the total elapsed time since the last frame.
      */
     protected void update(double elapsedTime) {
-        // Animation
+        // Animations
         for (int i = 0; i < this.animations.size(); i++) {
             Animation a = this.animations.get(i);
 
@@ -434,7 +424,7 @@ public class CopilotGUI extends JPanel {
         // Get the last key presses done by the user
         String key = this.gameController.getKeyPressed();
 
-        // If the user hit escape, the game will stop
+        // If the user hits escape, the game will stop
         if (key.equals("ESCAPE") || key.equals("ESCAPE_RELEASED")) {
             this.gameController.setKeyPressed("NONE");
             this.stop();
@@ -477,7 +467,7 @@ public class CopilotGUI extends JPanel {
                 if (go instanceof Obstacle) {
                     Obstacle obstacle = (Obstacle) go;
 
-                    // Animation
+                    // Animations
                     Animation bird = obstacle.getAnimation();
                     bird.setX((int) go.getTransform().getTranslationX());
                     bird.setY((int) go.getTransform().getTranslationY());
@@ -502,7 +492,7 @@ public class CopilotGUI extends JPanel {
                         if (o instanceof Obstacle) {
                             Obstacle obstacle = (Obstacle) o;
 
-                            // Animation
+                            // Animations
                             obstacle.getAnimation().stop();
 
                             Animation blood = new Animation(this.bloodFrames, 3);
@@ -638,7 +628,7 @@ public class CopilotGUI extends JPanel {
                         // of the Airplane
                         Obstacle obstacle = (Obstacle) o;
 
-                        // Animation
+                        // Animations
                         obstacle.getAnimation().stop();
 
                         Animation explosion = new Animation(this.explosionFrames, 1);
@@ -680,7 +670,6 @@ public class CopilotGUI extends JPanel {
                 // If the World doesn't have an Airplane object, the player
                 // is game over
                 if (!this.world.containsBody(airplane)) {
-                    this.stop();
                     this.gameOver();
                 }
             }
@@ -702,7 +691,7 @@ public class CopilotGUI extends JPanel {
                 go = new Obstacle(this.obstacleImage1);
                 Obstacle obstacle = (Obstacle) go;
 
-                // Animation
+                // Animations
                 Animation bird = new Animation(this.birdFrames, 5);
                 bird.setLooping(true);
                 bird.setX((int) obstacle.getTransform().getTranslationX());
@@ -748,9 +737,8 @@ public class CopilotGUI extends JPanel {
      * End the current game and show the game over screen.
      */
     private void gameOver() {
+        this.stop();
         GUIController.playGameOver();
-        GUIController.stopAirplaneSound();
-        GUIController.stopGameSound();
         AllCopilotGUI.setPanel("gameover", null, this.score);
     }
 
@@ -817,7 +805,7 @@ public class CopilotGUI extends JPanel {
         this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
         this.speedLabel.setText("Speed: " + this.zebraForce);
 
-        // Animation
+        // Animations
         for (Animation a : this.animations) {
             if (!a.isStopped()) {
                 g.drawImage(a.getSprite(), a.getX(), a.getY(), null);
@@ -860,7 +848,7 @@ public class CopilotGUI extends JPanel {
         }
 
         if (medal != null) {
-            g.drawImage(medal, this.screenWidth - 100, this.screenHeight - 100, null);
+            g.drawImage(medal, this.screenWidth - 150, this.screenHeight - 150, null);
         }
     }
 
@@ -869,6 +857,9 @@ public class CopilotGUI extends JPanel {
      */
     public synchronized void stop() {
         this.stopped = true;
+        GUIController.stopAirplaneSound();
+        GUIController.stopGameSound();
+        GUIController.playBackgroundMusic();
     }
 
     /**
