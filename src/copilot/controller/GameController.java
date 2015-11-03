@@ -21,13 +21,11 @@ import org.dyn4j.dynamics.contact.ContactConstraint;
  */
 public class GameController implements CollisionListener {
 
-    private final JPanel panel;
     private final String[] keyIdentifiers;
     private final Integer[] keyValues;
     private String keyPressed;
 
     public GameController(JPanel panel) {
-        this.panel = panel;
         this.keyIdentifiers = new String[]{
             "UP",
             "DOWN",
