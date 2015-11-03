@@ -11,6 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * @author IndyGames
+ */
 public class LaunchGUI extends JPanel {
     private final Font font, fontExtraSmall;
     private final Image screen;

@@ -1,7 +1,6 @@
 package copilot.domain;
 
 /**
- *
  * @author IndyGames
  */
 public class GameSetting {

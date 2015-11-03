@@ -3,7 +3,6 @@ package copilot.domain;
 import java.awt.Image;
 
 /**
- *
  * @author IndyGames
  */
 public class Obstacle extends GameObject {
@@ -12,7 +11,6 @@ public class Obstacle extends GameObject {
 
     /**
      * Initialize an instance of the Obstacle class which extends GameObject
-     *
      * @param image the image, may not be null
      */
     public Obstacle(Image image) {

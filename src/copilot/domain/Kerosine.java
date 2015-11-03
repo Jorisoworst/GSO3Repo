@@ -3,7 +3,6 @@ package copilot.domain;
 import java.awt.Image;
 
 /**
- *
  * @author IndyGames
  */
 public class Kerosine extends Pickup {
@@ -12,7 +11,6 @@ public class Kerosine extends Pickup {
 
     /**
      * Initialize an instance of the Kerosine class which extends Pickup
-     *
      * @param image the image, may not be null
      * @param amount the amount of fuel of this pickup
      */

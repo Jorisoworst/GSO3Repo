@@ -3,7 +3,6 @@ package copilot.domain;
 import java.awt.Image;
 
 /**
- *
  * @author IndyGames
  */
 public class Elevator extends AirplanePart {
@@ -13,7 +12,6 @@ public class Elevator extends AirplanePart {
     
     /**
      * Initialize an instance of the Elevator class which extends ArplanePart
-     *
      * @param image the image, may not be null
      * @param airplane the airplane, may not be null
      * @param user the user, may not be null

@@ -6,7 +6,6 @@ import java.awt.geom.AffineTransform;
 import org.dyn4j.dynamics.Body;
 
 /**
- *
  * @author IndyGames
  */
 public abstract class GameObject extends Body {
@@ -16,7 +15,6 @@ public abstract class GameObject extends Body {
 
     /**
      * Initialize an instance of the GameObject class which is abstract
-     *
      * @param image the image, may not be null
      */
     public GameObject(Image image) {

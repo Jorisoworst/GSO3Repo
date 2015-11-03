@@ -3,7 +3,6 @@ package copilot.domain;
 import java.util.ArrayList;
 
 /**
- *
  * @author IndyGames
  */
 public class Game {

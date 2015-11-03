@@ -16,7 +16,6 @@ import org.dyn4j.dynamics.CollisionListener;
 import org.dyn4j.dynamics.contact.ContactConstraint;
 
 /**
- *
  * @author IndyGames
  */
 public class GameController implements CollisionListener {
@@ -25,7 +24,10 @@ public class GameController implements CollisionListener {
     private final Integer[] keyValues;
     private String keyPressed;
     
-    //Create a new game controller with Jpanel to observe.
+    /**
+     * Initialize an instance of the GameController class
+     * @param panel the panel to set
+     */
     public GameController(JPanel panel) {
         
         //Add keys to the Dictionary.

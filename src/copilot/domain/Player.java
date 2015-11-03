@@ -3,14 +3,12 @@ package copilot.domain;
 import java.util.Calendar;
 
 /**
- *
  * @author IndyGames
  */
 public class Player extends User {
 
     /**
      * Initialize an instance of the Player class which implements User
-     *
      * @param username the username, may not be null or empty
      * @param password the password, may not be null or empty
      * @param displayName the displayName, may be null

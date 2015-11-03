@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
- *
  * @author IndyGames
  */
 public class SessionGUI extends JPanel {

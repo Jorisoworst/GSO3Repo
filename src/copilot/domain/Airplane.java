@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.awt.Image;
 
 /**
- *
  * @author IndyGames
  */
 public class Airplane extends GameObject {
@@ -16,7 +15,6 @@ public class Airplane extends GameObject {
 
     /**
      * Initialize an instance of the Airplane class which extends GameObject
-     *
      * @param image the image, may not be null
      */
     public Airplane(Image image) {

@@ -3,7 +3,6 @@ package copilot.domain;
 import java.util.Calendar;
 
 /**
- *
  * @author IndyGames
  */
 public abstract class User {

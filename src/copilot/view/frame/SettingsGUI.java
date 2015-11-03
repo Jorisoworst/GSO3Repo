@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- *
  * @author IndyGames
  */
 public class SettingsGUI extends JPanel {

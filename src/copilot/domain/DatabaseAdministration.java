@@ -24,8 +24,7 @@ public class DatabaseAdministration {
     private Connection conn;
 
     /**
-     * Constructor for the DatabaseAdministration class.
-     *
+     * Initializes an instance of the DatabseAdministration
      * @throws Exception
      */
     public DatabaseAdministration() throws Exception {
@@ -37,8 +36,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Initilialize the connection to the database.
-     *
+     * Initilialize the connection to the database
      * @return True if the connection was succesfully established, false if not
      * @throws FileNotFoundException
      * @throws IOException
@@ -65,7 +63,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Close the connection to the database.
+     * Close the connection to the database
      */
     private void closeConnection() {
         try {
@@ -77,9 +75,8 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Get all the user from the database.
-     *
-     * @return All the users from the database
+     * Get all the user from the database
+     * @return All the users from the databas
      * @throws IOException
      */
     public ArrayList<User> GetUsers() throws IOException {
@@ -156,8 +153,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Add a new user to the database.
-     *
+     * Add a new user to the database
      * @param user The user to be added
      * @return The user that was added
      * @throws IOException
@@ -208,8 +204,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Update an existing user from the database.
-     *
+     * Update an existing user from the database
      * @param user The user to be updated
      * @return True if the update was succesful, false if not
      * @throws IOException
@@ -254,8 +249,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Delete an existing user from the database.
-     *
+     * Delete an existing user from the database
      * @param userId The user id of the user to be deleted
      * @return True if the deletion was succesful, false if not
      * @throws IOException
@@ -280,8 +274,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Get a highscore from the database.
-     *
+     * Get a highscore from the database
      * @return The score
      * @throws IOException
      */
@@ -319,8 +312,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Add a highscore from the database.
-     *
+     * Add a highscore from the database
      * @param score The score to be added
      * @return The score that was added
      * @throws IOException
@@ -357,8 +349,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Update a highscore from the database.
-     *
+     * Update a highscore from the database
      * @param score The score to be updated
      * @return True if the update was succesful, false if not
      * @throws IOException
@@ -388,8 +379,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Delete a highscore from the database.
-     *
+     * Delete a highscore from the database
      * @param scoreId The score id of the score to be deleted
      * @return True if the deletion was succesful, false if not
      * @throws IOException
@@ -414,8 +404,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Get a game setting from the database.
-     *
+     * Get a game setting from the database
      * @return The game setting
      * @throws IOException
      */
@@ -452,8 +441,7 @@ public class DatabaseAdministration {
     }
 
     /**
-     * Save a game setting to the database.
-     *
+     * Save a game setting to the database
      * @param gameSetting The game setting to be added
      * @return True if the insert was succesful, false if not
      * @throws IOException

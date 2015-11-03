@@ -13,7 +13,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 /**
- *
  * @author IndyGames
  */
 public final class GUIController {

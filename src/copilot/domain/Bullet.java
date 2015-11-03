@@ -4,7 +4,6 @@ import java.awt.Image;
 import org.dyn4j.geometry.Vector2;
 
 /**
- *
  * @author IndyGames
  */
 public class Bullet extends GameObject {

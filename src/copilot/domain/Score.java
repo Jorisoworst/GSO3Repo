@@ -1,11 +1,11 @@
 package copilot.domain;
 
 /**
- *
  * @author IndyGames
  */
 public class Score {
-    private int scoreId, score, user1id, user2id, user3id, user4id;
+    private int scoreId;
+    private final int score, user1id, user2id, user3id, user4id;
     private User user1, user2, user3, user4;
     
     /**
@@ -18,7 +18,7 @@ public class Score {
      */
     public Score(int score, int user1, int user2, int user3, int user4)
     {
-        
+        this.scoreId = 0;
         this.score = score;
         this.user1id = user1;
         this.user2id = user2;

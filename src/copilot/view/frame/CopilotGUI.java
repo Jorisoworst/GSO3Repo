@@ -63,8 +63,7 @@ public class CopilotGUI extends JPanel {
             obstacleImage2, kerosineImage;
 
     /**
-     * Constructor for this gui.
-     *
+     * Initializes an instance of the CopilotGUI 
      * @param screenWidth the screenwidth
      * @param screenHeight the screenheight
      * @param font the font

@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- *
  * @author IndyGames
  */
 public class MainMenuGUI extends JPanel {

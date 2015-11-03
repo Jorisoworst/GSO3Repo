@@ -27,7 +27,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
- *
  * @author IndyGames
  */
 public class LoginGUI extends JPanel {

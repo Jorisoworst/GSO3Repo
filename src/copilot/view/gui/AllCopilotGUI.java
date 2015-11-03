@@ -26,7 +26,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
  * @author IndyGames
  */
 public class AllCopilotGUI {

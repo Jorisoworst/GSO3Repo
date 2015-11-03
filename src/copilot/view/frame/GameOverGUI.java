@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- *
  * @author IndyGames
  */
 public class GameOverGUI extends JPanel {
