@@ -25,56 +25,58 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Ruud
+ * @author IndyGames
  */
 public class DatabaseAdministrationTest {
-    
-    DatabaseAdministration dbAdmin;
-    private int testAccountId = 0;
-    private Score testScoreObj = null;
-    
-    public DatabaseAdministrationTest() {
-    }
-    
+    private DatabaseAdministration dbAdmin;
+    private int testAccountId;
+    private Score testScoreObj;
+
     @BeforeClass
     public static void setUpClass() {
-        
+
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
+
     }
-    
+
     @Before
     public void setUp() {
         try {
             dbAdmin = new DatabaseAdministration();
         } catch (Exception ex) {
             assertFalse(true);
+            System.out.println(ex.toString());
         }
-        
-    }
-    
-    @After
-    public void tearDown() {
+
+        this.testAccountId = 0;
+        this.testScoreObj = null;
     }
 
-    public User AddTestUser()
-    {
+    @After
+    public void tearDown() {
+
+    }
+
+    /**
+     * Add a user to the database
+     *
+     * @return the added user
+     */
+    public User addTestUser() {
         try {
             Random random = new Random();
             int randomInt = random.nextInt(10000);
-            User user = new Player("TestUser"+randomInt, "testPassword", "", Calendar.getInstance());
-            user.setDisplayName("TestDisplayName");
+            User user = new Player("TestUser" + randomInt, "testPassword", "TestDisplayName", Calendar.getInstance());
             user.setRegistrationDate(Calendar.getInstance());
+
             User resultUser = dbAdmin.AddUser(user);
-            if(resultUser != null)
-            {
+            if (resultUser != null) {
                 this.testAccountId = resultUser.getId();
                 return resultUser;
-            }
-            else
-            {
+            } else {
                 return null;
             }
         } catch (IOException ex) {
@@ -82,178 +84,187 @@ public class DatabaseAdministrationTest {
             return null;
         }
     }
-    
-    public boolean DeleteTestUser()
-    {
+
+    /**
+     * Delete a user
+     *
+     * @return whether the user is deleted or not
+     */
+    public boolean deleteTestUser() {
         try {
             return dbAdmin.DeleteUser(testAccountId);
         } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.toString());
             return false;
         }
     }
 
-    
+    /**
+     * Add users and add a score to them
+     *
+     * @return
+     */
+    public Score addTestScore() {
+        // Add 4 users
+        User user1 = addTestUser();
+        User user2 = addTestUser();
+        User user3 = addTestUser();
+        User user4 = addTestUser();
+
+        // Then add score
+        Score score = new Score(900, user1.getId(), user2.getId(), user3.getId(), user4.getId());
+        try {
+            return dbAdmin.AddScore(score);
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+            return null;
+        }
+    }
+
+    /**
+     * Delete the score of the users
+     */
+    public void DeleteTestScore() {
+        // Save testScoreUser id's
+        if (testScoreObj != null) {
+            int user1Id = this.testScoreObj.getUser1id();
+            int user2Id = this.testScoreObj.getUser2id();
+            int user3Id = this.testScoreObj.getUser3id();
+            int user4Id = this.testScoreObj.getUser4id();
+
+            try {
+                dbAdmin.DeleteScore(testScoreObj.getScoreId());
+                dbAdmin.DeleteUser(user1Id);
+
+                dbAdmin.DeleteUser(user2Id);
+
+                dbAdmin.DeleteUser(user3Id);
+                dbAdmin.DeleteUser(user4Id);
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
+        }
+    }
+
     /**
      * Test of AddUser method, of class DatabaseAdministration.
      */
     @Test
     public void testAddUser() {
-        User result = AddTestUser();
+        // Add a user, check if the result is correct and delete it afterwards
+        User result = addTestUser();
         assertNotNull(result);
-        DeleteTestUser();
+        deleteTestUser();
     }
-/**
+
+    /**
      * Test of DeleteUser method, of class DatabaseAdministration.
+     *
+     * @throws java.io.IOException
      */
     @Test
     public void testDeleteUser() throws IOException {
-        User testUser = AddTestUser();
+        // Add a user, delete it and check if it worked out or not
+        User testUser = addTestUser();
         boolean result = dbAdmin.DeleteUser(testUser.getId());
         assertTrue(result);
     }
-    
+
     /**
      * Test of GetUsers method, of class DatabaseAdministration.
      */
     @Test
     public void testGetUsers() {
         try {
-            //just test if we successfully get users from database.
-            AddTestUser();
+            // Test if we successfully get users from database.
+            addTestUser();
             boolean foundAddedUser = false;
             List<User> result = dbAdmin.GetUsers();
-            if(result.size() > 0)
-            {
-                for (User usr : result)
-                {
-                    if(usr.getId() == testAccountId)
-                    {
+            if (result.size() > 0) {
+                for (User usr : result) {
+                    if (usr.getId() == testAccountId) {
                         foundAddedUser = true;
                     }
                 }
             }
+
             assertTrue(foundAddedUser);
-            DeleteTestUser();
+            deleteTestUser();
         } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.toString());
             fail("Error database connection.");
         }
-        
     }
-   
-    
+
     /**
-     * Test of UpdateUser method, of class DatabaseAdministration.
+     * Test of UpdateUser method, of class DatabaseAdministrat
+     *
+     * @throws java.io.IOException
      */
     @Test
     public void testUpdateUser() throws IOException {
-        User testUser = AddTestUser();
+        // Add a user and make changes to it
+        User testUser = addTestUser();
         testUser.setDisplayName("testUserUpdated");
         testUser.setIsBanned(true);
         testUser.setLevel(1);
         testUser.setExperiencePoints(500);
         boolean result = dbAdmin.UpdateUser(testUser);
         assertTrue("update failed", result);
-        
-        //get all users, find this user and see if changes are really made
+
+        // Get all users, find the user and see if changes are really made
         List<User> users = dbAdmin.GetUsers();
         User getUser = null;
-        if(users.size() > 0)
-        {
-            for (User usr : users)
-            {
-                if(usr.getId() == testAccountId)
-                {
+        if (users.size() > 0) {
+            for (User usr : users) {
+                if (usr.getId() == testAccountId) {
                     getUser = usr;
                 }
             }
         }
+
         assertNotNull(getUser);
         assertEquals("display name check", testUser.getDisplayName(), getUser.getDisplayName());
         assertEquals("banned check", testUser.getIsBanned(), getUser.getIsBanned());
         assertEquals("level check", testUser.getLevel(), getUser.getLevel());
         assertEquals("exp check", testUser.getExperiencePoints(), getUser.getExperiencePoints());
-        DeleteTestUser();
+        deleteTestUser();
     }
 
-    public Score AddTestScore()
-    {
-        //first add 4 users
-        User user1 = AddTestUser();
-        User user2 = AddTestUser();
-        User user3 = AddTestUser();
-        User user4 = AddTestUser();
-        
-        //then add score
-        Score score = new Score(900, user1.getId(), user2.getId(), user3.getId(), user4.getId());
-        try {
-            return dbAdmin.AddScore(score);
-        } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-    
-    public void DeleteTestScore()
-    {
-        //save testScoreUser id's
-        if(testScoreObj != null)
-        {
-            int user1Id = this.testScoreObj.getUser1id();
-            int user2Id = this.testScoreObj.getUser2id();
-            int user3Id = this.testScoreObj.getUser3id();
-            int user4Id = this.testScoreObj.getUser4id();
-               try {
-            dbAdmin.DeleteScore(testScoreObj.getScoreId());
-            dbAdmin.DeleteUser(user1Id);
-         
-                dbAdmin.DeleteUser(user2Id);
-           
-            dbAdmin.DeleteUser(user3Id);
-            dbAdmin.DeleteUser(user4Id);
-             } catch (IOException ex) {
-                Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-        
-    }
-    
     /**
      * Test of AddScore method, of class DatabaseAdministration.
      */
     @Test
     public void testAddScore() {
-        Score score = AddTestScore();
+        Score score = addTestScore();
         assertNotNull(score);
-        //add asserts to check if user id's are not 0
+
+        // Add asserts to check if user id's are not 0
         List<Score> allScores;
         try {
             allScores = dbAdmin.SelectScore();
-       
-        boolean isAdded = false;
-        for (Score sc : allScores)
-            {
-                if(sc.getScoreId() == score.getScoreId())
-                {
-                    //is in list, so is added.
+
+            boolean isAdded = false;
+            for (Score sc : allScores) {
+                if (sc.getScoreId() == score.getScoreId()) {
+                    // Is in the list, so is added.
                     isAdded = true;
-                    //check user Id's
-                    assertEquals("user 1 check id.",sc.getUser1id(), score.getUser1id());
-                    assertEquals("user 2 check id",sc.getUser2id(), score.getUser2id());
-                    assertEquals("user 3 check id",sc.getUser3id(), score.getUser3id());
-                    assertEquals("user 4 check id",sc.getUser4id(), score.getUser4id());
+
+                    // Check the user Id's
+                    assertEquals("user 1 check id.", sc.getUser1id(), score.getUser1id());
+                    assertEquals("user 2 check id", sc.getUser2id(), score.getUser2id());
+                    assertEquals("user 3 check id", sc.getUser3id(), score.getUser3id());
+                    assertEquals("user 4 check id", sc.getUser4id(), score.getUser4id());
                 }
             }
-        assertTrue("added score does not exist in list.",isAdded);
-        DeleteTestScore();
-         } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
-              fail("error making db connection.");
+
+            assertTrue("added score does not exist in list.", isAdded);
+            DeleteTestScore();
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+            fail("error making db connection.");
         }
     }
-    
 
     /**
      * Test of SelectScore method, of class DatabaseAdministration.
@@ -262,19 +273,20 @@ public class DatabaseAdministrationTest {
     public void testSelectScore() {
         try {
             List<Score> result = dbAdmin.SelectScore();
-            assertNotNull(result); //if null then exception occured.
+            
+            // if it is null an exception occures.
+            assertNotNull(result);
         } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.toString());
         }
     }
-
 
     /**
      * Test of UpdateScore method, of class DatabaseAdministration.
      */
     @Test
     public void testUpdateScore() {
-        
+
     }
 
     /**
@@ -282,7 +294,7 @@ public class DatabaseAdministrationTest {
      */
     @Test
     public void testDeleteScore() {
-        
+
     }
 
     /**
@@ -290,37 +302,33 @@ public class DatabaseAdministrationTest {
      */
     @Test
     public void testGetAndSaveGameSetting() {
-        
         GameSetting result;
         try {
             result = dbAdmin.GetGameSetting();
-       
-        boolean addesTested = false;
-        if(result == null)
-        {
-            //might be none in database, add one
-            
-            GameSetting gameSetting = new GameSetting();
-            gameSetting.setLevelUp(50);
-            gameSetting.setMaxFuelCapacity(100);
-            gameSetting.setMaxUser(4);
-            gameSetting.setRequiredExperiencePoints(2);
-            boolean savedSetting = dbAdmin.SaveGameSetting(gameSetting);
-            assertTrue(savedSetting);
-            result = dbAdmin.GetGameSetting();
-            addesTested = true;
-        }
-        assertNotNull(result); //if null then exception occured or  no game settings found.
-        if(!addesTested)
-        {
-            //didn't test adding, so will try to resave the current result.
-            boolean saved = dbAdmin.SaveGameSetting(result);
-            assertTrue(saved);
-        }
-         } catch (IOException ex) {
-            Logger.getLogger(DatabaseAdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+
+            boolean addesTested = false;
+            if (result == null) {
+                // Might be none in the database so add one
+                GameSetting gameSetting = new GameSetting();
+                gameSetting.setLevelUp(50);
+                gameSetting.setMaxFuelCapacity(100);
+                gameSetting.setMaxUser(4);
+                gameSetting.setRequiredExperiencePoints(2);
+                boolean savedSetting = dbAdmin.SaveGameSetting(gameSetting);
+                assertTrue(savedSetting);
+                result = dbAdmin.GetGameSetting();
+                addesTested = true;
+            }
+            // If it is null then exception occures or there are no game settings found
+            assertNotNull(result); 
+            if (!addesTested) {
+                // Didn't test adding, so try to resave the current result.
+                boolean saved = dbAdmin.SaveGameSetting(result);
+                assertTrue(saved);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
             fail("error making db connection.");
         }
     }
-    
 }
