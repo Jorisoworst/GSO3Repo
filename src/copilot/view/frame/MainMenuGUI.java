@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.frame;
 
 import copilot.controller.GUIController;
@@ -25,11 +20,22 @@ import javax.swing.SwingConstants;
  * @author IndyGames
  */
 public class MainMenuGUI extends JPanel {
-    private Font font, sizedFont;
-    private Image screen, logo;
-    private int screenWidth, screenHeight;
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
 
+    /**
+     * Initializes an instance of the MainMenuGUI
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
     public MainMenuGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {
+        
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.font = font;
@@ -41,9 +47,15 @@ public class MainMenuGUI extends JPanel {
         placeComponents(userLoggedIn);
     }
 
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
     private void placeComponents(User user) {
+        
         this.setLayout(null);
         
+        // add a logout button and its listeners
         JButton logoutButton = new JButton("LOGOUT");
         logoutButton.setBounds(this.screenWidth - 280, 40, 240, 50);
         logoutButton.setContentAreaFilled(false);
@@ -73,7 +85,7 @@ public class MainMenuGUI extends JPanel {
             }
         });
         
-        
+        // add a join button and its listeners
         JButton joinButton = new JButton("JOIN");
         joinButton.setBounds(40, this.screenHeight - 300, 240, 50);
         joinButton.setContentAreaFilled(false);
@@ -102,6 +114,7 @@ public class MainMenuGUI extends JPanel {
             }
         });
 
+        // add a host button and its listeners
         JButton hostButton = new JButton("HOST");
         hostButton.setBounds(40, this.screenHeight - 250, 240, 50);
         hostButton.setContentAreaFilled(false);
@@ -133,7 +146,7 @@ public class MainMenuGUI extends JPanel {
             }
         });
 
-        
+        // add a settings button and its listeners
         JButton settingsButton = new JButton("SETTINGS");
         settingsButton.setBounds(40, this.screenHeight - 200, 240, 50);
         settingsButton.setContentAreaFilled(false);
@@ -162,6 +175,7 @@ public class MainMenuGUI extends JPanel {
             }
         });
         
+        // add a credits button and its listeners
         JButton creditsButton = new JButton("CREDITS");
         creditsButton.setBounds(40, this.screenHeight - 150, 240, 50);
         creditsButton.setContentAreaFilled(false);
@@ -190,6 +204,7 @@ public class MainMenuGUI extends JPanel {
             }
         });
         
+        // add a singleplayer button and its listeners
         JButton singleplayerButton = new JButton("SINGLEPLAYER");
         singleplayerButton.setBounds(40, this.screenHeight - 350, 540, 50);
         singleplayerButton.setContentAreaFilled(false);
@@ -219,10 +234,12 @@ public class MainMenuGUI extends JPanel {
             }
         });
         
+        // add the logo
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
         this.add(logoImage);
         
+        // add the background
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         this.add(bg);

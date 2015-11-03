@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LaunchGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">LaunchGUI.java</span></div><h1>LaunchGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+public class LaunchGUI extends JPanel {
+    private final Font font, fontExtraSmall;
+    private final Image screen;
+
+    /**
+     * Initializes an instance of the LaunchGUI
+     * @param font the larger font used
+     * @param fontExtraSmall the smallest font possible
+     * @param screen the background image
+     */
+<span class="fc" id="L24">    public LaunchGUI(Font font, Font fontExtraSmall, Image screen) {</span>
+        
+<span class="fc" id="L26">        this.font = font;</span>
+<span class="fc" id="L27">        this.fontExtraSmall = fontExtraSmall;</span>
+<span class="fc" id="L28">        this.screen = screen;</span>
+        
+<span class="fc" id="L30">        placeComponents();</span>
+<span class="fc" id="L31">    }</span>
+
+    private void placeComponents() {
+        
+<span class="fc" id="L35">        this.setLayout(null);</span>
+
+        // add a launch button and its listeners
+<span class="fc" id="L38">        JButton launchButton = new JButton(&quot;LAUNCH&quot;);</span>
+<span class="fc" id="L39">        launchButton.setBounds(290, 10, 244, 50);</span>
+<span class="fc" id="L40">        launchButton.setFocusPainted(false);</span>
+<span class="fc" id="L41">        launchButton.setFont(this.font);</span>
+<span class="fc" id="L42">        this.add(launchButton);</span>
+
+<span class="fc" id="L44">        launchButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="fc" id="L45">            GUIController.playClick();</span>
+<span class="fc" id="L46">            AllCopilotGUI.setPanel(&quot;login&quot;, null, null);</span>
+<span class="fc" id="L47">        });</span>
+
+<span class="fc" id="L49">        launchButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L52">                launchButton.setText(&quot;LAUNCH&quot;);</span>
+<span class="fc" id="L53">                GUIController.playHover();</span>
+<span class="fc" id="L54">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L58">                launchButton.setText(&quot;LAUNCH&quot;);</span>
+<span class="nc" id="L59">            }</span>
+        });
+        
+        // add a copyright label
+<span class="fc" id="L63">        JLabel copyRightLabel = new JLabel(&quot;Build 1.0000 | COPYRIGHT ALL RIGHTS RESERVED | INDYGAMES INC. &quot;, SwingConstants.LEFT);</span>
+<span class="fc" id="L64">        copyRightLabel.setBounds(4, 476, 200, 30);</span>
+<span class="fc" id="L65">        copyRightLabel.setFont(fontExtraSmall);</span>
+<span class="fc" id="L66">        this.add(copyRightLabel);</span>
+        
+        // add a background
+<span class="fc" id="L69">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="fc" id="L70">        bg.setBounds(0, 0, 800, 500);</span>
+<span class="fc" id="L71">        this.add(bg);</span>
+<span class="fc" id="L72">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

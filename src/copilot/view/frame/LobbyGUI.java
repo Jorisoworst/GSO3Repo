@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.frame;
 
 import copilot.controller.GUIController;
@@ -29,11 +24,22 @@ import javax.swing.SwingConstants;
  */
 public class LobbyGUI extends JPanel {
     
-    private Font font, sizedFont;
-    private Image screen, logo;
-    private int screenWidth, screenHeight;
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
     
+    /**
+     * Initializes an instance of the LobbyGUI
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
     public LobbyGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {
+        
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
@@ -43,27 +49,37 @@ public class LobbyGUI extends JPanel {
         placeComponents(userLoggedIn);
     }
     
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
     private void placeComponents(User user) {
+        
         this.setLayout(null);
 
+        // add a users label
         JLabel usersLabel = new JLabel("users");
         usersLabel.setBounds(125, 50, 50, 14);
         this.add(usersLabel);
         
+        // add a users listmodel
         DefaultListModel modelUsers = new DefaultListModel();
         JList users = new JList(modelUsers);
         users.setBounds(10, 70, 300, 500);
         this.add(users);
         
+        // add a sessions label
         JLabel sessionsLabel = new JLabel("sessions");
         sessionsLabel.setBounds(500, 50, 80, 14);
         this.add(sessionsLabel);
         
+        // add a sessions listmodel
         DefaultListModel modelSessions = new DefaultListModel();
         JList sessions = new JList(modelSessions);
         sessions.setBounds(340, 70, this.screenWidth - 350, this.screenHeight - 130);
         this.add(sessions);
         
+        // add a join button and its listeners
         JButton joinButton = new JButton("JOIN");
         joinButton.setFont(font);
         joinButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -86,7 +102,7 @@ public class LobbyGUI extends JPanel {
             }
         });
         
-        // TODO kan pas echt gaan werken wanneer RMI goed werkzaam is
+        // TODO is able to work when there is an RMI connection
         joinButton.addActionListener(new ActionListener() {
 
             @Override
@@ -95,6 +111,7 @@ public class LobbyGUI extends JPanel {
             }
         });
         
+        // add a refresh button and its listeners
         JButton refreshButton = new JButton("REFRESH");
         refreshButton.setFont(font);
         refreshButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -117,6 +134,7 @@ public class LobbyGUI extends JPanel {
             }
         });
         
+        // refresh all the listmodels
         refreshButton.addActionListener(new ActionListener(){
 
             @Override
@@ -126,16 +144,17 @@ public class LobbyGUI extends JPanel {
                 ArrayList<User> usersList = admin.getUsers();
                 int count = 0;
 
-                for (Session session : sessionsList) {
+                sessionsList.stream().forEach((session) -> {
                     modelSessions.addElement(count + ": " + session.getHost().getUsername() + " Game, Amount of players in session: " + session.getUsers().size() + ", is started: " + session.isIsStarted());
-                }
+                });
 
-                for (User userInList : usersList) {
+                usersList.stream().forEach((userInList) -> {
                     modelUsers.addElement(userInList.getUsername());
-                }
+                });
             }
         });
         
+        // add a back button and its listeners
         JButton backButton = new JButton("BACK");
         backButton.setFont(font);
         backButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -166,23 +185,26 @@ public class LobbyGUI extends JPanel {
             }
         });
         
+        // add all the users and sessions to the list
         GameAdministration admin = GameAdministration.getInstance();
         ArrayList<Session> sessionsList = admin.getSessions();
         ArrayList<User> usersList = admin.getUsers();
         int count = 0;
         
-        for (Session session : sessionsList) {
+        sessionsList.stream().forEach((session) -> {
             modelSessions.addElement(count + ": " + session.getHost().getUsername() + " Game, Amount of players in session: " + session.getUsers().size() + ", is started: " + session.isIsStarted());
-        }
+        });
         
-        for (User userInList : usersList) {
+        usersList.stream().forEach((userInList) -> {
             modelUsers.addElement(userInList.getUsername());
-        }
+        });
 
+        // add the logo
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
         this.add(logoImage);
         
+        // add the background
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         this.add(bg);

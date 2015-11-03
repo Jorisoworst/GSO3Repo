@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.frame;
 
 import copilot.controller.GUIController;
@@ -23,26 +18,34 @@ import javax.swing.SwingConstants;
  * @author IndyGames
  */
 public class GameOverGUI extends JPanel {
-    private final String gameOverText;
     private final int score;
-    private Font font;
-    private int screenWidth, screenHeight;
+    private final Font font;
+    private final int screenWidth, screenHeight;
 
+    /**
+     * Initializes an instance of the GameOverGUI
+     * @param userLoggedIn the user logged in
+     * @param score the score achieved in the game
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the font used
+     */
     public GameOverGUI(User userLoggedIn, int score, int screenWidth, int screenHeight, Font font) {
-        this.gameOverText = "Game Over";
+        
         this.score = score;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
         
         this.setLayout(new BorderLayout());
-        this.createGUI(userLoggedIn);
+        this.placeComponents(userLoggedIn);
     }
 
-    private void createGUI(User user) {
-        this.setLayout(new BorderLayout());
-
+    private void placeComponents(User user) {
         
+        this.setLayout(new BorderLayout());
+        
+        // add the gameOver label
         JLabel gameOverLabel = new JLabel("Game Over");
         gameOverLabel.setLayout(new BorderLayout());
         gameOverLabel.setPreferredSize(new Dimension(this.screenWidth, (this.screenHeight / 7) * 3));
@@ -51,7 +54,7 @@ public class GameOverGUI extends JPanel {
         gameOverLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(gameOverLabel, BorderLayout.NORTH);
         
-        
+        // add the score label
         JLabel scoreLabel = new JLabel("Score: " + this.score);
         scoreLabel.setLayout(new BorderLayout());
         scoreLabel.setPreferredSize(new Dimension(this.screenWidth, (this.screenHeight / 7) * 4));
@@ -60,7 +63,7 @@ public class GameOverGUI extends JPanel {
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(scoreLabel, BorderLayout.CENTER);
 
-        
+        // add the gameOver button and its listeners
         JButton gameOverButton = new JButton("Main Menu");
         gameOverButton.setHorizontalAlignment(SwingConstants.CENTER);
         gameOverButton.setContentAreaFilled(false);

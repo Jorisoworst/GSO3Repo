@@ -1,47 +1,151 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.controller</a> &gt; <span class="el_source">GameController.java</span></div><h1>GameController.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.controller;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.controller</a> &gt; <span class="el_source">GameController.java</span></div><h1>GameController.java</h1><pre class="source lang-java linenums">package copilot.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.Event;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import org.dyn4j.collision.manifold.Manifold;
+import org.dyn4j.collision.narrowphase.Penetration;
+import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionListener;
+import org.dyn4j.dynamics.contact.ContactConstraint;
 
 /**
  *
- * @author Joris
+ * @author IndyGames
  */
-<span class="nc" id="L22">public class GameController implements Initializable {</span>
+public class GameController implements CollisionListener {
 
-    //Main Menu
-    @FXML
-    Button startGameBtn;
-    @FXML
-    Button highscoresBtn;
-    @FXML
-    Button quitGameBtn;
+    private final String[] keyIdentifiers;
+    private final Integer[] keyValues;
+    private String keyPressed;
+
+<span class="nc" id="L28">    public GameController(JPanel panel) {</span>
+        
+<span class="nc" id="L30">        this.keyIdentifiers = new String[]{</span>
+            &quot;UP&quot;,
+            &quot;DOWN&quot;,
+            &quot;LEFT&quot;,
+            &quot;RIGHT&quot;,
+            &quot;SPACE&quot;,
+            &quot;ESCAPE&quot;
+        };
+
+<span class="nc" id="L39">        this.keyValues = new Integer[]{</span>
+<span class="nc" id="L40">            KeyEvent.VK_W/*VK_UP*/,</span>
+<span class="nc" id="L41">            KeyEvent.VK_S/*VK_DOWN*/,</span>
+<span class="nc" id="L42">            KeyEvent.VK_A/*VK_LEFT*/,</span>
+<span class="nc" id="L43">            KeyEvent.VK_D/*VK_RIGHT*/,</span>
+<span class="nc" id="L44">            KeyEvent.VK_SPACE,</span>
+<span class="nc" id="L45">            KeyEvent.VK_ESCAPE</span>
+        };
+
+<span class="nc" id="L48">        InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);</span>
+<span class="nc" id="L49">        ActionMap am = panel.getActionMap();</span>
+<span class="nc" id="L50">        int limit = this.keyIdentifiers.length;</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        for (int i = 0; i &lt; limit; i++) {</span>
+<span class="nc" id="L53">            im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0), this.keyIdentifiers[i]);</span>
+<span class="nc" id="L54">            am.put(this.keyIdentifiers[i], new KeyAction(this.keyIdentifiers[i]));</span>
+        }
+
+<span class="nc" id="L57">        String releasedIdentifier = &quot;&quot;;</span>
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        for (int i = 0; i &lt; limit - 1; i++) {</span>
+<span class="nc" id="L60">            releasedIdentifier = this.keyIdentifiers[i] + &quot;_RELEASED&quot;;</span>
+<span class="nc" id="L61">            im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0, true), releasedIdentifier);</span>
+<span class="nc" id="L62">            am.put(releasedIdentifier, new KeyAction(releasedIdentifier));</span>
+        }
+
+<span class="nc" id="L65">        this.keyPressed = &quot;NONE&quot;;</span>
+<span class="nc" id="L66">    }</span>
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2) {
+<span class="nc bnc" id="L70" title="All 4 branches missed.">        if (body1 != null &amp;&amp; body2 != null) {</span>
+<span class="nc" id="L71">            body1.setUserData(body2);</span>
+<span class="nc" id="L72">            body2.setUserData(body1);</span>
+        }
 
-<span class="nc" id="L35">    }</span>
+<span class="nc" id="L75">        return false;</span>
+    }
 
-    public void startGame(Event evt) {
-<span class="nc" id="L38">        System.out.println(&quot;START GAME&quot;);</span>
-<span class="nc" id="L39">    }</span>
+    @Override
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
+<span class="nc" id="L80">        return false;</span>
+    }
 
-    public void quitGame(Event evt) {
-<span class="nc" id="L42">        System.out.println(&quot;QUIT GAME&quot;);</span>
+    @Override
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Manifold manifold) {
+<span class="nc" id="L85">        return false;</span>
+    }
 
-<span class="nc" id="L44">    }</span>
+    @Override
+    public boolean collision(ContactConstraint contactConstraint) {
+<span class="nc" id="L90">        return false;</span>
+    }
 
+    /**
+     * @return the keyPressed
+     */
+    public String getKeyPressed() {
+<span class="nc" id="L97">        return keyPressed;</span>
+    }
+
+    /**
+     * @param keyPressed the keyPressed to set
+     */
+    public void setKeyPressed(String keyPressed) {
+<span class="nc" id="L104">        this.keyPressed = keyPressed;</span>
+<span class="nc" id="L105">    }</span>
+
+    public class KeyAction extends AbstractAction {
+
+<span class="nc" id="L109">        public KeyAction(String name) {</span>
+<span class="nc" id="L110">            putValue(Action.NAME, name);</span>
+<span class="nc" id="L111">            putValue(ACTION_COMMAND_KEY, &quot;Command: &quot; + name);</span>
+<span class="nc" id="L112">        }</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L116">            String inputKey = getValue(Action.NAME).toString();</span>
+
+<span class="nc bnc" id="L118" title="All 17 branches missed.">            switch (inputKey) {</span>
+                case &quot;UP&quot;:
+                case &quot;DOWN&quot;: {
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                    if (getKeyPressed().equals(&quot;SPACE&quot;)) {</span>
+<span class="nc" id="L122">                        setKeyPressed(inputKey + &quot;_&quot; + getKeyPressed());</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                    } else if (getKeyPressed().endsWith(&quot;_SPACE&quot;)) {</span>
+<span class="nc" id="L124">                        setKeyPressed(inputKey + &quot;_SPACE&quot;);</span>
+                    } else {
+<span class="nc" id="L126">                        setKeyPressed(inputKey);</span>
+                    }
+<span class="nc" id="L128">                    break;</span>
+                }
+                case &quot;SPACE&quot;: {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                    if (getKeyPressed().equals(&quot;UP&quot;)</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                            || getKeyPressed().equals(&quot;DOWN&quot;)) {</span>
+<span class="nc" id="L133">                        setKeyPressed(getKeyPressed() + &quot;_&quot; + inputKey);</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">                    } else if (!getKeyPressed().endsWith(&quot;_SPACE&quot;)) {</span>
+<span class="nc" id="L135">                        setKeyPressed(inputKey);</span>
+                    }
+                    break;
+                }
+                case &quot;ESCAPE&quot;: {
+<span class="nc" id="L140">                    setKeyPressed(inputKey);</span>
+<span class="nc" id="L141">                    break;</span>
+                }
+                default: {
+<span class="nc" id="L144">                    setKeyPressed(&quot;NONE&quot;);</span>
+                    break;
+                }
+            }
+<span class="nc" id="L148">        }</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

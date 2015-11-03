@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameSetting.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">GameSetting.java</span></div><h1>GameSetting.java</h1><pre class="source lang-java linenums">package copilot.domain;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class GameSetting {
+    private int maxFuelCapacity, maxUser, requiredExperiencePoints;
+    private double levelUp;
+    
+    /**
+     * Initializes an instance of the GameSetting class
+     */
+    public GameSetting()
+<span class="nc" id="L15">    {</span>
+      // EMPTY  
+<span class="nc" id="L17">    }</span>
+
+    /**
+     * get the max fuel capacity
+     * @return the maxFuelCapacity
+     */
+    public int getMaxFuelCapacity() {
+<span class="nc" id="L24">        return maxFuelCapacity;</span>
+    }
+
+    /**
+     * get the max user number
+     * @return the maxUser
+     */
+    public int getMaxUser() {
+<span class="nc" id="L32">        return maxUser;</span>
+    }
+
+    /**
+     * get the required experience points to level up
+     * @return the requiredExperiencePoints
+     */
+    public int getRequiredExperiencePoints() {
+<span class="nc" id="L40">        return requiredExperiencePoints;</span>
+    }
+
+    /**
+     * get the level up
+     * @return the levelUp
+     */
+    public double getLevelUp() {
+<span class="nc" id="L48">        return levelUp;</span>
+    }
+
+    /**
+     * set the max fuel capacity
+     * @param maxFuelCapacity the maxFuelCapacity to set 
+     */
+    public void setMaxFuelCapacity(int maxFuelCapacity) {
+<span class="nc" id="L56">        this.maxFuelCapacity = maxFuelCapacity;</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * set the max users
+     * @param maxUser the maxUser to set
+     */
+    public void setMaxUser(int maxUser) {
+<span class="nc" id="L64">        this.maxUser = maxUser;</span>
+<span class="nc" id="L65">    }</span>
+
+    /**
+     * set the required experience points to level up
+     * @param requiredExperiencePoints the requiredExperiencePoints to set
+     */
+    public void setRequiredExperiencePoints(int requiredExperiencePoints) {
+<span class="nc" id="L72">        this.requiredExperiencePoints = requiredExperiencePoints;</span>
+<span class="nc" id="L73">    }</span>
+
+    /**
+     * set the level up
+     * @param levelUp the levelUp to set
+     */
+    public void setLevelUp(double levelUp) {
+<span class="nc" id="L80">        this.levelUp = levelUp;</span>
+<span class="nc" id="L81">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

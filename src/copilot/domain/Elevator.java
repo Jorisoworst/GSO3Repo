@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Image;
@@ -13,7 +8,7 @@ import java.awt.Image;
  */
 public class Elevator extends AirplanePart {
     private double elevatorPitch;
-    private Airplane airplane;
+    private final Airplane airplane;
     public static double PITCH_INCREASMENT = 0.3;
     
     /**
@@ -24,6 +19,7 @@ public class Elevator extends AirplanePart {
      * @param user the user, may not be null
      */
     public Elevator(Image image, Airplane airplane, User user) {
+        
         super(image, airplane, user);
         this.airplane = airplane;
     }
@@ -42,12 +38,10 @@ public class Elevator extends AirplanePart {
         
         //the elevator pitch has changed, as a result, the airplane nose pitch will change.
         //Assumption: User will continuesly give input that calls this method.
-        
         double currentPitch = airplane.getPitch();
         double newPitch = currentPitch + (PITCH_INCREASMENT * elevatorPitch);
         airplane.setPitch(newPitch);
 
         this.elevatorPitch = elevatorPitch;
-        //airplane.updateAirplane();
     }
 }

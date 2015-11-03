@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LoginGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">LoginGUI.java</span></div><h1>LoginGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.domain.GameAdministration;
+import copilot.domain.Player;
+import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class LoginGUI extends JPanel {
+
+    private final int screenHeight, screenWidth;
+    private final Font font, sizedFont, sizedFont2;
+    private final Image screen, logo;
+
+    /**
+     * Initializes an instance of the LoginGUI Panel
+     * @param screenHeight the height of the screen
+     * @param screenWidth the width of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param sizedFont2 the largest font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
+<span class="fc" id="L49">    public LoginGUI(int screenHeight, int screenWidth, Font font, Font sizedFont, Font sizedFont2, Image screen, Image logo) {</span>
+        
+<span class="fc" id="L51">        this.screenHeight = screenHeight;</span>
+<span class="fc" id="L52">        this.screenWidth = screenWidth;</span>
+<span class="fc" id="L53">        this.font = font;</span>
+<span class="fc" id="L54">        this.sizedFont = sizedFont;</span>
+<span class="fc" id="L55">        this.sizedFont2 = sizedFont2;</span>
+<span class="fc" id="L56">        this.screen = screen;</span>
+<span class="fc" id="L57">        this.logo = logo;</span>
+
+<span class="fc" id="L59">        placeComponents();</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * used to place all the components to the panel
+     */
+    private void placeComponents() {
+        
+<span class="fc" id="L67">        this.setLayout(null);</span>
+
+        // add a username label
+<span class="fc" id="L70">        JLabel userLabel = new JLabel(&quot;Username&quot;);</span>
+<span class="fc" id="L71">        userLabel.setBounds(50, this.screenHeight - (this.screenHeight / 2), 100, 25);</span>
+<span class="fc" id="L72">        userLabel.setFont(this.font);</span>
+<span class="fc" id="L73">        this.add(userLabel);</span>
+
+        // add a username textfield
+<span class="fc" id="L76">        JTextField userText = new JTextField(20);</span>
+<span class="fc" id="L77">        userText.setBounds(50, userLabel.getY() + 25, 160, 25);</span>
+<span class="fc" id="L78">        userText.setFont(this.sizedFont);</span>
+<span class="fc" id="L79">        this.add(userText);</span>
+
+        // add a password label
+<span class="fc" id="L82">        JLabel passwordLabel = new JLabel(&quot;Password&quot;);</span>
+<span class="fc" id="L83">        passwordLabel.setBounds(50, userText.getY() + 25, 100, 25);</span>
+<span class="fc" id="L84">        passwordLabel.setFont(font);</span>
+<span class="fc" id="L85">        this.add(passwordLabel);</span>
+
+        // add a password field
+<span class="fc" id="L88">        JPasswordField passwordText = new JPasswordField(20);</span>
+<span class="fc" id="L89">        passwordText.setBounds(50, passwordLabel.getY() + 25, 160, 25);</span>
+<span class="fc" id="L90">        passwordText.setFont(this.sizedFont);</span>
+<span class="fc" id="L91">        this.add(passwordText);</span>
+
+        // add a login button and its listeners
+<span class="fc" id="L94">        JButton loginButton = new JButton(&quot;login&quot;);</span>
+<span class="fc" id="L95">        loginButton.setHorizontalAlignment(SwingConstants.CENTER);</span>
+<span class="fc" id="L96">        loginButton.setBounds(50, passwordText.getY() + 30, 160, 25);</span>
+<span class="fc" id="L97">        loginButton.setFocusPainted(false);</span>
+<span class="fc" id="L98">        loginButton.setFont(this.sizedFont);</span>
+<span class="fc" id="L99">        this.add(loginButton);</span>
+
+<span class="fc" id="L101">        loginButton.addActionListener(new ActionListener() {</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="fc" id="L105">                GUIController.playClick();</span>
+<span class="fc" id="L106">                GameAdministration admin = GameAdministration.getInstance();</span>
+                
+                // check the database connection
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">                if (admin.getDatabaseState()) {</span>
+                    
+                    // check the login and login or give a message
+<span class="nc" id="L112">                    boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));</span>
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                    if (login) {</span>
+<span class="nc" id="L115">                        User user = admin.getUser(userText.getText());</span>
+<span class="nc" id="L116">                        AllCopilotGUI.setPanel(&quot;menu&quot;, user, null);</span>
+<span class="nc" id="L117">                    } else {</span>
+<span class="nc" id="L118">                        passwordText.setText(null);</span>
+<span class="nc" id="L119">                        JOptionPane.showMessageDialog(null, &quot;Your username and/or password is not correct, try again or create an account&quot;, &quot;ALERT&quot;, JOptionPane.ERROR_MESSAGE);</span>
+                    }
+<span class="nc" id="L121">                } else {</span>
+<span class="fc" id="L122">                    JOptionPane.showMessageDialog(null, &quot;The Database connection could not be initialized, please check your network connection&quot;, &quot;ALERT&quot;, JOptionPane.ERROR_MESSAGE);</span>
+                }
+<span class="fc" id="L124">            }</span>
+        });
+
+<span class="fc" id="L127">        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L131">                loginButton.setText(&quot;&gt;login&quot;);</span>
+<span class="fc" id="L132">                GUIController.playHover();</span>
+<span class="fc" id="L133">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L137">                loginButton.setText(&quot;login&quot;);</span>
+<span class="fc" id="L138">            }</span>
+        });
+
+        // add a register button and its listeners
+<span class="fc" id="L142">        JButton registerButton = new JButton(&quot;register&quot;);</span>
+<span class="fc" id="L143">        registerButton.setHorizontalAlignment(SwingConstants.CENTER);</span>
+<span class="fc" id="L144">        registerButton.setBounds(50, loginButton.getY() + 30, 160, 25);</span>
+<span class="fc" id="L145">        registerButton.setFocusPainted(false);</span>
+<span class="fc" id="L146">        registerButton.setFont(this.sizedFont);</span>
+<span class="fc" id="L147">        this.add(registerButton);</span>
+
+<span class="fc" id="L149">        registerButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L150">            GUIController.playClick();</span>
+
+            try {
+                // check the fields and try to register
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                if (userText.getText().isEmpty()</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                        || passwordText.getPassword().length == 0) {</span>
+<span class="nc" id="L156">                    JOptionPane.showMessageDialog(null, &quot;please fill in your username and/or password to register&quot;);</span>
+                } else {
+<span class="nc" id="L158">                    String dateAsString = JOptionPane.showInputDialog(&quot;please insert your birthday with the following format: yyyy-mm-dd&quot;);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                    if (dateAsString != null) {</span>
+<span class="nc" id="L160">                        DateFormat format = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L161">                        format.setLenient(false);</span>
+<span class="nc" id="L162">                        Date date = format.parse(dateAsString);</span>
+<span class="nc" id="L163">                        Calendar birthday = Calendar.getInstance();</span>
+<span class="nc" id="L164">                        birthday.setTime(date);</span>
+
+                        // try to create a new player object and add it to the database and the admin
+                        try {
+<span class="nc" id="L168">                            Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), &quot;&quot; /*DisplayName*/, birthday); // TODO add DisplayName textfield in the gui</span>
+<span class="nc" id="L169">                            GameAdministration admin = GameAdministration.getInstance();</span>
+
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                            if (admin.getDatabaseState()) {</span>
+<span class="nc" id="L172">                                admin.addUser(user);</span>
+<span class="nc" id="L173">                                JOptionPane.showMessageDialog(null, &quot;Your account has been created, you can now log in with your information&quot;, &quot;USER CREATED&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+                            } else {
+<span class="nc" id="L175">                                JOptionPane.showMessageDialog(null, &quot;The Database connection could not be initialized, please check your network connection&quot;, &quot;ALERT&quot;, JOptionPane.ERROR_MESSAGE);</span>
+                            }
+<span class="nc" id="L177">                        } catch (Exception ex) {</span>
+<span class="nc" id="L178">                            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L179">                        }</span>
+                    }
+                }
+<span class="nc" id="L182">            } catch (HeadlessException | ParseException ex) {</span>
+<span class="nc" id="L183">                GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L184">            }</span>
+<span class="nc" id="L185">        });</span>
+
+<span class="fc" id="L187">        registerButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L190">                registerButton.setText(&quot;&gt;register&quot;);</span>
+<span class="fc" id="L191">                GUIController.playHover();</span>
+<span class="fc" id="L192">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L196">                registerButton.setText(&quot;register&quot;);</span>
+<span class="fc" id="L197">            }</span>
+        });
+
+        // add a quit button and its listeners
+<span class="fc" id="L201">        JButton quitButton = new JButton(&quot;QUIT&quot;);</span>
+<span class="fc" id="L202">        quitButton.setBounds(this.screenWidth - 250, 10, 250, 100);</span>
+<span class="fc" id="L203">        quitButton.setContentAreaFilled(false);</span>
+<span class="fc" id="L204">        quitButton.setFocusPainted(false);</span>
+<span class="fc" id="L205">        quitButton.setFont(this.sizedFont2);</span>
+<span class="fc" id="L206">        this.add(quitButton);</span>
+
+<span class="fc" id="L208">        quitButton.addActionListener(new ActionListener() {</span>
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L211">                System.exit(0);</span>
+<span class="nc" id="L212">            }</span>
+        });
+
+<span class="fc" id="L215">        quitButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="fc" id="L218">                quitButton.setText(&quot;&gt;QUIT&quot;);</span>
+<span class="fc" id="L219">                GUIController.playHover();</span>
+<span class="fc" id="L220">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L224">                quitButton.setText(&quot;QUIT&quot;);</span>
+<span class="nc" id="L225">            }</span>
+        });
+
+        // add a back label
+<span class="fc" id="L229">        JLabel backLogin = new JLabel();</span>
+<span class="fc" id="L230">        backLogin.setBounds(userLabel.getX() - 10, userLabel.getY() - 10, 200, 200);</span>
+<span class="fc" id="L231">        backLogin.setOpaque(true);</span>
+<span class="fc" id="L232">        backLogin.setBackground(Color.WHITE);</span>
+<span class="fc" id="L233">        this.add(backLogin);</span>
+
+        // add the logo
+<span class="fc" id="L236">        JLabel logoImage = new JLabel(new ImageIcon(this.logo));</span>
+<span class="fc" id="L237">        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);</span>
+<span class="fc" id="L238">        this.add(logoImage);</span>
+
+        // add the background
+<span class="fc" id="L241">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="fc" id="L242">        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);</span>
+<span class="fc" id="L243">        this.add(bg);</span>
+<span class="fc" id="L244">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

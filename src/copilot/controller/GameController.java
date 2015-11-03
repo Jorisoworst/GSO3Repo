@@ -26,6 +26,7 @@ public class GameController implements CollisionListener {
     private String keyPressed;
 
     public GameController(JPanel panel) {
+        
         this.keyIdentifiers = new String[]{
             "UP",
             "DOWN",

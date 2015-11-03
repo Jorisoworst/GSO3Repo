@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CreditsGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">CreditsGUI.java</span></div><h1>CreditsGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class CreditsGUI extends JPanel {
+    
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
+    
+    /**
+     * Initializes an instance of the CreditsGUI
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
+<span class="nc" id="L36">    public CreditsGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {</span>
+        
+<span class="nc" id="L38">        this.screenHeight = screenHeight;</span>
+<span class="nc" id="L39">        this.screenWidth = screenWidth;</span>
+<span class="nc" id="L40">        this.font = font;</span>
+<span class="nc" id="L41">        this.sizedFont = sizedFont;</span>
+<span class="nc" id="L42">        this.screen = screen;</span>
+<span class="nc" id="L43">        this.logo = logo;</span>
+        
+<span class="nc" id="L45">        placeComponents(userLoggedIn);</span>
+<span class="nc" id="L46">    }</span>
+    
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
+    private void placeComponents(User user) {
+        
+<span class="nc" id="L54">        this.setLayout(null); </span>
+        
+        // add a back button and its listeners
+<span class="nc" id="L57">        JButton backButton = new JButton(&quot;BACK&quot;);</span>
+<span class="nc" id="L58">        backButton.setFont(font);</span>
+<span class="nc" id="L59">        backButton.setBounds(40, this.screenHeight - 60, 160, 40);</span>
+<span class="nc" id="L60">        backButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L61">        this.add(backButton);</span>
+        
+<span class="nc" id="L63">        backButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L66">                backButton.setFont(sizedFont);</span>
+<span class="nc" id="L67">                backButton.setText(&quot;&gt;BACK&quot;);</span>
+<span class="nc" id="L68">                GUIController.playHover();</span>
+<span class="nc" id="L69">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L73">                backButton.setFont(font);</span>
+<span class="nc" id="L74">                backButton.setText(&quot;BACK&quot;);</span>
+<span class="nc" id="L75">            }</span>
+        });
+        
+<span class="nc" id="L78">        backButton.addActionListener(new ActionListener(){</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L82">                GUIController.playClick();</span>
+<span class="nc" id="L83">                AllCopilotGUI.setPanel(&quot;menu&quot;, user, null);</span>
+<span class="nc" id="L84">            }</span>
+        });
+        
+        // add a game brought by label
+<span class="nc" id="L88">        JLabel gameBroughtLabel = new JLabel(&quot;MADE BY&quot;);</span>
+<span class="nc" id="L89">        gameBroughtLabel.setBounds(this.screenWidth / 2 - 68, 180, 300, 80);</span>
+<span class="nc" id="L90">        gameBroughtLabel.setFont(sizedFont);</span>
+<span class="nc" id="L91">        this.add(gameBroughtLabel);</span>
+        
+        // add an Indy label
+<span class="nc" id="L94">        JLabel indyLabel = new JLabel(&quot;INDY&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L95">        indyLabel.setBounds(gameBroughtLabel.getX(), gameBroughtLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L96">        indyLabel.setFont(font);</span>
+<span class="nc" id="L97">        this.add(indyLabel);</span>
+        
+        // add a Jonne label
+<span class="nc" id="L100">        JLabel jonneLabel = new JLabel(&quot;JONNE&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L101">        jonneLabel.setBounds(gameBroughtLabel.getX(), indyLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L102">        jonneLabel.setFont(font);</span>
+<span class="nc" id="L103">        this.add(jonneLabel);</span>
+        
+        // add a Joris label
+<span class="nc" id="L106">        JLabel jorisLabel = new JLabel(&quot;JORIS&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L107">        jorisLabel.setBounds(gameBroughtLabel.getX(), jonneLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L108">        jorisLabel.setFont(font);</span>
+<span class="nc" id="L109">        this.add(jorisLabel);</span>
+  
+        // add a Mark label
+<span class="nc" id="L112">        JLabel markLabel = new JLabel(&quot;MARK&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L113">        markLabel.setBounds(gameBroughtLabel.getX(), jorisLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L114">        markLabel.setFont(font);</span>
+<span class="nc" id="L115">        this.add(markLabel);</span>
+
+        // add a Niels label
+<span class="nc" id="L118">        JLabel nielsLabel = new JLabel(&quot;NIELS&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L119">        nielsLabel.setBounds(gameBroughtLabel.getX(), markLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L120">        nielsLabel.setFont(font);</span>
+<span class="nc" id="L121">        this.add(nielsLabel);</span>
+        
+        // add a Ruud label
+<span class="nc" id="L124">        JLabel ruudLabel = new JLabel(&quot;RUUD&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L125">        ruudLabel.setBounds(gameBroughtLabel.getX(), nielsLabel.getY() + 55, 150, 150);</span>
+<span class="nc" id="L126">        ruudLabel.setFont(font);</span>
+<span class="nc" id="L127">        this.add(ruudLabel);</span>
+        
+        // add the logo
+<span class="nc" id="L130">        JLabel logoImage = new JLabel(new ImageIcon(this.logo));</span>
+<span class="nc" id="L131">        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);</span>
+<span class="nc" id="L132">        this.add(logoImage);</span>
+        
+        // add the background
+<span class="nc" id="L135">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="nc" id="L136">        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);</span>
+<span class="nc" id="L137">        this.add(bg);</span>
+        
+<span class="nc" id="L139">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

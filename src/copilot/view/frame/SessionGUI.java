@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.frame;
 
 import copilot.domain.Session;
@@ -19,13 +14,27 @@ import javax.swing.JPanel;
  */
 public class SessionGUI extends JPanel {
     
+    /**
+     * Initializes an instance of the SessionGUI
+     * @param session the session which is the gui for
+     * @param userLoggedIn the user logged in
+     */
     public SessionGUI(Session session, User userLoggedIn) {
+       
         placeComponents(session, userLoggedIn);
     }
     
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     * @param session the session that has to be given to the game later
+     * @param user the user logged in
+     */
     private void placeComponents(Session session, User user) {
+        
         this.setLayout(null);
         
+        // add a backbutton and its listeners
         JButton backButton = new JButton("back");
         backButton.setBounds(610, 10, 160, 50);
         this.add(backButton);
@@ -37,6 +46,5 @@ public class SessionGUI extends JPanel {
                 AllCopilotGUI.setPanel("lobby", user, null);
             }
         });
-    }
-    
+    } 
 }

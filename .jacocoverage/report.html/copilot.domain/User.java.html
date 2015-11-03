@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package copilot.domain;
 
 import java.util.Calendar;
 
@@ -12,21 +7,21 @@ import java.util.Calendar;
  * @author IndyGames
  */
 public abstract class User {
-<span class="fc" id="L15">    private static int nextId = 0;</span>
+<span class="nc" id="L10">    private static int nextId = 0;</span>
     
     /**
      * @return the nextId
      */
     public static int getNextId() {
-<span class="nc" id="L21">        return User.nextId;</span>
+<span class="nc" id="L16">        return User.nextId;</span>
     }
 
     /**
      * @param nextId the nextId to set
      */
     public static void setNextId(int nextId) {
-<span class="nc" id="L28">        User.nextId = nextId;</span>
-<span class="nc" id="L29">    }</span>
+<span class="nc" id="L23">        User.nextId = nextId;</span>
+<span class="nc" id="L24">    }</span>
     
     private boolean isBanned;
     private Calendar registrationDate;
@@ -40,221 +35,222 @@ public abstract class User {
     private String password;
     private String displayName;
     
-    
     /**
      * Initialize an instance of the User class which is abstract
      * @param username the username, may not be null or empty and must be unique
      * @param password the password, may not be null or empty
+     * @param displayName the displayName, may be null
      * @param dateOfBirth the date of birth, may not be null
      */
-<span class="fc" id="L50">    public User(String username, String password, Calendar dateOfBirth) {</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (dateOfBirth == null)</span>
-<span class="fc" id="L52">            throw new IllegalArgumentException(&quot;The date of birth must not be null&quot;);</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (username == null || </span>
-<span class="fc bfc" id="L54" title="All 2 branches covered.">                username.isEmpty()) </span>
-<span class="fc" id="L55">            throw new IllegalArgumentException(&quot;The username must not be null or empty&quot;);</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (password == null ||</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">                password.isEmpty())</span>
-<span class="fc" id="L58">            throw new IllegalArgumentException(&quot;The password must not be null or empty&quot;);</span>
+<span class="nc" id="L45">    public User(String username, String password, String displayName, Calendar dateOfBirth) {</span>
         
-        // TODO: Search for the user in the database if the user exists get the information, else set the information
-<span class="fc" id="L61">        this.isBanned = false;</span>
-<span class="fc" id="L62">        this.registrationDate = Calendar.getInstance();</span>
-<span class="fc" id="L63">        this.dateOfBirth = dateOfBirth;</span>
-<span class="fc" id="L64">        this.id = User.nextId;</span>
-<span class="fc" id="L65">        this.personalBestScore = 0;</span>
-<span class="fc" id="L66">        this.experiencePoints = 0;</span>
-<span class="fc" id="L67">        this.reports = 0;</span>
-<span class="fc" id="L68">        this.username = username;</span>
-<span class="fc" id="L69">        this.password = password;</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (dateOfBirth == null)</span>
+<span class="nc" id="L48">            throw new IllegalArgumentException(&quot;The date of birth must not be unknown&quot;);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (username == null || </span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                username.isEmpty()) </span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;The username must not be empty&quot;);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (password == null ||</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                password.isEmpty())</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;The password must not be empty&quot;);</span>
         
-<span class="fc" id="L71">        User.nextId++;</span>
-<span class="fc" id="L72">    }</span>
+<span class="nc" id="L56">        this.isBanned = false;</span>
+<span class="nc" id="L57">        this.registrationDate = Calendar.getInstance();</span>
+<span class="nc" id="L58">        this.dateOfBirth = dateOfBirth;</span>
+<span class="nc" id="L59">        this.id = User.nextId;</span>
+<span class="nc" id="L60">        this.personalBestScore = 0;</span>
+<span class="nc" id="L61">        this.experiencePoints = 0;</span>
+<span class="nc" id="L62">        this.reports = 0;</span>
+<span class="nc" id="L63">        this.username = username;</span>
+<span class="nc" id="L64">        this.password = password;</span>
+        
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (displayName.isEmpty()) {</span>
+<span class="nc" id="L67">            this.displayName = this.username;</span>
+        } else {
+<span class="nc" id="L69">            this.displayName = displayName;</span>
+        }
+        
+<span class="nc" id="L72">        User.nextId++;</span>
+<span class="nc" id="L73">    }</span>
 
     /**
      * @return the isBanned
      */
     public boolean getIsBanned() {
-<span class="fc" id="L78">        return this.isBanned;</span>
+<span class="nc" id="L79">        return this.isBanned;</span>
     }
 
     /**
      * @param isBanned the isBanned to set
      */
     public void setIsBanned(boolean isBanned) {
-<span class="fc" id="L85">        this.isBanned = isBanned;</span>
-<span class="fc" id="L86">    }</span>
+<span class="nc" id="L86">        this.isBanned = isBanned;</span>
+<span class="nc" id="L87">    }</span>
 
     /**
      * @return the registrationDate
      */
     public Calendar getRegistrationDate() {
-<span class="nc" id="L92">        return this.registrationDate;</span>
+<span class="nc" id="L93">        return this.registrationDate;</span>
     }
 
     /**
      * @param registrationDate the registrationDate to set
      */
     public void setRegistrationDate(Calendar registrationDate) {
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (registrationDate != null) {</span>
-<span class="nc" id="L100">            this.registrationDate = registrationDate;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (registrationDate != null) {</span>
+<span class="nc" id="L101">            this.registrationDate = registrationDate;</span>
         }
-<span class="nc" id="L102">    }</span>
+<span class="nc" id="L103">    }</span>
 
     /**
      * @return the dateOfBirth
      */
     public Calendar getDateOfBirth() {
-<span class="fc" id="L108">        return this.dateOfBirth;</span>
+<span class="nc" id="L109">        return this.dateOfBirth;</span>
     }
 
     /**
      * @param dateOfBirth the dateOfBirth to set
      */
     public void setDateOfBirth(Calendar dateOfBirth) {
-<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (dateOfBirth != null) { </span>
-<span class="nc" id="L116">            this.dateOfBirth = dateOfBirth;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (dateOfBirth != null) { </span>
+<span class="nc" id="L117">            this.dateOfBirth = dateOfBirth;</span>
         }
-<span class="nc" id="L118">    }</span>
+<span class="nc" id="L119">    }</span>
 
     /**
      * @return the id
      */
     public int getId() {
-<span class="nc" id="L124">        return this.id;</span>
+<span class="nc" id="L125">        return this.id;</span>
     }
 
     /**
      * @param id the id to set, must not be negative
      */
     public void setId(int id) {
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (id &gt;= 0) {</span>
-<span class="nc" id="L132">            this.id = id;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (id &gt;= 0) {</span>
+<span class="nc" id="L133">            this.id = id;</span>
         }
-<span class="nc" id="L134">    }</span>
+<span class="nc" id="L135">    }</span>
 
     /**
      * @return the personalBestScore
      */
     public int getPersonalBestScore() {
-<span class="nc" id="L140">        return this.personalBestScore;</span>
+<span class="nc" id="L141">        return this.personalBestScore;</span>
     }
 
     /**
      * @param personalBestScore the personalBestScore to set, must not be negative
      */
     public void setPersonalBestScore(int personalBestScore) {
-<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (personalBestScore &gt;= 0) {</span>
-<span class="nc" id="L148">            this.personalBestScore = personalBestScore;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (personalBestScore &gt;= 0) {</span>
+<span class="nc" id="L149">            this.personalBestScore = personalBestScore;</span>
         }
-<span class="nc" id="L150">    }</span>
+<span class="nc" id="L151">    }</span>
 
     /**
      * @return the experiencePoints
      */
     public int getExperiencePoints() {
-<span class="nc" id="L156">        return this.experiencePoints;</span>
+<span class="nc" id="L157">        return this.experiencePoints;</span>
     }
 
     /**
      * @param experiencePoints the experiencePoints to set, must not be negative
      */
     public void setExperiencePoints(int experiencePoints) {
-<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (experiencePoints &gt;= 0) {</span>
-<span class="nc" id="L164">            this.experiencePoints = experiencePoints;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (experiencePoints &gt;= 0) {</span>
+<span class="nc" id="L165">            this.experiencePoints = experiencePoints;</span>
         }
-<span class="nc" id="L166">    }</span>
+<span class="nc" id="L167">    }</span>
     
     /**
      * @return the level
      */
     public int getLevel() {
-<span class="nc" id="L172">        return this.level;</span>
+<span class="nc" id="L173">        return this.level;</span>
     }
 
     /**
      * @param level the level to set
      */
     public void setLevel(int level) {
-<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (level &gt;= 0) {</span>
-<span class="nc" id="L180">            this.level = level;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (level &gt;= 0) {</span>
+<span class="nc" id="L181">            this.level = level;</span>
         }
-<span class="nc" id="L182">    }</span>
+<span class="nc" id="L183">    }</span>
 
     /**
      * @return the username
      */
     public String getUsername() {
-<span class="fc" id="L188">        return this.username;</span>
+<span class="nc" id="L189">        return this.username;</span>
     }
 
     /**
      * @param username the username to set
      */
     public void setUsername(String username) {
-<span class="nc" id="L195">        this.username = username;</span>
-<span class="nc" id="L196">    }</span>
+<span class="nc" id="L196">        this.username = username;</span>
+<span class="nc" id="L197">    }</span>
 
     /**
      * @return the reports
      */
     public int getReports() {
-<span class="fc" id="L202">        return reports;</span>
+<span class="nc" id="L203">        return reports;</span>
     }
 
     /**
      * @param reports the reports to set, must not be negative
      */
     public void setReports(int reports) {
-<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (reports &gt;= 0) {</span>
-<span class="nc" id="L210">            this.reports = reports;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (reports &gt;= 0) {</span>
+<span class="nc" id="L211">            this.reports = reports;</span>
         }
-<span class="nc" id="L212">    }</span>
+<span class="nc" id="L213">    }</span>
 
     /**
      * @return the password
      */
     public String getPassword() {
-<span class="fc" id="L218">        return this.password;</span>
+<span class="nc" id="L219">        return this.password;</span>
     }
 
     /**
      * @param password the password to set, must not be null or empty
      */
     public void setPassword(String password) {
-<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (password != null &amp;&amp;</span>
-<span class="nc bnc" id="L226" title="All 2 branches missed.">                !password.isEmpty()) {</span>
-<span class="nc" id="L227">            this.password = password;</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (password != null &amp;&amp;</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">                !password.isEmpty()) {</span>
+<span class="nc" id="L228">            this.password = password;</span>
         }
-<span class="nc" id="L229">    }</span>
+<span class="nc" id="L230">    }</span>
 
     /**
      * @return the displayName
      */
     public String getDisplayName() {
-<span class="nc" id="L235">        return this.displayName;</span>
+<span class="nc" id="L236">        return this.displayName;</span>
     }
 
     /**
      * @param displayName the displayName to set, must not be null or empty
      */
     public void setDisplayName(String displayName) {
-<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (displayName != null &amp;&amp;</span>
-<span class="nc bnc" id="L243" title="All 2 branches missed.">                !displayName.isEmpty()) {</span>
-<span class="nc" id="L244">            this.displayName = displayName;</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (displayName != null &amp;&amp;</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                !displayName.isEmpty()) {</span>
+<span class="nc" id="L245">            this.displayName = displayName;</span>
         }
-<span class="nc" id="L246">    }</span>
+<span class="nc" id="L247">    }</span>
     
     /**
      * Method to add a report
      */
     public void addReport() {
-<span class="fc" id="L252">        this.reports += 1;</span>
-<span class="fc" id="L253">    }</span>
-    
-//    @Override
-//    public String toString() {
-//        return &quot;&quot;;
-//    }
+<span class="nc" id="L253">        this.reports += 1;</span>
+<span class="nc" id="L254">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

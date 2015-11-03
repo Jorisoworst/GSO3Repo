@@ -32,11 +32,22 @@ import javax.swing.SwingConstants;
  */
 public class LoginGUI extends JPanel {
 
-    private int screenHeight, screenWidth;
-    private Font font, sizedFont, sizedFont2;
-    private Image screen, logo;
+    private final int screenHeight, screenWidth;
+    private final Font font, sizedFont, sizedFont2;
+    private final Image screen, logo;
 
+    /**
+     * Initializes an instance of the LoginGUI Panel
+     * @param screenHeight the height of the screen
+     * @param screenWidth the width of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param sizedFont2 the largest font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
     public LoginGUI(int screenHeight, int screenWidth, Font font, Font sizedFont, Font sizedFont2, Image screen, Image logo) {
+        
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.font = font;
@@ -45,39 +56,47 @@ public class LoginGUI extends JPanel {
         this.screen = screen;
         this.logo = logo;
 
-        placeComponents(this);
+        placeComponents();
     }
 
-    private void placeComponents(JPanel panel) {
-        panel.setLayout(null);
+    /**
+     * used to place all the components to the panel
+     */
+    private void placeComponents() {
+        
+        this.setLayout(null);
 
+        // add a username label
         JLabel userLabel = new JLabel("Username");
         userLabel.setBounds(50, this.screenHeight - (this.screenHeight / 2), 100, 25);
         userLabel.setFont(this.font);
-        panel.add(userLabel);
+        this.add(userLabel);
 
+        // add a username textfield
         JTextField userText = new JTextField(20);
         userText.setBounds(50, userLabel.getY() + 25, 160, 25);
         userText.setFont(this.sizedFont);
-        panel.add(userText);
+        this.add(userText);
 
+        // add a password label
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setBounds(50, userText.getY() + 25, 100, 25);
         passwordLabel.setFont(font);
-        panel.add(passwordLabel);
+        this.add(passwordLabel);
 
+        // add a password field
         JPasswordField passwordText = new JPasswordField(20);
         passwordText.setBounds(50, passwordLabel.getY() + 25, 160, 25);
         passwordText.setFont(this.sizedFont);
-        panel.add(passwordText);
+        this.add(passwordText);
 
+        // add a login button and its listeners
         JButton loginButton = new JButton("login");
         loginButton.setHorizontalAlignment(SwingConstants.CENTER);
         loginButton.setBounds(50, passwordText.getY() + 30, 160, 25);
-        //loginButton.setContentAreaFilled(false);
         loginButton.setFocusPainted(false);
         loginButton.setFont(this.sizedFont);
-        panel.add(loginButton);
+        this.add(loginButton);
 
         loginButton.addActionListener(new ActionListener() {
 
@@ -85,12 +104,14 @@ public class LoginGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 GameAdministration admin = GameAdministration.getInstance();
-                // HAS TO BE admin.getDatabaseState()
-                if (true) {
+                
+                // check the database connection
+                if (admin.getDatabaseState()) {
+                    
+                    // check the login and login or give a message
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
-                    // HAS TO BE login
-                    if (true) {
+                    if (login) {
                         User user = admin.getUser(userText.getText());
                         AllCopilotGUI.setPanel("menu", user, null);
                     } else {
@@ -117,20 +138,21 @@ public class LoginGUI extends JPanel {
             }
         });
 
+        // add a register button and its listeners
         JButton registerButton = new JButton("register");
         registerButton.setHorizontalAlignment(SwingConstants.CENTER);
         registerButton.setBounds(50, loginButton.getY() + 30, 160, 25);
-        //registerButton.setContentAreaFilled(false);
         registerButton.setFocusPainted(false);
         registerButton.setFont(this.sizedFont);
-        panel.add(registerButton);
+        this.add(registerButton);
 
         registerButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
 
             try {
+                // check the fields and try to register
                 if (userText.getText().isEmpty()
-                        || passwordText.getText().isEmpty()) {
+                        || passwordText.getPassword().length == 0) {
                     JOptionPane.showMessageDialog(null, "please fill in your username and/or password to register");
                 } else {
                     String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
@@ -141,6 +163,7 @@ public class LoginGUI extends JPanel {
                         Calendar birthday = Calendar.getInstance();
                         birthday.setTime(date);
 
+                        // try to create a new player object and add it to the database and the admin
                         try {
                             Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), "" /*DisplayName*/, birthday); // TODO add DisplayName textfield in the gui
                             GameAdministration admin = GameAdministration.getInstance();
@@ -174,12 +197,13 @@ public class LoginGUI extends JPanel {
             }
         });
 
+        // add a quit button and its listeners
         JButton quitButton = new JButton("QUIT");
         quitButton.setBounds(this.screenWidth - 250, 10, 250, 100);
         quitButton.setContentAreaFilled(false);
         quitButton.setFocusPainted(false);
         quitButton.setFont(this.sizedFont2);
-        panel.add(quitButton);
+        this.add(quitButton);
 
         quitButton.addActionListener(new ActionListener() {
             @Override
@@ -201,18 +225,21 @@ public class LoginGUI extends JPanel {
             }
         });
 
+        // add a back label
         JLabel backLogin = new JLabel();
         backLogin.setBounds(userLabel.getX() - 10, userLabel.getY() - 10, 200, 200);
         backLogin.setOpaque(true);
         backLogin.setBackground(Color.WHITE);
-        panel.add(backLogin);
+        this.add(backLogin);
 
+        // add the logo
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
-        panel.add(logoImage);
+        this.add(logoImage);
 
+        // add the background
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
-        panel.add(bg);
+        this.add(bg);
     }
 }

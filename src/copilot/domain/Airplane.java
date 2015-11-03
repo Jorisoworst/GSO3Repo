@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.util.ArrayList;
@@ -17,7 +12,7 @@ public class Airplane extends GameObject {
     private double pitch;
     private int altitude, speed, maxFuelCapacity, fuelAmount;
     private ArrayList<AirplanePart> airplaneParts;
-    private int minimumSpeed = -40;
+    private final int minimumSpeed;
 
     /**
      * Initialize an instance of the Airplane class which extends GameObject
@@ -25,10 +20,12 @@ public class Airplane extends GameObject {
      * @param image the image, may not be null
      */
     public Airplane(Image image) {
+        
         super(image);
         this.airplaneParts = new ArrayList();
         this.maxFuelCapacity = 100;
         this.fuelAmount = this.maxFuelCapacity;
+        this.minimumSpeed = -40;
     }
 
     /**

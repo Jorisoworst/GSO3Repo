@@ -1,20 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Propellor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Propellor.java</span></div><h1>Propellor.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Propellor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Propellor.java</span></div><h1>Propellor.java</h1><pre class="source lang-java linenums">package copilot.domain;
 
-import javafx.scene.image.Image;
+import java.awt.Image;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Propellor extends AirplanePart {
     private int rpm;
     private double fuelConsumption;
-    private Airplane airplane;
+    private final Airplane airplane;
+    
     /**
      * Initialize an instance of the Propellor class which extends ArplanePart
      *
@@ -23,16 +19,17 @@ public class Propellor extends AirplanePart {
      * @param user the user, may not be null
      */
     public Propellor(Image image, Airplane airplane, User user) {
-<span class="fc" id="L26">        super(image, airplane, user);</span>
-<span class="fc" id="L27">        this.airplane = airplane;</span>
         
-<span class="fc" id="L29">    }</span>
+<span class="nc" id="L23">        super(image, airplane, user);</span>
+<span class="nc" id="L24">        this.airplane = airplane;</span>
+        
+<span class="nc" id="L26">    }</span>
 
     /**
      * @return the rpm
      */
     public int getRpm() {
-<span class="nc" id="L35">        return rpm;</span>
+<span class="nc" id="L32">        return rpm;</span>
     }
 
     /**
@@ -40,61 +37,58 @@ public class Propellor extends AirplanePart {
      * @param rpm the rpm to set
      */
     public void setRpm(int rpm) {
-<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if(rpm &gt; 2600)</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if(rpm &gt; 2600)</span>
         {
-<span class="nc" id="L45">            this.rpm = 2600;</span>
+<span class="nc" id="L42">            this.rpm = 2600;</span>
         }
-<span class="fc bfc" id="L47" title="All 2 branches covered.">        if(rpm &lt; 0)</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if(rpm &lt; 0)</span>
         {
-<span class="fc" id="L49">            this.rpm = 0;</span>
+<span class="nc" id="L46">            this.rpm = 0;</span>
         }
         else
         {
-<span class="fc" id="L53">            this.rpm = rpm;    </span>
+<span class="nc" id="L50">            this.rpm = rpm;    </span>
         }
-<span class="fc" id="L55">        double airplanePitch = this.airplane.getPitch();</span>
-<span class="fc" id="L56">        double knotsSpeed = this.rpm * airplanePitch * 0.00822894;</span>
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if(knotsSpeed &lt; 0)</span>
+<span class="nc" id="L52">        double airplanePitch = this.airplane.getPitch();</span>
+<span class="nc" id="L53">        double knotsSpeed = this.rpm * airplanePitch * 0.00822894;</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if(knotsSpeed &lt; 0)</span>
         {
-<span class="nc" id="L59">            knotsSpeed = 0;</span>
+<span class="nc" id="L56">            knotsSpeed = 0;</span>
         }
         
         //speed should be adjusted slower for more realism
-<span class="fc" id="L63">        int currentSpeed = airplane.getSpeed();</span>
-<span class="fc" id="L64">        double increasementSpeed = knotsSpeed - currentSpeed;</span>
-<span class="fc" id="L65">        int newAirplaneSpeed = currentSpeed + ((int)increasementSpeed);</span>
+<span class="nc" id="L60">        int currentSpeed = airplane.getSpeed();</span>
+<span class="nc" id="L61">        double increasementSpeed = knotsSpeed - currentSpeed;</span>
+<span class="nc" id="L62">        int newAirplaneSpeed = currentSpeed + ((int)increasementSpeed);</span>
         
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if(newAirplaneSpeed &lt; 0)</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if(newAirplaneSpeed &lt; 0)</span>
         {
-<span class="nc" id="L69">            newAirplaneSpeed = 0;</span>
+<span class="nc" id="L66">            newAirplaneSpeed = 0;</span>
         }
         
-<span class="fc" id="L72">        airplane.setSpeed(newAirplaneSpeed);</span>
-<span class="fc" id="L73">        double fuelConsumption = calculateFuelConsumption(rpm);</span>
-<span class="fc" id="L74">        this.setFuelConsumption(fuelConsumption);</span>
-<span class="fc" id="L75">    }</span>
+<span class="nc" id="L69">        airplane.setSpeed(newAirplaneSpeed);</span>
+<span class="nc" id="L70">        this.fuelConsumption = calculateFuelConsumption(rpm);</span>
+<span class="nc" id="L71">    }</span>
     
     private double calculateFuelConsumption(double rpm)
     {
-<span class="fc" id="L79">        double fuelConsumption = 0;</span>
-<span class="fc" id="L80">        fuelConsumption = rpm / 260;</span>
+<span class="nc" id="L75">        this.fuelConsumption = rpm / 260;</span>
         
-<span class="fc" id="L82">        return fuelConsumption;</span>
+<span class="nc" id="L77">        return fuelConsumption;</span>
     }
 
     /**
      * @return the fuelConsumption
      */
     public double getFuelConsumption() {
-<span class="fc" id="L89">        return fuelConsumption;</span>
+<span class="nc" id="L84">        return fuelConsumption;</span>
     }
 
     /**
      * @param fuelConsumption the fuelConsumption to set
      */
     public void setFuelConsumption(double fuelConsumption) {
-<span class="fc" id="L96">        this.fuelConsumption = fuelConsumption;</span>
-<span class="fc" id="L97">    }</span>
-    
+<span class="nc" id="L91">        this.fuelConsumption = fuelConsumption;</span>
+<span class="nc" id="L92">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

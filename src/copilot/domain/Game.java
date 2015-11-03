@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.util.ArrayList;
@@ -22,14 +17,13 @@ public class Game {
      * @param session the session, may not be null
      */
     public Game(Session session) {
+        
         this.isStarted = false;
         this.score = 0;
         this.difficulty = 0;
         if(session != null){
-        this.session = session;
-        }
-        else
-        {
+            this.session = session;
+        } else {
             System.out.println("Session cannot be null, Session not found. 404");
         }
     }

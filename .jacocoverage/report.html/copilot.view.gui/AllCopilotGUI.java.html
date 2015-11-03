@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AllCopilotGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.gui</a> &gt; <span class="el_source">AllCopilotGUI.java</span></div><h1>AllCopilotGUI.java</h1><pre class="source lang-java linenums">package copilot.view.gui;
+
+import copilot.view.frame.CopilotGUI;
+import copilot.view.frame.LobbyGUI;
+import copilot.view.frame.LaunchGUI;
+import copilot.view.frame.CreditsGUI;
+import copilot.view.frame.MainMenuGUI;
+import copilot.view.frame.LoginGUI;
+import copilot.view.frame.SettingsGUI;
+import copilot.view.frame.GameOverGUI;
+import copilot.view.frame.SessionGUI;
+import copilot.controller.GUIController;
+import copilot.domain.Session;
+import copilot.domain.User;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class AllCopilotGUI {
+
+    private static int screenWidth, screenHeight, screenWidthLaunch, screenHeightLaunch;
+    private static JFrame frame;
+    private static JPanel panel;
+    private static Image LaunchScreen, logo, screen;
+    private static Font font, sizedFont, sizedFont2, sizedFont3, sizedFont4, sizedFont5, fontExtraSmall;
+    private static CardLayout layout;
+
+    /**
+     * Is called when the game is started, will create a frame and its first panel will be added
+     * @param args 
+     */
+    public static void main(String[] args) {
+<span class="fc" id="L46">        AllCopilotGUI gui = new AllCopilotGUI();</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Initializes an instance of the AllCopilotGUI
+     */
+<span class="fc" id="L52">    public AllCopilotGUI() {</span>
+        
+        try {
+<span class="fc" id="L55">            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());</span>
+<span class="nc" id="L56">        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {</span>
+<span class="nc" id="L57">            GUIController.showExceptionError(ex.toString());</span>
+<span class="fc" id="L58">        }</span>
+
+<span class="fc" id="L60">        GUIController.playBackgroundMusic();</span>
+
+<span class="fc" id="L62">        layout = new CardLayout();</span>
+        
+        // set the dimensions of the screens to fullscreen
+<span class="fc" id="L65">        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();</span>
+<span class="fc" id="L66">        screenWidth = size.width;</span>
+<span class="fc" id="L67">        screenHeight = size.height;</span>
+
+<span class="fc" id="L69">        screenWidthLaunch = 805;</span>
+<span class="fc" id="L70">        screenHeightLaunch = 525;</span>
+
+<span class="fc" id="L72">        frame = new JFrame(&quot;CO-Pilot Launch&quot;);</span>
+
+        try {
+<span class="fc" id="L75">            screen = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;bg.png&quot;));</span>
+<span class="fc" id="L76">            LaunchScreen = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;launch_screen_copilot.png&quot;));</span>
+<span class="fc" id="L77">            logo = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;logo.png&quot;));</span>
+<span class="fc" id="L78">            logo = logo.getScaledInstance(158, 122, 1);</span>
+<span class="nc" id="L79">        } catch (IOException ex) {</span>
+<span class="nc" id="L80">            GUIController.showExceptionError(ex.toString());</span>
+<span class="fc" id="L81">        }</span>
+
+        // load all the used fontsizes
+<span class="fc" id="L84">        font = GUIController.loadFont(10);</span>
+<span class="fc" id="L85">        sizedFont = GUIController.loadFont(12);</span>
+<span class="fc" id="L86">        sizedFont2 = GUIController.loadFont(30);</span>
+<span class="fc" id="L87">        sizedFont3 = GUIController.loadFont(32);</span>
+<span class="fc" id="L88">        sizedFont4 = GUIController.loadFont(64);</span>
+<span class="fc" id="L89">        sizedFont5 = GUIController.loadFont(20);</span>
+<span class="fc" id="L90">        fontExtraSmall = GUIController.loadFont(5);</span>
+
+        // create the launch panel and add it to the layout
+<span class="fc" id="L93">        JPanel panelLaunch = new LaunchGUI(sizedFont2, fontExtraSmall, LaunchScreen);</span>
+<span class="fc" id="L94">        panelLaunch.setPreferredSize(new Dimension(screenWidthLaunch, screenHeightLaunch));</span>
+<span class="fc" id="L95">        panel = new JPanel(layout);</span>
+<span class="fc" id="L96">        panel.add(panelLaunch, &quot;launch&quot;);</span>
+        
+        // set the frame settings
+<span class="fc" id="L99">        frame.setContentPane(panel);</span>
+<span class="fc" id="L100">        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="fc" id="L101">        frame.setResizable(false);</span>
+<span class="fc" id="L102">        frame.setVisible(true);</span>
+<span class="fc" id="L103">        frame.pack();</span>
+<span class="fc" id="L104">        frame.setLocationRelativeTo(null);</span>
+        
+        // show the launch panel
+<span class="fc" id="L107">        layout.show(frame.getContentPane(), &quot;launch&quot;);</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Method to set the right panel for the frame
+     * @param name the name of the panel you want to call
+     * @param extraInformation an object, is a User
+     * @param extraInformation2 an object, is a Session or an int for scores
+     */
+    public static void setPanel(String name, Object extraInformation, Object extraInformation2) {
+        
+        // a switch to check the name of the panel
+<span class="pc bpc" id="L119" title="31 of 34 branches missed.">        switch (name) {</span>
+            case &quot;login&quot;:
+<span class="fc" id="L121">                LoginGUI panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);</span>
+<span class="fc" id="L122">                panel.add(panelLogin, &quot;login&quot;);</span>
+                
+                // set the frame to fullscreen now if it is not fullscreen yet
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                if (!(frame.getExtendedState() == JFrame.MAXIMIZED_BOTH)) {</span>
+<span class="fc" id="L126">                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);</span>
+<span class="fc" id="L127">                    frame.dispose();</span>
+<span class="fc" id="L128">                    frame.setUndecorated(true);</span>
+<span class="fc" id="L129">                    frame.setVisible(true);</span>
+                }
+<span class="fc" id="L131">                layout.show(frame.getContentPane(), &quot;login&quot;);</span>
+<span class="fc" id="L132">                break;</span>
+                
+            case &quot;menu&quot;:
+<span class="nc" id="L135">                MainMenuGUI panelMenu = new MainMenuGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);</span>
+<span class="nc" id="L136">                panel.add(panelMenu, &quot;menu&quot;);</span>
+<span class="nc" id="L137">                layout.show(frame.getContentPane(), &quot;menu&quot;);</span>
+<span class="nc" id="L138">                break;</span>
+                
+            case &quot;lobby&quot;:
+<span class="nc" id="L141">                LobbyGUI panelLobby = new LobbyGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);</span>
+<span class="nc" id="L142">                panel.add(panelLobby, &quot;lobby&quot;);</span>
+<span class="nc" id="L143">                layout.show(frame.getContentPane(), &quot;lobby&quot;);</span>
+<span class="nc" id="L144">                break;</span>
+                
+            case &quot;session&quot;:
+<span class="nc" id="L147">                SessionGUI panelSession = new SessionGUI((Session)extraInformation2, (User)extraInformation);</span>
+<span class="nc" id="L148">                panel.add(panelSession, &quot;session&quot;);</span>
+<span class="nc" id="L149">                layout.show(frame.getContentPane(), &quot;session&quot;);</span>
+<span class="nc" id="L150">                break;</span>
+                
+            case &quot;settings&quot;:
+<span class="nc" id="L153">                SettingsGUI panelSettings = new SettingsGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);</span>
+<span class="nc" id="L154">                panel.add(panelSettings, &quot;settings&quot;);</span>
+<span class="nc" id="L155">                layout.show(frame.getContentPane(), &quot;settings&quot;);</span>
+<span class="nc" id="L156">                break;</span>
+                
+            case &quot;credits&quot;:
+<span class="nc" id="L159">                CreditsGUI panelCredits = new CreditsGUI((User)extraInformation, screenWidth, screenHeight, sizedFont2, sizedFont3, screen, logo);</span>
+<span class="nc" id="L160">                panel.add(panelCredits, &quot;credits&quot;);</span>
+<span class="nc" id="L161">                layout.show(frame.getContentPane(), &quot;credits&quot;);</span>
+<span class="nc" id="L162">                break;</span>
+                
+            case &quot;game&quot;:
+<span class="nc" id="L165">                CopilotGUI panelGame = new CopilotGUI(screenWidth, screenHeight, sizedFont5);</span>
+<span class="nc" id="L166">                panel.add(panelGame, &quot;game&quot;);</span>
+<span class="nc" id="L167">                layout.show(frame.getContentPane(), &quot;game&quot;);</span>
+<span class="nc" id="L168">                panelGame.start();</span>
+<span class="nc" id="L169">                break;</span>
+                
+            case &quot;gameover&quot;:
+<span class="nc" id="L172">                GameOverGUI panelGameover = new GameOverGUI((User)extraInformation, (int)extraInformation2, screenWidth, screenHeight, sizedFont4);</span>
+<span class="nc" id="L173">                panelGameover.setBackground(Color.BLACK);</span>
+<span class="nc" id="L174">                panel.add(panelGameover, &quot;gameover&quot;);</span>
+<span class="nc" id="L175">                layout.show(frame.getContentPane(), &quot;gameover&quot;);</span>
+                break;
+        }
+<span class="fc" id="L178">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Image;
@@ -22,6 +17,7 @@ public class Kerosine extends Pickup {
      * @param amount the amount of fuel of this pickup
      */
     public Kerosine(Image image, int amount) {
+       
         super(image);
         this.amount = amount;
     }

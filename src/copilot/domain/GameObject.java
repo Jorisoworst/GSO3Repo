@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Graphics2D;
@@ -25,6 +20,7 @@ public abstract class GameObject extends Body {
      * @param image the image, may not be null
      */
     public GameObject(Image image) {
+        
         if (image == null) {
             throw new IllegalArgumentException("No image set!");
         }

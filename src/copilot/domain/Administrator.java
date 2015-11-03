@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.util.Calendar;
@@ -22,6 +17,7 @@ public class Administrator extends Moderator {
      * @param dateOfBirth the date of birth, may not be null or in the future
      */
     public Administrator(String username, String password, String displayName, Calendar dateOfBirth) {
+        
         super(username, password, displayName, dateOfBirth);
     }
 }

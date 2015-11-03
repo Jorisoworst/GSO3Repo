@@ -1,21 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package copilot.domain;
 
 import java.util.ArrayList;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class Game {
     private boolean isStarted;
-    private int score;
-    private int difficulty;
-    private int changeInterval;
+    private int score, difficulty, changeInterval;
     private Session session;
     private ArrayList&lt;GameObject&gt; objects;
     
@@ -23,38 +16,37 @@ public class Game {
      * Initialize an instance of the Session class
      * @param session the session, may not be null
      */
-<span class="nc" id="L26">    public Game(Session session) {</span>
-<span class="nc" id="L27">        this.isStarted = false;</span>
-<span class="nc" id="L28">        this.score = 0;</span>
-<span class="nc" id="L29">        this.difficulty = 0;</span>
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(session != null){</span>
-<span class="nc" id="L31">        this.session = session;</span>
+<span class="nc" id="L19">    public Game(Session session) {</span>
+        
+<span class="nc" id="L21">        this.isStarted = false;</span>
+<span class="nc" id="L22">        this.score = 0;</span>
+<span class="nc" id="L23">        this.difficulty = 0;</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if(session != null){</span>
+<span class="nc" id="L25">            this.session = session;</span>
+        } else {
+<span class="nc" id="L27">            System.out.println(&quot;Session cannot be null, Session not found. 404&quot;);</span>
         }
-        else
-        {
-<span class="nc" id="L35">            System.out.println(&quot;Session cannot be null, Session not found. 404&quot;);</span>
-        }
-<span class="nc" id="L37">    }</span>
+<span class="nc" id="L29">    }</span>
 
     /**
      * @return the isStarted
      */
     public boolean isIsStarted() {
-<span class="nc" id="L43">        return isStarted;</span>
+<span class="nc" id="L35">        return isStarted;</span>
     }
 
     /**
      * @param isStarted the isStarted to set
      */
     public void setIsStarted(boolean isStarted) {
-<span class="nc" id="L50">        this.isStarted = isStarted;</span>
-<span class="nc" id="L51">    }</span>
+<span class="nc" id="L42">        this.isStarted = isStarted;</span>
+<span class="nc" id="L43">    }</span>
 
     /**
      * @return the score
      */
     public int getScore() {
-<span class="nc" id="L57">        return score;</span>
+<span class="nc" id="L49">        return score;</span>
     }
 
     /**
@@ -62,64 +54,64 @@ public class Game {
      */
     public void setScore(int score) {
        
-<span class="nc" id="L65">        this.score = score;</span>
-<span class="nc" id="L66">    }</span>
+<span class="nc" id="L57">        this.score = score;</span>
+<span class="nc" id="L58">    }</span>
 
     /**
      * @return the difficulty
      */
     public int getDifficulty() {
-<span class="nc" id="L72">        return difficulty;</span>
+<span class="nc" id="L64">        return difficulty;</span>
     }
 
     /**
      * @param difficulty the difficulty to set
      */
     public void setDifficulty(int difficulty) {
-<span class="nc" id="L79">        this.difficulty = difficulty;</span>
-<span class="nc" id="L80">    }</span>
+<span class="nc" id="L71">        this.difficulty = difficulty;</span>
+<span class="nc" id="L72">    }</span>
        
     /**
      * @return the changeInterval
      */
     public int getChangeInterval() {
-<span class="nc" id="L86">        return changeInterval;</span>
+<span class="nc" id="L78">        return changeInterval;</span>
     }
 
     /**
      * @param changeInterval the changeInterval to set
      */
     public void setChangeInterval(int changeInterval) {
-<span class="nc" id="L93">        this.changeInterval = changeInterval;</span>
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L85">        this.changeInterval = changeInterval;</span>
+<span class="nc" id="L86">    }</span>
 
     /**
      * @return the session
      */
     public Session getSession() {
-<span class="nc" id="L100">        return session;</span>
+<span class="nc" id="L92">        return session;</span>
     }
 
     /**
      * @param session the session to set
      */
     public void setSession(Session session) {
-<span class="nc" id="L107">        this.session = session;</span>
-<span class="nc" id="L108">    }</span>
+<span class="nc" id="L99">        this.session = session;</span>
+<span class="nc" id="L100">    }</span>
     
     /**
      * @return the objects
      */
     public ArrayList&lt;GameObject&gt; getObjects() {
-<span class="nc" id="L114">        return objects;</span>
+<span class="nc" id="L106">        return objects;</span>
     }
 
     /**
      * @param objects the objects to set
      */
     public void setObjects(ArrayList&lt;GameObject&gt; objects) {
-<span class="nc" id="L121">        this.objects = objects;</span>
-<span class="nc" id="L122">    }</span>
+<span class="nc" id="L113">        this.objects = objects;</span>
+<span class="nc" id="L114">    }</span>
     
     /**
      * Method to start the game
@@ -127,7 +119,7 @@ public class Game {
      */
     public boolean start() {
         // TODO
-<span class="nc" id="L130">        return false;</span>
+<span class="nc" id="L122">        return false;</span>
     }
     
     /**
@@ -136,7 +128,7 @@ public class Game {
      */
     public boolean stop() {
         // TODO
-<span class="nc" id="L139">        return false;</span>
+<span class="nc" id="L131">        return false;</span>
     }
     
     /**
@@ -145,7 +137,7 @@ public class Game {
      */
     public boolean changeRoles() {
         // TODO
-<span class="nc" id="L148">        return false;</span>
+<span class="nc" id="L140">        return false;</span>
     }
     
     /**
@@ -154,7 +146,7 @@ public class Game {
      */
     public boolean generateLevel() {
         // TODO
-<span class="nc" id="L157">        return false;</span>
+<span class="nc" id="L149">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Score.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Score.java</span></div><h1>Score.java</h1><pre class="source lang-java linenums">package copilot.domain;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class Score {
+    private int scoreId, score, user1id, user2id, user3id, user4id;
+    private User user1, user2, user3, user4;
+    
+    /**
+     * Initializes an instance of the Score
+     * @param score the score 
+     * @param user1 the number of user 1
+     * @param user2 the number of user 2
+     * @param user3 the number of user 3
+     * @param user4 the number of user 4
+     */
+    public Score(int score, int user1, int user2, int user3, int user4)
+<span class="nc" id="L20">    {</span>
+        
+<span class="nc" id="L22">        this.score = score;</span>
+<span class="nc" id="L23">        this.user1id = user1;</span>
+<span class="nc" id="L24">        this.user2id = user2;</span>
+<span class="nc" id="L25">        this.user3id = user3;</span>
+<span class="nc" id="L26">        this.user4id = user4;</span>
+<span class="nc" id="L27">    }</span>
+
+    /**
+     * set the score ID
+     * @param scoreId the id to set the scoreID to
+     */
+    public void setScoreId(int scoreId) {
+<span class="nc" id="L34">        this.scoreId = scoreId;</span>
+<span class="nc" id="L35">    }</span>
+    
+    /**
+     * get the score ID
+     * @return the scoreId
+     */
+    public int getScoreId() {
+<span class="nc" id="L42">        return this.scoreId;</span>
+    }
+    
+    /**
+     * get the score
+     * @return the score
+     */
+    public int getScore() {
+<span class="nc" id="L50">        return score;</span>
+    }
+
+    /**
+     * get the user id of user1
+     * @return the userID of user 1
+     */
+    public int getUser1id() {
+<span class="nc" id="L58">        return user1id;</span>
+    }
+
+    /**
+     * get the user id of user2
+     * @return the userID of user 2
+     */
+    public int getUser2id() {
+<span class="nc" id="L66">        return user2id;</span>
+    }
+
+    /**
+     * get the user id of user3
+     * @return the userID of user 3
+     */
+    public int getUser3id() {
+<span class="nc" id="L74">        return user3id;</span>
+    }
+
+    /**
+     * get the user id of user4
+     * @return the userID of user 4
+     */
+    public int getUser4id() {
+<span class="nc" id="L82">        return user4id;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

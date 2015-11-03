@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GUIController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.controller</a> &gt; <span class="el_source">GUIController.java</span></div><h1>GUIController.java</h1><pre class="source lang-java linenums">package copilot.controller;
+
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author IndyGames
+ */
+<span class="nc" id="L19">public final class GUIController {</span>
+
+    private static Clip backgroundClip, airplaneSound, gameSound;
+<span class="fc" id="L22">    private static final Random random = new Random();</span>
+    private static final int min = 1;
+    private static final int max = 5;
+<span class="fc" id="L25">    private static int countKill, countHit = 0;</span>
+    
+    public static Font loadFont(int size) {
+        try {
+<span class="fc" id="L29">            InputStream is = GUIController.class.getClassLoader().getResourceAsStream(&quot;Minecraftia-Regular.ttf&quot;);</span>
+            Font font;
+<span class="fc" id="L31">            font = Font.createFont(Font.TRUETYPE_FONT, is);</span>
+<span class="fc" id="L32">            return font.deriveFont(Font.PLAIN, size);</span>
+<span class="nc" id="L33">        } catch (FontFormatException | IOException ex) {</span>
+<span class="nc" id="L34">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L35">            return null;</span>
+        }
+    }
+
+    public static void playClick() {
+        try {
+<span class="fc" id="L41">            Clip click = AudioSystem.getClip();</span>
+<span class="fc" id="L42">            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/click.wav&quot;)));</span>
+<span class="fc" id="L43">            click.start();</span>
+<span class="nc" id="L44">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L45">            GUIController.showExceptionError(ex.toString());</span>
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">    }</span>
+
+    public static void playHover() {
+        try {
+<span class="fc" id="L51">            Clip hover = AudioSystem.getClip();</span>
+<span class="fc" id="L52">            hover.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/hover.wav&quot;)));</span>
+<span class="fc" id="L53">            hover.start();</span>
+<span class="nc" id="L54">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L55">            GUIController.showExceptionError(ex.toString());</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc" id="L57">    }</span>
+
+    public static void showExceptionError(String error) {
+<span class="nc" id="L60">        JOptionPane.showMessageDialog(null, &quot;Something went wrong, please try again, ERROR: &quot; + error, &quot;ALERT&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L61">    }</span>
+
+    public static void playBackgroundMusic() {
+        try {
+<span class="fc" id="L65">            backgroundClip = AudioSystem.getClip();</span>
+<span class="fc" id="L66">            backgroundClip.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource(&quot;/sounds/main_song.wav&quot;)));</span>
+<span class="fc" id="L67">            FloatControl volume = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);</span>
+<span class="fc" id="L68">            volume.setValue(-20.0f);</span>
+<span class="fc" id="L69">            backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);</span>
+<span class="nc" id="L70">        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {</span>
+<span class="nc" id="L71">            GUIController.showExceptionError(ex.toString());</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    public static void stopBackgroundMusic() {
+<span class="nc" id="L76">        backgroundClip.stop();</span>
+<span class="nc" id="L77">    }</span>
+
+    //sounds ingame
+    public static void playCollisionBullet() {
+        try {
+<span class="nc" id="L82">            int rndNum = random.nextInt(max - min) + min;</span>
+<span class="nc" id="L83">            Clip click = AudioSystem.getClip();</span>
+<span class="nc bnc" id="L84" title="All 6 branches missed.">            switch (rndNum) {</span>
+                case 1:
+<span class="nc" id="L86">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Asshole 2.wav&quot;)));</span>
+<span class="nc" id="L87">                    break;</span>
+                case 2:
+<span class="nc" id="L89">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Woaw Jesus.wav&quot;)));</span>
+<span class="nc" id="L90">                    break;</span>
+                case 3:
+<span class="nc" id="L92">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Woaw.wav&quot;)));</span>
+<span class="nc" id="L93">                    break;</span>
+                case 4:
+<span class="nc" id="L95">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Oi 1.wav&quot;)));</span>
+<span class="nc" id="L96">                    break;</span>
+                case 5:
+<span class="nc" id="L98">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/scream.wav&quot;)));</span>
+<span class="nc" id="L99">                    break;</span>
+                default:
+<span class="nc" id="L101">                    click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Asshole 2.wav&quot;)));</span>
+                    break;
+            }
+<span class="nc" id="L104">            countKill++;</span>
+<span class="nc" id="L105">            click.start();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            if (countKill &gt;= 5) {</span>
+<span class="nc" id="L107">                Clip kill = AudioSystem.getClip();</span>
+<span class="nc" id="L108">                kill.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Kill frenzy.wav&quot;)));</span>
+<span class="nc" id="L109">                kill.start();</span>
+<span class="nc" id="L110">                countKill = 0;</span>
+            }
+
+<span class="nc" id="L113">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L114">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L115">        }</span>
+<span class="nc" id="L116">    }</span>
+
+    public static void playCollisionBird() {
+        try {
+<span class="nc" id="L120">            Clip hit = AudioSystem.getClip();</span>
+            FloatControl volume;
+<span class="nc" id="L122">            countHit++;</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">            switch (countHit) {</span>
+                case 1:
+<span class="nc" id="L125">                    hit.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_SML_EXPLOSION.wav&quot;)));</span>
+<span class="nc" id="L126">                    volume = (FloatControl) hit.getControl(FloatControl.Type.MASTER_GAIN);</span>
+<span class="nc" id="L127">                    volume.setValue(-10.0f);</span>
+<span class="nc" id="L128">                    break;</span>
+                case 2:
+<span class="nc" id="L130">                    hit.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_SML_EXPLOSION.wav&quot;)));</span>
+<span class="nc" id="L131">                    break;</span>
+                case 3:
+<span class="nc" id="L133">                    hit.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_SML_EXPLOSION.wav&quot;)));</span>
+<span class="nc" id="L134">                    volume = (FloatControl) hit.getControl(FloatControl.Type.MASTER_GAIN);</span>
+<span class="nc" id="L135">                    volume.setValue(+5.0f);</span>
+<span class="nc" id="L136">                    break;</span>
+                default:
+<span class="nc" id="L138">                    hit.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_SML_EXPLOSION.wav&quot;)));</span>
+                    break;
+            }
+<span class="nc" id="L141">            hit.start();</span>
+<span class="nc" id="L142">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L143">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L144">        }</span>
+<span class="nc" id="L145">    }</span>
+
+    public static void playAirplane() {
+        try {
+<span class="nc" id="L149">            airplaneSound = AudioSystem.getClip();</span>
+<span class="nc" id="L150">            airplaneSound.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/airplane_sound_2.wav&quot;)));</span>
+<span class="nc" id="L151">            FloatControl volume = (FloatControl) airplaneSound.getControl(FloatControl.Type.MASTER_GAIN);</span>
+<span class="nc" id="L152">            volume.setValue(-20.0f);</span>
+<span class="nc" id="L153">            airplaneSound.loop(Clip.LOOP_CONTINUOUSLY);</span>
+<span class="nc" id="L154">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L155">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">    }</span>
+
+    public static void stopAirplaneSound() {
+<span class="nc" id="L160">        airplaneSound.stop();</span>
+<span class="nc" id="L161">    }</span>
+
+    public static void playGameSound() {
+        try {
+<span class="nc" id="L165">            gameSound = AudioSystem.getClip();</span>
+<span class="nc" id="L166">            gameSound.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_NIGHTCLUB_LOOP.wav&quot;)));</span>
+<span class="nc" id="L167">            gameSound.loop(Clip.LOOP_CONTINUOUSLY);</span>
+<span class="nc" id="L168">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L169">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">    }</span>
+
+    public static void stopGameSound() {
+<span class="nc" id="L174">        gameSound.stop();</span>
+<span class="nc" id="L175">    }</span>
+
+    public static void playGun() {
+        try {
+<span class="nc" id="L179">            Clip click = AudioSystem.getClip();</span>
+<span class="nc" id="L180">            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/singe machine gunshot.wav&quot;)));</span>
+<span class="nc" id="L181">            click.start();</span>
+<span class="nc" id="L182">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L183">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L184">        }</span>
+<span class="nc" id="L185">    }</span>
+
+    public static void playOilPickUp() {
+        try {
+<span class="nc" id="L189">            Clip click = AudioSystem.getClip();</span>
+<span class="nc" id="L190">            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/SFX_OILDROP.wav&quot;)));</span>
+<span class="nc" id="L191">            click.start();</span>
+<span class="nc" id="L192">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L193">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L194">        }</span>
+<span class="nc" id="L195">    }</span>
+
+    public static void playStart() {
+        try {
+<span class="nc" id="L199">            Clip click = AudioSystem.getClip();</span>
+<span class="nc" id="L200">            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/Crowd cheer.wav&quot;)));</span>
+<span class="nc" id="L201">            click.start();</span>
+<span class="nc" id="L202">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L203">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L204">        }</span>
+<span class="nc" id="L205">    }</span>
+
+    public static void playGameOver() {
+        try {
+<span class="nc" id="L209">            Clip click = AudioSystem.getClip();</span>
+<span class="nc" id="L210">            click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource(&quot;/sounds/game_over.wav&quot;)));</span>
+<span class="nc" id="L211">            click.start();</span>
+<span class="nc" id="L212">        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {</span>
+<span class="nc" id="L213">            GUIController.showExceptionError(ex.toString());</span>
+<span class="nc" id="L214">        }</span>
+<span class="nc" id="L215">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

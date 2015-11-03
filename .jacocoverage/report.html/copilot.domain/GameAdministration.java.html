@@ -1,38 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameAdministration.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">GameAdministration.java</span></div><h1>GameAdministration.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GameAdministration.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">GameAdministration.java</span></div><h1>GameAdministration.java</h1><pre class="source lang-java linenums">package copilot.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author Niels
+ * @author IndyGames
  */
 public class GameAdministration {
-    private static GameAdministration instance;  
+    private static GameAdministration instance; 
 
     /**
      * @return the instance of the singleton
      */
     public static GameAdministration getInstance() {
-<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (GameAdministration.instance == null) {</span>
-<span class="nc" id="L22">            GameAdministration.instance = new GameAdministration();</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">       if (GameAdministration.instance == null) {</span>
+<span class="fc" id="L20">            GameAdministration.instance = new GameAdministration();</span>
         }
         
-<span class="nc" id="L25">        return GameAdministration.instance;</span>
+<span class="fc" id="L23">        return GameAdministration.instance;</span>
     }
     
     /**
      * @param aInstance the instance to set
      */
     public static void setInstance(GameAdministration aInstance) {
-<span class="nc" id="L32">        instance = aInstance;</span>
-<span class="nc" id="L33">    }</span>
+<span class="nc" id="L30">        instance = aInstance;</span>
+<span class="nc" id="L31">    }</span>
     
-    private int requiredExperiencePoints;
+    private DatabaseAdministration dbAdmin;
     private ArrayList&lt;User&gt; users;
     private ArrayList&lt;Session&gt; sessions;
     private ArrayList&lt;Game&gt; games;
@@ -40,65 +38,74 @@ public class GameAdministration {
     /**
      * Initialize an instance of the GameAdministration singleton
      */
-<span class="nc" id="L43">    private GameAdministration() {</span>
-        // EMPTY  
-<span class="nc" id="L45">    }</span>
-      
-    /**
-     * @return the requiredExperiencePoints
-     */
-    public int getRequiredExperiencePoints() {
-<span class="nc" id="L51">        return requiredExperiencePoints;</span>
+<span class="fc" id="L41">    private GameAdministration() throws NullPointerException {</span>
+        
+        try {
+<span class="nc" id="L44">            this.dbAdmin = new DatabaseAdministration();</span>
+<span class="fc" id="L45">        } catch (Exception ex) {</span>
+            // do nothing
+<span class="nc" id="L47">        }</span>
+        
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (this.dbAdmin != null) {</span>
+            try {
+<span class="nc" id="L51">                this.users = this.dbAdmin.GetUsers();</span>
+<span class="nc" id="L52">            } catch (IOException ex) {</span>
+<span class="nc" id="L53">                Logger.getLogger(GameAdministration.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L54">            }</span>
+        } else {
+<span class="fc" id="L56">            this.users = new ArrayList&lt;&gt;();</span>
+        }
+        
+        // add to database
+<span class="fc" id="L60">        this.sessions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L61">        this.games = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L62">    }</span>
+    
+    public boolean getDatabaseState() {
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        return this.dbAdmin != null;</span>
     }
-
-    /**
-     * @param requiredExperiencePoints the requiredExperiencePoints to set
-     */
-    public void setRequiredExperiencePoints(int requiredExperiencePoints) {
-<span class="nc" id="L58">        this.requiredExperiencePoints = requiredExperiencePoints;</span>
-<span class="nc" id="L59">    }</span>
 
     /**
      * @return the users
      */
     public ArrayList&lt;User&gt; getUsers() {
-<span class="nc" id="L65">        return users;</span>
+<span class="nc" id="L72">        return users;</span>
     }
 
     /**
      * @param users the users to set
      */
     public void setUsers(ArrayList&lt;User&gt; users) {
-<span class="nc" id="L72">        this.users = users;</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L79">        this.users = users;</span>
+<span class="nc" id="L80">    }</span>
 
     /**
      * @return the sessions
      */
     public ArrayList&lt;Session&gt; getSessions() {
-<span class="nc" id="L79">        return sessions;</span>
+<span class="nc" id="L86">        return sessions;</span>
     }
 
     /**
      * @param sessions the sessions to set
      */
     public void setSessions(ArrayList&lt;Session&gt; sessions) {
-<span class="nc" id="L86">        this.sessions = sessions;</span>
-<span class="nc" id="L87">    }</span>
+<span class="nc" id="L93">        this.sessions = sessions;</span>
+<span class="nc" id="L94">    }</span>
 
     /**
      * @return the games
      */
     public ArrayList&lt;Game&gt; getGames() {
-<span class="nc" id="L93">        return games;</span>
+<span class="nc" id="L100">        return games;</span>
     }
 
     /**
      * @param games the games to set
      */
     public void setGames(ArrayList&lt;Game&gt; games) {
-<span class="nc" id="L100">        this.games = games;</span>
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L107">        this.games = games;</span>
+<span class="nc" id="L108">    }</span>
     
     /**
      * Method to add a user to the users
@@ -106,13 +113,18 @@ public class GameAdministration {
      * @return a boolean whether adding the user went well or not
      */
     public boolean addUser(User user) {
-        // TODO
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (user == null) {</span>
-<span class="nc" id="L111">            return false;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L117">            return false;</span>
         }
         
-<span class="nc" id="L114">        this.users.add(user);</span>
-<span class="nc" id="L115">        return true;</span>
+<span class="nc" id="L120">        this.users.add(user);</span>
+        
+        try {
+<span class="nc" id="L123">            this.dbAdmin.AddUser(user);</span>
+<span class="nc" id="L124">        } catch (Exception ex) {</span>
+<span class="nc" id="L125">            return false;</span>
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">        return true;</span>
     }
     
     /**
@@ -121,17 +133,24 @@ public class GameAdministration {
      * @return a User object
      */
     public User getUser(int userId) {
-        // TODO
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (userId &lt; 0) {</span>
-<span class="nc" id="L126">            return null;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (userId &lt; 0) {</span>
+<span class="nc" id="L137">            return null;</span>
         }
         
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        for (User user : this.users) {</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (user.getId() == userId) {</span>
-<span class="nc" id="L131">                return user;</span>
-            }
-<span class="nc" id="L133">        }</span>
-<span class="nc" id="L134">        return null;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (this.dbAdmin != null) {</span>
+            try {
+<span class="nc" id="L142">                this.users = this.dbAdmin.GetUsers();</span>
+<span class="nc" id="L143">            } catch (IOException ex) {</span>
+<span class="nc" id="L144">               return null;</span>
+<span class="nc" id="L145">            }</span>
+        
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            for (User user : this.users) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                if (user.getId() == userId) {</span>
+<span class="nc" id="L149">                    return user;</span>
+                }
+<span class="nc" id="L151">            }</span>
+        }
+<span class="nc" id="L153">        return null;</span>
     }
     
     /**
@@ -140,17 +159,25 @@ public class GameAdministration {
      * @return a User object
      */
     public User getUser(String username) {
-        // TODO
-<span class="nc bnc" id="L144" title="All 4 branches missed.">        if (username == null || username.equals(&quot;&quot;)) {</span>
-<span class="nc" id="L145">            return null;</span>
+<span class="nc bnc" id="L162" title="All 4 branches missed.">        if (username == null || username.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L163">            return null;</span>
         }
         
-<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (User user : this.users) {</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (user.getUsername().equals(username)) {</span>
-<span class="nc" id="L150">                return user;</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (this.dbAdmin != null) {</span>
+            try {
+<span class="nc" id="L168">                this.users = this.dbAdmin.GetUsers();</span>
+<span class="nc" id="L169">            } catch (IOException ex) {</span>
+<span class="nc" id="L170">                return null;</span>
+<span class="nc" id="L171">            }</span>
+        }
+        
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        for (User user : this.users) {</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (user.getUsername().equals(username)) {</span>
+<span class="nc" id="L176">                return user;</span>
             }
-<span class="nc" id="L152">        }</span>
-<span class="nc" id="L153">        return null;</span>
+<span class="nc" id="L178">        }</span>
+        
+<span class="nc" id="L180">        return null;</span>
     }
     
     /**
@@ -158,15 +185,15 @@ public class GameAdministration {
      * @param host the host, may not be null
      * @return a boolean whether adding the session went well or not
      */
-    public boolean createSession(User host) {
+    public Session createSession(User host) {
         // TODO
-<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (host == null) {</span>
-<span class="nc" id="L164">            return false;</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (host == null) {</span>
+<span class="nc" id="L191">            return null;</span>
         }
         
-<span class="nc" id="L167">        Session session = new Session(host);      </span>
-<span class="nc" id="L168">        this.sessions.add(session);        </span>
-<span class="nc" id="L169">        return true;</span>
+<span class="nc" id="L194">        Session session = new Session(host);      </span>
+<span class="nc" id="L195">        this.sessions.add(session);        </span>
+<span class="nc" id="L196">        return session;</span>
     }
     
     /**
@@ -176,16 +203,16 @@ public class GameAdministration {
      */
     public Session getSession(int hostId) {
         // TODO
-<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (hostId &lt; 0) {</span>
-<span class="nc" id="L180">            return null;</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (hostId &lt; 0) {</span>
+<span class="nc" id="L207">            return null;</span>
         }
         
-<span class="nc bnc" id="L183" title="All 2 branches missed.">        for (Session session : this.sessions) {</span>
-<span class="nc bnc" id="L184" title="All 2 branches missed.">            if (session.getHost().getId() == hostId) {</span>
-<span class="nc" id="L185">                return session;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        for (Session session : this.sessions) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (session.getHost().getId() == hostId) {</span>
+<span class="nc" id="L212">                return session;</span>
             }
-<span class="nc" id="L187">        }</span>
-<span class="nc" id="L188">        return null;</span>
+<span class="nc" id="L214">        }</span>
+<span class="nc" id="L215">        return null;</span>
     }
     
     /**
@@ -195,12 +222,12 @@ public class GameAdministration {
      */
     public boolean addGame(Game game) {
         // TODO
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (game == null) {</span>
-<span class="nc" id="L199">            return false;</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (game == null) {</span>
+<span class="nc" id="L226">            return false;</span>
         }
         
-<span class="nc" id="L202">        this.games.add(game);</span>
-<span class="nc" id="L203">        return true;</span>
+<span class="nc" id="L229">        this.games.add(game);</span>
+<span class="nc" id="L230">        return true;</span>
     }
     
     /**
@@ -209,17 +236,16 @@ public class GameAdministration {
      * @return a Game object
      */
     public Game getGame(int hostId) {
-        // TODO
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (hostId &lt; 0) {</span>
-<span class="nc" id="L214">            return null;</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (hostId &lt; 0) {</span>
+<span class="nc" id="L240">            return null;</span>
         }
         
-<span class="nc bnc" id="L217" title="All 2 branches missed.">        for (Game game : this.games) {</span>
-<span class="nc bnc" id="L218" title="All 2 branches missed.">            if (game.getSession().getHost().getId() == hostId) {</span>
-<span class="nc" id="L219">                return game;</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        for (Game game : this.games) {</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (game.getSession().getHost().getId() == hostId) {</span>
+<span class="nc" id="L245">                return game;</span>
             }
-<span class="nc" id="L221">        }</span>
-<span class="nc" id="L222">        return null;</span>
+<span class="nc" id="L247">        }</span>
+<span class="nc" id="L248">        return null;</span>
     }
     
     /**
@@ -229,18 +255,24 @@ public class GameAdministration {
      * @return a boolean whether logging in the user went well or not
      */
     public boolean login(String username, String password) {
-        // TODO
-<span class="nc bnc" id="L233" title="All 8 branches missed.">        if (username == null || username.equals(&quot;&quot;) || password == null || password.equals(&quot;&quot;)) {</span>
-<span class="nc" id="L234">            return false;</span>
+<span class="nc bnc" id="L258" title="All 8 branches missed.">        if (username == null || username.equals(&quot;&quot;) || password == null || password.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L259">            return false;</span>
         }
         
-<span class="nc bnc" id="L237" title="All 2 branches missed.">        for (User user : this.users) {</span>
-<span class="nc bnc" id="L238" title="All 4 branches missed.">            if (user.getUsername().equals(username) &amp;&amp; user.getPassword().equals(password)) {</span>
-<span class="nc" id="L239">                return true;</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (this.dbAdmin != null) {</span>
+            try {
+<span class="nc" id="L264">                this.users = this.dbAdmin.GetUsers();</span>
+<span class="nc" id="L265">            } catch (IOException ex) {</span>
+<span class="nc" id="L266">                return false;</span>
+<span class="nc" id="L267">            }</span>
+
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            if(this.users != null) {</span>
+<span class="nc bnc" id="L270" title="All 6 branches missed.">                if (this.users.stream().anyMatch((user) -&gt; (user.getUsername().equals(username) &amp;&amp; user.getPassword().equals(password)))) {</span>
+<span class="nc" id="L271">                    return true;</span>
+                }
             }
-<span class="nc" id="L241">        }</span>
-        
-<span class="nc" id="L243">        return false;</span>
+        }
+<span class="nc" id="L275">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

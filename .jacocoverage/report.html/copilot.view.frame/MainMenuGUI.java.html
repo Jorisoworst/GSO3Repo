@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MainMenuGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">MainMenuGUI.java</span></div><h1>MainMenuGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.domain.GameAdministration;
+import copilot.domain.Session;
+import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class MainMenuGUI extends JPanel {
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
+
+    /**
+     * Initializes an instance of the MainMenuGUI
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
+<span class="nc" id="L37">    public MainMenuGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {</span>
+        
+<span class="nc" id="L39">        this.screenHeight = screenHeight;</span>
+<span class="nc" id="L40">        this.screenWidth = screenWidth;</span>
+<span class="nc" id="L41">        this.font = font;</span>
+<span class="nc" id="L42">        this.sizedFont = sizedFont;</span>
+<span class="nc" id="L43">        this.screen = screen;</span>
+<span class="nc" id="L44">        this.logo = logo;</span>
+<span class="nc" id="L45">        this.setPreferredSize(new Dimension(screenWidth, screenHeight));</span>
+        
+<span class="nc" id="L47">        placeComponents(userLoggedIn);</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
+    private void placeComponents(User user) {
+        
+<span class="nc" id="L56">        this.setLayout(null);</span>
+        
+        // add a logout button and its listeners
+<span class="nc" id="L59">        JButton logoutButton = new JButton(&quot;LOGOUT&quot;);</span>
+<span class="nc" id="L60">        logoutButton.setBounds(this.screenWidth - 280, 40, 240, 50);</span>
+<span class="nc" id="L61">        logoutButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L62">        logoutButton.setFocusPainted(false);</span>
+<span class="nc" id="L63">        logoutButton.setFont(this.font);</span>
+<span class="nc" id="L64">        logoutButton.setHorizontalAlignment(SwingConstants.RIGHT);</span>
+<span class="nc" id="L65">        this.add(logoutButton);</span>
+        
+<span class="nc" id="L67">        logoutButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L68">            GUIController.playClick();</span>
+<span class="nc" id="L69">            GUIController.stopBackgroundMusic();</span>
+<span class="nc" id="L70">            AllCopilotGUI.setPanel(&quot;login&quot;, null, null);</span>
+<span class="nc" id="L71">        });</span>
+
+<span class="nc" id="L73">        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L76">                logoutButton.setFont(sizedFont);</span>
+<span class="nc" id="L77">                logoutButton.setText(&quot;&gt;LOGOUT&quot;);</span>
+<span class="nc" id="L78">                GUIController.playHover();                </span>
+<span class="nc" id="L79">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L83">                logoutButton.setFont(font);</span>
+<span class="nc" id="L84">                logoutButton.setText(&quot;LOGOUT&quot;);</span>
+<span class="nc" id="L85">            }</span>
+        });
+        
+        // add a join button and its listeners
+<span class="nc" id="L89">        JButton joinButton = new JButton(&quot;JOIN&quot;);</span>
+<span class="nc" id="L90">        joinButton.setBounds(40, this.screenHeight - 300, 240, 50);</span>
+<span class="nc" id="L91">        joinButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L92">        joinButton.setFocusPainted(false);</span>
+<span class="nc" id="L93">        joinButton.setFont(this.font);</span>
+<span class="nc" id="L94">        joinButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L95">        this.add(joinButton);        </span>
+
+<span class="nc" id="L97">        joinButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L98">            GUIController.playClick();</span>
+<span class="nc" id="L99">            AllCopilotGUI.setPanel(&quot;lobby&quot;, user, null);</span>
+<span class="nc" id="L100">        });</span>
+        
+<span class="nc" id="L102">        joinButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L105">                joinButton.setFont(sizedFont);</span>
+<span class="nc" id="L106">                joinButton.setText(&quot;&gt;JOIN&quot;);</span>
+<span class="nc" id="L107">                GUIController.playHover();      </span>
+<span class="nc" id="L108">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L112">                joinButton.setFont(font);</span>
+<span class="nc" id="L113">                joinButton.setText(&quot;JOIN&quot;);</span>
+<span class="nc" id="L114">            }</span>
+        });
+
+        // add a host button and its listeners
+<span class="nc" id="L118">        JButton hostButton = new JButton(&quot;HOST&quot;);</span>
+<span class="nc" id="L119">        hostButton.setBounds(40, this.screenHeight - 250, 240, 50);</span>
+<span class="nc" id="L120">        hostButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L121">        hostButton.setFocusPainted(false);</span>
+<span class="nc" id="L122">        hostButton.setFont(this.font);</span>
+<span class="nc" id="L123">        hostButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L124">        this.add(hostButton);</span>
+
+<span class="nc" id="L126">        hostButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L127">            GUIController.playClick();</span>
+<span class="nc" id="L128">            Session session = GameAdministration.getInstance().createSession(user);</span>
+<span class="nc" id="L129">            session.addUser(user);</span>
+<span class="nc" id="L130">            GUIController.stopBackgroundMusic();</span>
+<span class="nc" id="L131">            AllCopilotGUI.setPanel(&quot;session&quot;, user, session);</span>
+<span class="nc" id="L132">        });</span>
+        
+<span class="nc" id="L134">        hostButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L137">                hostButton.setFont(sizedFont);</span>
+<span class="nc" id="L138">                hostButton.setText(&quot;&gt;HOST&quot;);</span>
+<span class="nc" id="L139">                GUIController.playHover();  </span>
+<span class="nc" id="L140">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L144">                hostButton.setFont(font);</span>
+<span class="nc" id="L145">                hostButton.setText(&quot;HOST&quot;);</span>
+<span class="nc" id="L146">            }</span>
+        });
+
+        // add a settings button and its listeners
+<span class="nc" id="L150">        JButton settingsButton = new JButton(&quot;SETTINGS&quot;);</span>
+<span class="nc" id="L151">        settingsButton.setBounds(40, this.screenHeight - 200, 240, 50);</span>
+<span class="nc" id="L152">        settingsButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L153">        settingsButton.setFocusPainted(false);</span>
+<span class="nc" id="L154">        settingsButton.setFont(this.font);</span>
+<span class="nc" id="L155">        settingsButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L156">        this.add(settingsButton);</span>
+
+<span class="nc" id="L158">        settingsButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L159">            GUIController.playClick();</span>
+<span class="nc" id="L160">            AllCopilotGUI.setPanel(&quot;settings&quot;, user, null);</span>
+<span class="nc" id="L161">        });</span>
+
+<span class="nc" id="L163">        settingsButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L166">                settingsButton.setFont(sizedFont);</span>
+<span class="nc" id="L167">                settingsButton.setText(&quot;&gt;SETTINGS&quot;);</span>
+<span class="nc" id="L168">                GUIController.playHover();  </span>
+<span class="nc" id="L169">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L173">                settingsButton.setFont(font);</span>
+<span class="nc" id="L174">                settingsButton.setText(&quot;SETTINGS&quot;);</span>
+<span class="nc" id="L175">            }</span>
+        });
+        
+        // add a credits button and its listeners
+<span class="nc" id="L179">        JButton creditsButton = new JButton(&quot;CREDITS&quot;);</span>
+<span class="nc" id="L180">        creditsButton.setBounds(40, this.screenHeight - 150, 240, 50);</span>
+<span class="nc" id="L181">        creditsButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L182">        creditsButton.setFocusPainted(false);</span>
+<span class="nc" id="L183">        creditsButton.setFont(this.font);</span>
+<span class="nc" id="L184">        creditsButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L185">        this.add(creditsButton);</span>
+
+<span class="nc" id="L187">        creditsButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L188">            GUIController.playClick();</span>
+<span class="nc" id="L189">            AllCopilotGUI.setPanel(&quot;credits&quot;, null, null);</span>
+<span class="nc" id="L190">        });</span>
+
+<span class="nc" id="L192">        creditsButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L195">                creditsButton.setFont(sizedFont);</span>
+<span class="nc" id="L196">                creditsButton.setText(&quot;&gt;CREDITS&quot;);</span>
+<span class="nc" id="L197">                GUIController.playHover();  </span>
+<span class="nc" id="L198">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L202">                creditsButton.setFont(font);</span>
+<span class="nc" id="L203">                creditsButton.setText(&quot;CREDITS&quot;);</span>
+<span class="nc" id="L204">            }</span>
+        });
+        
+        // add a singleplayer button and its listeners
+<span class="nc" id="L208">        JButton singleplayerButton = new JButton(&quot;SINGLEPLAYER&quot;);</span>
+<span class="nc" id="L209">        singleplayerButton.setBounds(40, this.screenHeight - 350, 540, 50);</span>
+<span class="nc" id="L210">        singleplayerButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L211">        singleplayerButton.setFocusPainted(false);</span>
+<span class="nc" id="L212">        singleplayerButton.setFont(this.font);</span>
+<span class="nc" id="L213">        singleplayerButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L214">        this.add(singleplayerButton);</span>
+        
+<span class="nc" id="L216">        singleplayerButton.addActionListener((ActionEvent e) -&gt; {</span>
+<span class="nc" id="L217">            GUIController.playClick();</span>
+<span class="nc" id="L218">            GUIController.stopBackgroundMusic();</span>
+<span class="nc" id="L219">            AllCopilotGUI.setPanel(&quot;game&quot;, null, null);</span>
+<span class="nc" id="L220">        });</span>
+
+<span class="nc" id="L222">        singleplayerButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L225">                singleplayerButton.setFont(sizedFont);</span>
+<span class="nc" id="L226">                singleplayerButton.setText(&quot;&gt;SINGLEPLAYER&quot;);</span>
+<span class="nc" id="L227">                GUIController.playHover();   </span>
+<span class="nc" id="L228">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L232">                singleplayerButton.setFont(font);</span>
+<span class="nc" id="L233">                singleplayerButton.setText(&quot;SINGLEPLAYER&quot;);</span>
+<span class="nc" id="L234">            }</span>
+        });
+        
+        // add the logo
+<span class="nc" id="L238">        JLabel logoImage = new JLabel(new ImageIcon(this.logo));</span>
+<span class="nc" id="L239">        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);</span>
+<span class="nc" id="L240">        this.add(logoImage);</span>
+        
+        // add the background
+<span class="nc" id="L243">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="nc" id="L244">        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);</span>
+<span class="nc" id="L245">        this.add(bg);</span>
+<span class="nc" id="L246">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

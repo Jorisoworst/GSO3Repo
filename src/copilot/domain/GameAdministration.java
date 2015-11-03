@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.io.IOException;
@@ -21,7 +16,7 @@ public class GameAdministration {
      * @return the instance of the singleton
      */
     public static GameAdministration getInstance() {
-        if (GameAdministration.instance == null) {
+       if (GameAdministration.instance == null) {
             GameAdministration.instance = new GameAdministration();
         }
         
@@ -44,6 +39,7 @@ public class GameAdministration {
      * Initialize an instance of the GameAdministration singleton
      */
     private GameAdministration() throws NullPointerException {
+        
         try {
             this.dbAdmin = new DatabaseAdministration();
         } catch (Exception ex) {
@@ -66,11 +62,7 @@ public class GameAdministration {
     }
     
     public boolean getDatabaseState() {
-        if (this.dbAdmin != null) {
-            return true;
-        } 
-        
-        return false;
+        return this.dbAdmin != null;
     }
 
     /**
@@ -275,10 +267,8 @@ public class GameAdministration {
             }
 
             if(this.users != null) {
-                for (User user : this.users) {
-                    if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                        return true;
-                    }
+                if (this.users.stream().anyMatch((user) -> (user.getUsername().equals(username) && user.getPassword().equals(password)))) {
+                    return true;
                 }
             }
         }

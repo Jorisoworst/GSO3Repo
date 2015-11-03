@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Image;
@@ -21,6 +16,7 @@ public class Obstacle extends GameObject {
      * @param image the image, may not be null
      */
     public Obstacle(Image image) {
+        
         super(image);
         this.isDestructable = false;
     }

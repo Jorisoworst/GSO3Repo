@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Image;
@@ -23,6 +18,7 @@ public class AirplanePart extends GameObject {
      * @param user the user, may not be null
      */
     public AirplanePart(Image image, Airplane airplane, User user) {
+       
         super(image);
         this.airplane = airplane;
         this.user = user;

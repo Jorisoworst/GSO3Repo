@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.frame;
 
 import copilot.controller.GUIController;
@@ -23,11 +18,22 @@ import javax.swing.JPanel;
  */
 public class SettingsGUI extends JPanel {
     
-    private Font font, sizedFont;
-    private Image screen, logo;
-    private int screenWidth, screenHeight;
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
     
+    /**
+     * Initializes an instance of the SettingsGUI Panel
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
     public SettingsGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {
+        
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
@@ -38,10 +44,15 @@ public class SettingsGUI extends JPanel {
         placeComponents(userLoggedIn);
     }
     
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
     private void placeComponents(User user) {
         
         this.setLayout(null); 
         
+        // set the back button and its listeners
         JButton backButton = new JButton("BACK");
         backButton.setFont(font);
         backButton.setBounds(40, this.screenHeight - 60, 160, 40);
@@ -72,10 +83,12 @@ public class SettingsGUI extends JPanel {
             }
         });
         
+        // set the logo
         JLabel logoImage = new JLabel(new ImageIcon(this.logo));
         logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);
         this.add(logoImage);
         
+        // set the background
         JLabel bg = new JLabel(new ImageIcon(this.screen));
         bg.setBounds(0, 0, this.screenWidth, this.screenHeight);
         this.add(bg);

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LobbyGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">LobbyGUI.java</span></div><h1>LobbyGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.domain.GameAdministration;
+import copilot.domain.Session;
+import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class LobbyGUI extends JPanel {
+    
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
+    
+    /**
+     * Initializes an instance of the LobbyGUI
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
+<span class="nc" id="L41">    public LobbyGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {</span>
+        
+<span class="nc" id="L43">        this.screenWidth = screenWidth;</span>
+<span class="nc" id="L44">        this.screenHeight = screenHeight;</span>
+<span class="nc" id="L45">        this.font = font;</span>
+<span class="nc" id="L46">        this.sizedFont = sizedFont;</span>
+<span class="nc" id="L47">        this.screen = screen;</span>
+<span class="nc" id="L48">        this.logo = logo;</span>
+<span class="nc" id="L49">        placeComponents(userLoggedIn);</span>
+<span class="nc" id="L50">    }</span>
+    
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
+    private void placeComponents(User user) {
+        
+<span class="nc" id="L58">        this.setLayout(null);</span>
+
+        // add a users label
+<span class="nc" id="L61">        JLabel usersLabel = new JLabel(&quot;users&quot;);</span>
+<span class="nc" id="L62">        usersLabel.setBounds(125, 50, 50, 14);</span>
+<span class="nc" id="L63">        this.add(usersLabel);</span>
+        
+        // add a users listmodel
+<span class="nc" id="L66">        DefaultListModel modelUsers = new DefaultListModel();</span>
+<span class="nc" id="L67">        JList users = new JList(modelUsers);</span>
+<span class="nc" id="L68">        users.setBounds(10, 70, 300, 500);</span>
+<span class="nc" id="L69">        this.add(users);</span>
+        
+        // add a sessions label
+<span class="nc" id="L72">        JLabel sessionsLabel = new JLabel(&quot;sessions&quot;);</span>
+<span class="nc" id="L73">        sessionsLabel.setBounds(500, 50, 80, 14);</span>
+<span class="nc" id="L74">        this.add(sessionsLabel);</span>
+        
+        // add a sessions listmodel
+<span class="nc" id="L77">        DefaultListModel modelSessions = new DefaultListModel();</span>
+<span class="nc" id="L78">        JList sessions = new JList(modelSessions);</span>
+<span class="nc" id="L79">        sessions.setBounds(340, 70, this.screenWidth - 350, this.screenHeight - 130);</span>
+<span class="nc" id="L80">        this.add(sessions);</span>
+        
+        // add a join button and its listeners
+<span class="nc" id="L83">        JButton joinButton = new JButton(&quot;JOIN&quot;);</span>
+<span class="nc" id="L84">        joinButton.setFont(font);</span>
+<span class="nc" id="L85">        joinButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L86">        joinButton.setBounds(40, this.screenHeight - 150, 150, 60);</span>
+<span class="nc" id="L87">        joinButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L88">        this.add(joinButton);</span>
+        
+<span class="nc" id="L90">        joinButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L93">                joinButton.setFont(sizedFont);</span>
+<span class="nc" id="L94">                joinButton.setText(&quot;&gt;JOIN&quot;);</span>
+<span class="nc" id="L95">                GUIController.playHover();</span>
+<span class="nc" id="L96">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L100">                joinButton.setFont(font);</span>
+<span class="nc" id="L101">                joinButton.setText(&quot;JOIN&quot;);</span>
+<span class="nc" id="L102">            }</span>
+        });
+        
+        // TODO is able to work when there is an RMI connection
+<span class="nc" id="L106">        joinButton.addActionListener(new ActionListener() {</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L110">                throw new UnsupportedOperationException(&quot;Not supported yet.&quot;); //To change body of generated methods, choose Tools | Templates.</span>
+            }
+        });
+        
+        // add a refresh button and its listeners
+<span class="nc" id="L115">        JButton refreshButton = new JButton(&quot;REFRESH&quot;);</span>
+<span class="nc" id="L116">        refreshButton.setFont(font);</span>
+<span class="nc" id="L117">        refreshButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L118">        refreshButton.setBounds(40, this.screenHeight - 200, 240, 60);</span>
+<span class="nc" id="L119">        refreshButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L120">        this.add(refreshButton);</span>
+        
+<span class="nc" id="L122">        refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L125">                refreshButton.setFont(sizedFont);</span>
+<span class="nc" id="L126">                refreshButton.setText(&quot;&gt;REFRESH&quot;);</span>
+<span class="nc" id="L127">                GUIController.playHover();</span>
+<span class="nc" id="L128">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L132">                refreshButton.setFont(font);</span>
+<span class="nc" id="L133">                refreshButton.setText(&quot;REFRESH&quot;);</span>
+<span class="nc" id="L134">            }</span>
+        });
+        
+        // refresh all the listmodels
+<span class="nc" id="L138">        refreshButton.addActionListener(new ActionListener(){</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L142">                GameAdministration admin = GameAdministration.getInstance();</span>
+<span class="nc" id="L143">                ArrayList&lt;Session&gt; sessionsList = admin.getSessions();</span>
+<span class="nc" id="L144">                ArrayList&lt;User&gt; usersList = admin.getUsers();</span>
+<span class="nc" id="L145">                int count = 0;</span>
+
+<span class="nc" id="L147">                sessionsList.stream().forEach((session) -&gt; {</span>
+<span class="nc" id="L148">                    modelSessions.addElement(count + &quot;: &quot; + session.getHost().getUsername() + &quot; Game, Amount of players in session: &quot; + session.getUsers().size() + &quot;, is started: &quot; + session.isIsStarted());</span>
+<span class="nc" id="L149">                });</span>
+
+<span class="nc" id="L151">                usersList.stream().forEach((userInList) -&gt; {</span>
+<span class="nc" id="L152">                    modelUsers.addElement(userInList.getUsername());</span>
+<span class="nc" id="L153">                });</span>
+<span class="nc" id="L154">            }</span>
+        });
+        
+        // add a back button and its listeners
+<span class="nc" id="L158">        JButton backButton = new JButton(&quot;BACK&quot;);</span>
+<span class="nc" id="L159">        backButton.setFont(font);</span>
+<span class="nc" id="L160">        backButton.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L161">        backButton.setBounds(40, this.screenHeight - 100, 160, 60);</span>
+<span class="nc" id="L162">        backButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L163">        this.add(backButton);</span>
+        
+<span class="nc" id="L165">        backButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L168">                backButton.setFont(sizedFont);</span>
+<span class="nc" id="L169">                backButton.setText(&quot;&gt;BACK&quot;);</span>
+<span class="nc" id="L170">                GUIController.playHover();</span>
+<span class="nc" id="L171">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L175">                backButton.setFont(font);</span>
+<span class="nc" id="L176">                backButton.setText(&quot;BACK&quot;);</span>
+<span class="nc" id="L177">            }</span>
+        });
+        
+<span class="nc" id="L180">        backButton.addActionListener(new ActionListener(){</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L184">                AllCopilotGUI.setPanel(&quot;menu&quot;, user, null);</span>
+<span class="nc" id="L185">            }</span>
+        });
+        
+        // add all the users and sessions to the list
+<span class="nc" id="L189">        GameAdministration admin = GameAdministration.getInstance();</span>
+<span class="nc" id="L190">        ArrayList&lt;Session&gt; sessionsList = admin.getSessions();</span>
+<span class="nc" id="L191">        ArrayList&lt;User&gt; usersList = admin.getUsers();</span>
+<span class="nc" id="L192">        int count = 0;</span>
+        
+<span class="nc" id="L194">        sessionsList.stream().forEach((session) -&gt; {</span>
+<span class="nc" id="L195">            modelSessions.addElement(count + &quot;: &quot; + session.getHost().getUsername() + &quot; Game, Amount of players in session: &quot; + session.getUsers().size() + &quot;, is started: &quot; + session.isIsStarted());</span>
+<span class="nc" id="L196">        });</span>
+        
+<span class="nc" id="L198">        usersList.stream().forEach((userInList) -&gt; {</span>
+<span class="nc" id="L199">            modelUsers.addElement(userInList.getUsername());</span>
+<span class="nc" id="L200">        });</span>
+
+        // add the logo
+<span class="nc" id="L203">        JLabel logoImage = new JLabel(new ImageIcon(this.logo));</span>
+<span class="nc" id="L204">        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);</span>
+<span class="nc" id="L205">        this.add(logoImage);</span>
+        
+        // add the background
+<span class="nc" id="L208">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="nc" id="L209">        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);</span>
+<span class="nc" id="L210">        this.add(bg);</span>
+<span class="nc" id="L211">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

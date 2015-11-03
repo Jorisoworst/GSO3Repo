@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.awt.Image;
@@ -14,7 +9,7 @@ import java.awt.Image;
 public class Propellor extends AirplanePart {
     private int rpm;
     private double fuelConsumption;
-    private Airplane airplane;
+    private final Airplane airplane;
     
     /**
      * Initialize an instance of the Propellor class which extends ArplanePart
@@ -24,6 +19,7 @@ public class Propellor extends AirplanePart {
      * @param user the user, may not be null
      */
     public Propellor(Image image, Airplane airplane, User user) {
+        
         super(image, airplane, user);
         this.airplane = airplane;
         
@@ -71,14 +67,12 @@ public class Propellor extends AirplanePart {
         }
         
         airplane.setSpeed(newAirplaneSpeed);
-        double fuelConsumption = calculateFuelConsumption(rpm);
-        this.fuelConsumption = fuelConsumption;
+        this.fuelConsumption = calculateFuelConsumption(rpm);
     }
     
     private double calculateFuelConsumption(double rpm)
     {
-        double fuelConsumption = 0;
-        fuelConsumption = rpm / 260;
+        this.fuelConsumption = rpm / 260;
         
         return fuelConsumption;
     }

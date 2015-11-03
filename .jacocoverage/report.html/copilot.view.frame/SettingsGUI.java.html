@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SettingsGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">SettingsGUI.java</span></div><h1>SettingsGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.domain.User;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class SettingsGUI extends JPanel {
+    
+    private final Font font, sizedFont;
+    private final Image screen, logo;
+    private final int screenWidth, screenHeight;
+    
+    /**
+     * Initializes an instance of the SettingsGUI Panel
+     * @param userLoggedIn the user logged in
+     * @param screenWidth the width of the screen
+     * @param screenHeight the height of the screen
+     * @param font the smallest font used
+     * @param sizedFont the larger font used
+     * @param screen the background image
+     * @param logo the logo image
+     */
+<span class="nc" id="L35">    public SettingsGUI(User userLoggedIn, int screenWidth, int screenHeight, Font font, Font sizedFont, Image screen, Image logo) {</span>
+        
+<span class="nc" id="L37">        this.screenWidth = screenWidth;</span>
+<span class="nc" id="L38">        this.screenHeight = screenHeight;</span>
+<span class="nc" id="L39">        this.font = font;</span>
+<span class="nc" id="L40">        this.sizedFont = sizedFont;</span>
+<span class="nc" id="L41">        this.screen = screen;</span>
+<span class="nc" id="L42">        this.logo = logo;</span>
+        
+<span class="nc" id="L44">        placeComponents(userLoggedIn);</span>
+<span class="nc" id="L45">    }</span>
+    
+    /**
+     * used to place all the components to the panel
+     * @param user the user logged in
+     */
+    private void placeComponents(User user) {
+        
+<span class="nc" id="L53">        this.setLayout(null); </span>
+        
+        // set the back button and its listeners
+<span class="nc" id="L56">        JButton backButton = new JButton(&quot;BACK&quot;);</span>
+<span class="nc" id="L57">        backButton.setFont(font);</span>
+<span class="nc" id="L58">        backButton.setBounds(40, this.screenHeight - 60, 160, 40);</span>
+<span class="nc" id="L59">        backButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L60">        this.add(backButton);</span>
+        
+<span class="nc" id="L62">        backButton.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L65">                backButton.setFont(sizedFont);</span>
+<span class="nc" id="L66">                backButton.setText(&quot;&gt;BACK&quot;);</span>
+<span class="nc" id="L67">                GUIController.playHover();</span>
+<span class="nc" id="L68">            }</span>
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L72">                backButton.setFont(font);</span>
+<span class="nc" id="L73">                backButton.setText(&quot;BACK&quot;);</span>
+<span class="nc" id="L74">            }</span>
+        });
+        
+<span class="nc" id="L77">        backButton.addActionListener(new ActionListener(){</span>
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L81">                GUIController.playClick();</span>
+<span class="nc" id="L82">                AllCopilotGUI.setPanel(&quot;menu&quot;, user, null);</span>
+<span class="nc" id="L83">            }</span>
+        });
+        
+        // set the logo
+<span class="nc" id="L87">        JLabel logoImage = new JLabel(new ImageIcon(this.logo));</span>
+<span class="nc" id="L88">        logoImage.setBounds(this.screenWidth / 2 - 75, 80, 158, 122);</span>
+<span class="nc" id="L89">        this.add(logoImage);</span>
+        
+        // set the background
+<span class="nc" id="L92">        JLabel bg = new JLabel(new ImageIcon(this.screen));</span>
+<span class="nc" id="L93">        bg.setBounds(0, 0, this.screenWidth, this.screenHeight);</span>
+<span class="nc" id="L94">        this.add(bg);</span>
+        
+<span class="nc" id="L96">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 import java.util.Calendar;
@@ -40,7 +35,6 @@ public abstract class User {
     private String password;
     private String displayName;
     
-    
     /**
      * Initialize an instance of the User class which is abstract
      * @param username the username, may not be null or empty and must be unique
@@ -49,6 +43,7 @@ public abstract class User {
      * @param dateOfBirth the date of birth, may not be null
      */
     public User(String username, String password, String displayName, Calendar dateOfBirth) {
+        
         if (dateOfBirth == null)
             throw new IllegalArgumentException("The date of birth must not be unknown");
         if (username == null || 
@@ -257,9 +252,4 @@ public abstract class User {
     public void addReport() {
         this.reports += 1;
     }
-    
-//    @Override
-//    public String toString() {
-//        return "";
-//    }
 }

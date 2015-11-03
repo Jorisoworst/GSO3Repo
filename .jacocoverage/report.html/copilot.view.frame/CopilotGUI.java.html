@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CopilotGUI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.view.frame</a> &gt; <span class="el_source">CopilotGUI.java</span></div><h1>CopilotGUI.java</h1><pre class="source lang-java linenums">package copilot.view.frame;
+
+import copilot.controller.GUIController;
+import copilot.controller.GameController;
+import copilot.domain.Airplane;
+import copilot.domain.Bullet;
+import copilot.domain.GameObject;
+import copilot.domain.Kerosine;
+import copilot.domain.Obstacle;
+import copilot.view.gui.AllCopilotGUI;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferStrategy;
+import java.io.IOException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Transform;
+import org.dyn4j.geometry.Vector2;
+
+/**
+ *
+ * @author IndyGames
+ */
+public class CopilotGUI extends JPanel {
+
+    public static final boolean DEBUG_MODE = false;
+    public static final long NANO_TO_BASE = 1000000000;
+    public static final int BULLET_FORCE = 25;
+    public static final int FORCE = 7;
+    public static final int TARGET_FPS = 60;
+    private final GameController gameController;
+    private final Font font;
+    private final int screenWidth, screenHeight;
+    private boolean stopped;
+    private double elapsedTime, targetInterval, diff, actualInterval;
+    private long last, lastTime, time;
+    private int zebraForce, fps, lives, score, backgroundX, spawnTimer,
+            fpsTimer, fuelTimer, speedTimer, animationTimer, bulletsFired,
+            clipSize, reloadTimer, reloadProgress, reloadCooldown;
+    private Canvas canvas;
+    private World world;
+    private Random rnd;
+    private JPanel labelPanel;
+    private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
+            fuelLabel, fpsLabel;
+    private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1,
+            obstacleImage2, kerosineImage;
+
+    /**
+     * Constructor for this gui.
+     *
+     * @param screenWidth the screenwidth
+     * @param screenHeight the screenheight
+     * @param font the font
+     */
+<span class="nc" id="L73">    public CopilotGUI(int screenWidth, int screenHeight, Font font) {</span>
+<span class="nc" id="L74">        this.screenWidth = screenWidth;</span>
+<span class="nc" id="L75">        this.screenHeight = screenHeight;</span>
+<span class="nc" id="L76">        this.font = font;</span>
+<span class="nc" id="L77">        this.initializeVariables();</span>
+<span class="nc" id="L78">        this.loadResources();</span>
+<span class="nc" id="L79">        this.createGUI();</span>
+<span class="nc" id="L80">        this.gameController = new GameController(this);</span>
+<span class="nc" id="L81">        this.initializeWorld();</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * Initialize all variables
+     */
+    private void initializeVariables() {
+<span class="nc" id="L88">        this.rnd = new Random();</span>
+<span class="nc" id="L89">        this.stopped = false;</span>
+<span class="nc" id="L90">        this.zebraForce = FORCE;</span>
+<span class="nc" id="L91">        this.lives = 3;</span>
+<span class="nc" id="L92">        this.actualInterval = 0;</span>
+<span class="nc" id="L93">        this.diff = 0;</span>
+<span class="nc" id="L94">        this.time = 0;</span>
+<span class="nc" id="L95">        this.targetInterval = 0;</span>
+<span class="nc" id="L96">        this.elapsedTime = 0;</span>
+<span class="nc" id="L97">        this.score = 0;</span>
+<span class="nc" id="L98">        this.backgroundX = 0;</span>
+<span class="nc" id="L99">        this.spawnTimer = 0;</span>
+<span class="nc" id="L100">        this.fpsTimer = 0;</span>
+<span class="nc" id="L101">        this.fuelTimer = 0;</span>
+<span class="nc" id="L102">        this.speedTimer = 0;</span>
+<span class="nc" id="L103">        this.animationTimer = 0;</span>
+<span class="nc" id="L104">        this.reloadTimer = 0;</span>
+<span class="nc" id="L105">        this.reloadProgress = 0;</span>
+<span class="nc" id="L106">        this.reloadCooldown = 50;</span>
+<span class="nc" id="L107">        this.bulletsFired = 0;</span>
+<span class="nc" id="L108">        this.clipSize = 15; // TODO</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Load and initialize all resources
+     */
+    private void loadResources() {
+        try {
+<span class="nc" id="L116">            this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;airplane.png&quot;));</span>
+<span class="nc" id="L117">            this.airplaneImage = this.airplaneImage.getScaledInstance(103, 60, 1);</span>
+
+<span class="nc" id="L119">            this.backgroundImage = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;background.png&quot;));</span>
+<span class="nc" id="L120">            this.bulletImage = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;bullet.png&quot;));</span>
+
+<span class="nc" id="L122">            this.obstacleImage1 = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;goose_wing_down.png&quot;));</span>
+<span class="nc" id="L123">            this.obstacleImage1 = this.obstacleImage1.getScaledInstance(103, 60, 1);</span>
+
+<span class="nc" id="L125">            this.obstacleImage2 = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;goose_wing_up.png&quot;));</span>
+<span class="nc" id="L126">            this.obstacleImage2 = this.obstacleImage2.getScaledInstance(103, 60, 1);</span>
+
+<span class="nc" id="L128">            this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource(&quot;fuel.png&quot;));</span>
+<span class="nc" id="L129">            this.kerosineImage = this.kerosineImage.getScaledInstance(80, 80, 1);</span>
+
+<span class="nc" id="L131">        } catch (IOException ex) {</span>
+<span class="nc" id="L132">            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L133">        }</span>
+<span class="nc" id="L134">    }</span>
+
+    /**
+     * Create the gui components.
+     */
+    private void createGUI() {
+<span class="nc" id="L140">        this.setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L142">        this.labelPanel = new JPanel();</span>
+<span class="nc" id="L143">        this.labelPanel.setLayout(new GridLayout(0, 7));</span>
+<span class="nc" id="L144">        this.labelPanel.setBackground(new Color(121, 201, 249));</span>
+
+<span class="nc" id="L146">        this.scoreLabel = new JLabel(&quot;Score: 0&quot;);</span>
+<span class="nc" id="L147">        this.labelPanel.add(this.scoreLabel);</span>
+
+<span class="nc" id="L149">        this.livesLabel = new JLabel(&quot;Lives: 0&quot;);</span>
+<span class="nc" id="L150">        this.labelPanel.add(this.livesLabel);</span>
+
+<span class="nc" id="L152">        this.bulletsLabel = new JLabel(&quot;Bullets: &quot; + (this.clipSize - this.bulletsFired));</span>
+<span class="nc" id="L153">        this.labelPanel.add(this.bulletsLabel);</span>
+
+<span class="nc" id="L155">        this.altLabel = new JLabel(&quot;Alt: 0&quot;);</span>
+<span class="nc" id="L156">        this.labelPanel.add(this.altLabel);</span>
+
+<span class="nc" id="L158">        this.speedLabel = new JLabel(&quot;Speed: 0&quot;);</span>
+<span class="nc" id="L159">        this.labelPanel.add(this.speedLabel);</span>
+
+<span class="nc" id="L161">        this.fuelLabel = new JLabel(&quot;Fuel: 0&quot;);</span>
+<span class="nc" id="L162">        this.labelPanel.add(this.fuelLabel);</span>
+
+<span class="nc" id="L164">        this.fpsLabel = new JLabel(&quot;FPS: &quot; + this.fps);</span>
+<span class="nc" id="L165">        this.labelPanel.add(this.fpsLabel);</span>
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (Component comp : this.labelPanel.getComponents()) {</span>
+<span class="nc" id="L168">            JLabel lbl = (JLabel) comp;</span>
+<span class="nc" id="L169">            lbl.setFont(this.font);</span>
+<span class="nc" id="L170">            lbl.setForeground(Color.WHITE);</span>
+<span class="nc" id="L171">            lbl.setHorizontalAlignment(SwingConstants.CENTER);</span>
+        }
+
+<span class="nc" id="L174">        this.add(this.labelPanel, BorderLayout.PAGE_START);</span>
+
+<span class="nc" id="L176">        Dimension size = new Dimension(this.screenWidth, this.screenHeight);</span>
+
+<span class="nc" id="L178">        this.canvas = new Canvas();</span>
+<span class="nc" id="L179">        this.canvas.setPreferredSize(size);</span>
+<span class="nc" id="L180">        this.canvas.setMinimumSize(size);</span>
+<span class="nc" id="L181">        this.canvas.setMaximumSize(size);</span>
+
+<span class="nc" id="L183">        this.add(this.canvas, BorderLayout.PAGE_END);</span>
+<span class="nc" id="L184">    }</span>
+
+    /**
+     * Creates game objects and adds them to the world.
+     */
+    private void initializeWorld() {
+<span class="nc" id="L190">        this.world = new World();</span>
+<span class="nc" id="L191">        this.world.setGravity(new Vector2(0.0, 9.81));</span>
+<span class="nc" id="L192">        this.world.addListener(this.gameController);</span>
+
+<span class="nc" id="L194">        GameObject airplane = new Airplane(this.airplaneImage);</span>
+<span class="nc" id="L195">        Rectangle airplaneShape = new Rectangle(airplane.getWidth(), airplane.getHeight());</span>
+<span class="nc" id="L196">        airplane.addFixture(airplaneShape);</span>
+<span class="nc" id="L197">        airplane.setMass(MassType.NORMAL);</span>
+<span class="nc" id="L198">        airplane.translate(this.screenWidth / 4 - airplane.getWidth() / 2, this.screenHeight / 2 - airplane.getHeight());</span>
+
+<span class="nc" id="L200">        this.world.addBody(airplane);</span>
+<span class="nc" id="L201">    }</span>
+
+    /**
+     * Start the game.
+     */
+    public void start() {
+<span class="nc" id="L207">        GUIController.playStart();</span>
+<span class="nc" id="L208">        GUIController.playAirplane();</span>
+<span class="nc" id="L209">        GUIController.playGameSound();</span>
+
+<span class="nc" id="L211">        this.last = System.nanoTime();</span>
+<span class="nc" id="L212">        this.canvas.setIgnoreRepaint(true);</span>
+<span class="nc" id="L213">        this.canvas.createBufferStrategy(2);</span>
+
+<span class="nc" id="L215">        Thread thread = new Thread() {</span>
+            @Override
+            public void run() {
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                while (!isStopped()) {</span>
+<span class="nc" id="L219">                    lastTime = System.nanoTime();</span>
+<span class="nc" id="L220">                    gameLoop();</span>
+<span class="nc" id="L221">                    fps = (int) Math.round(NANO_TO_BASE / (System.nanoTime() - lastTime));</span>
+<span class="nc" id="L222">                    lastTime = System.nanoTime();</span>
+                }
+<span class="nc" id="L224">            }</span>
+        };
+
+<span class="nc" id="L227">        thread.setDaemon(true);</span>
+<span class="nc" id="L228">        thread.start();</span>
+<span class="nc" id="L229">    }</span>
+
+    /**
+     * The method calling the necessary methods to update the game, graphics,
+     * and poll for input.
+     */
+    protected void gameLoop() {
+<span class="nc" id="L236">        this.time = System.nanoTime();</span>
+<span class="nc" id="L237">        this.diff = (double) this.time - (double) this.last;</span>
+<span class="nc" id="L238">        this.last = this.time;</span>
+<span class="nc" id="L239">        this.elapsedTime += this.diff;</span>
+<span class="nc" id="L240">        this.targetInterval = NANO_TO_BASE / TARGET_FPS;</span>
+<span class="nc" id="L241">        this.actualInterval = this.elapsedTime / this.targetInterval;</span>
+
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (this.elapsedTime &gt;= this.targetInterval) {</span>
+<span class="nc" id="L244">            this.world.update(this.actualInterval);</span>
+<span class="nc" id="L245">            this.update(this.actualInterval);</span>
+<span class="nc" id="L246">            this.elapsedTime = 0;</span>
+        }
+
+<span class="nc" id="L249">        BufferStrategy strategy = this.canvas.getBufferStrategy();</span>
+<span class="nc" id="L250">        Graphics2D g = (Graphics2D) strategy.getDrawGraphics();</span>
+
+<span class="nc" id="L252">        this.render(g);</span>
+<span class="nc" id="L253">        g.dispose();</span>
+
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (!strategy.contentsLost()) {</span>
+<span class="nc" id="L256">            strategy.show();</span>
+        }
+
+<span class="nc" id="L259">        Toolkit.getDefaultToolkit().sync();</span>
+<span class="nc" id="L260">    }</span>
+
+    /**
+     * Update the game and it's gameobjects.
+     *
+     * @param elapsedTime the total elapsed time since the last frame.
+     */
+    protected void update(double elapsedTime) {
+<span class="nc" id="L268">        String key = this.gameController.getKeyPressed();</span>
+
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        if (key.equals(&quot;ESCAPE&quot;)) {</span>
+<span class="nc" id="L271">            this.gameController.setKeyPressed(&quot;NONE&quot;);</span>
+<span class="nc" id="L272">            this.stop();</span>
+<span class="nc" id="L273">            AllCopilotGUI.setPanel(&quot;menu&quot;, null, null);</span>
+//            System.exit(0);
+        }
+
+<span class="nc" id="L277">        this.spawnTimer += (elapsedTime * this.zebraForce) / 2;</span>
+
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (this.spawnTimer &gt;= 150) {</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            if ((rnd.nextInt(10) + 1) % 10 == 0) {</span>
+<span class="nc" id="L281">                spawnObject(&quot;P&quot;);</span>
+            } else {
+<span class="nc" id="L283">                spawnObject(&quot;O&quot;);</span>
+            }
+
+<span class="nc" id="L286">            this.spawnTimer = 0;</span>
+        }
+
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        for (int i = 0; i &lt; this.world.getBodyCount(); i++) {</span>
+<span class="nc" id="L290">            GameObject go = (GameObject) this.world.getBody(i);</span>
+
+<span class="nc bnc" id="L292" title="All 4 branches missed.">            if (go instanceof Obstacle || go instanceof Kerosine) {</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                if (go.getTransform().getTranslationX() + go.getWidth() &lt; 0) {</span>
+<span class="nc" id="L294">                    this.world.removeBody(go);</span>
+                } else {
+<span class="nc" id="L296">                    go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));</span>
+                }
+
+<span class="nc bnc" id="L299" title="All 2 branches missed.">                if (go instanceof Obstacle) {</span>
+<span class="nc" id="L300">                    Obstacle obstacle = (Obstacle) go;</span>
+
+<span class="nc" id="L302">                    this.animationTimer += elapsedTime;</span>
+
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                    if (this.animationTimer &gt;= 25) {</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                        if (obstacle.getImage() == this.obstacleImage2) {</span>
+<span class="nc" id="L306">                            obstacle.setImage(this.obstacleImage1);</span>
+                        } else {
+<span class="nc" id="L308">                            obstacle.setImage(this.obstacleImage2);</span>
+                        }
+
+<span class="nc" id="L311">                        this.animationTimer = 0;</span>
+                    }
+<span class="nc" id="L313">                }</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">            } else if (go instanceof Bullet) {</span>
+<span class="nc" id="L315">                Bullet bullet = (Bullet) go;</span>
+
+<span class="nc bnc" id="L317" title="All 2 branches missed.">                if (bullet.getTransform().getTranslationX() - bullet.getWidth() &gt; this.screenWidth) {</span>
+<span class="nc" id="L318">                    this.world.removeBody(bullet);</span>
+                } else {
+<span class="nc" id="L320">                    bullet.translate(new Vector2(BULLET_FORCE * elapsedTime, 0));</span>
+<span class="nc" id="L321">                    Object o = bullet.getUserData();</span>
+
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                    if (o != null) {</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                        if (o instanceof Obstacle) {</span>
+<span class="nc" id="L325">                            this.world.removeBody(bullet);</span>
+<span class="nc" id="L326">                            this.world.removeBody((Obstacle) o);</span>
+<span class="nc" id="L327">                            this.score++;</span>
+<span class="nc" id="L328">                            GUIController.playCollisionBullet();</span>
+                        }
+                    }
+                }
+<span class="nc bnc" id="L332" title="All 2 branches missed.">            } else if (go instanceof Airplane) {</span>
+<span class="nc" id="L333">                Airplane airplane = (Airplane) go;</span>
+<span class="nc" id="L334">                double airplaneWidth = airplane.getWidth();</span>
+<span class="nc" id="L335">                double airplaneHeight = airplane.getHeight();</span>
+
+<span class="nc" id="L337">                Transform airplaneTransform = airplane.getTransform();</span>
+<span class="nc" id="L338">                double airplaneX = airplaneTransform.getTranslationX();</span>
+<span class="nc" id="L339">                double airplaneY = airplaneTransform.getTranslationY();</span>
+
+<span class="nc" id="L341">                this.fuelTimer += elapsedTime;</span>
+
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                if (this.fuelTimer &gt;= 25) {</span>
+<span class="nc" id="L344">                    airplane.setFuelAmount(airplane.getFuelAmount() - 1);</span>
+<span class="nc" id="L345">                    this.fuelTimer = 0;</span>
+                }
+
+<span class="nc" id="L348">                this.speedTimer += elapsedTime;</span>
+
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                if (this.speedTimer &gt;= 500) {</span>
+<span class="nc" id="L351">                    this.zebraForce++;</span>
+<span class="nc" id="L352">                    this.score += elapsedTime * (this.zebraForce / 7);</span>
+<span class="nc" id="L353">                    this.speedTimer = 0;</span>
+                }
+
+<span class="nc" id="L356">                this.fpsTimer += elapsedTime;</span>
+
+<span class="nc bnc" id="L358" title="All 2 branches missed.">                if (this.fpsTimer &gt;= 50) {</span>
+<span class="nc" id="L359">                    this.fpsLabel.setText(&quot;FPS: &quot; + this.fps);</span>
+<span class="nc" id="L360">                    this.fpsTimer = 0;</span>
+                }
+
+<span class="nc bnc" id="L363" title="All 2 branches missed.">                if (this.bulletsFired &gt;= this.clipSize) {</span>
+<span class="nc" id="L364">                    this.reloadTimer += elapsedTime;</span>
+<span class="nc" id="L365">                    this.reloadProgress = 100 / this.reloadCooldown * this.reloadTimer;</span>
+
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                    if (this.reloadTimer &gt;= this.reloadCooldown) {</span>
+<span class="nc" id="L368">                        this.bulletsFired = 0;</span>
+<span class="nc" id="L369">                        this.reloadTimer = 0;</span>
+<span class="nc" id="L370">                        this.reloadProgress = 0;</span>
+                    }
+                }
+
+<span class="nc" id="L374">                airplane.setAltitude(this.screenHeight - (int) Math.round(airplaneY));</span>
+
+<span class="nc bnc" id="L376" title="All 2 branches missed.">                if (key.startsWith(&quot;UP&quot;)) {</span>
+<span class="nc bnc" id="L377" title="All 4 branches missed.">                    if (airplane.getFuelAmount() &gt; 0 &amp;&amp; airplaneY - (this.scoreLabel.getHeight() * 1.5) &gt; 0) {</span>
+<span class="nc" id="L378">                        airplane.translate(new Vector2(0, -FORCE * elapsedTime));</span>
+                    }
+                }
+
+<span class="nc bnc" id="L382" title="All 2 branches missed.">                if (key.startsWith(&quot;DOWN&quot;)) {</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                    if (airplaneY + airplaneHeight &lt; this.screenHeight) {</span>
+<span class="nc" id="L384">                        airplane.translate(new Vector2(0, FORCE * elapsedTime));</span>
+                    }
+                }
+
+<span class="nc bnc" id="L388" title="All 4 branches missed.">                if (key.endsWith(&quot;SPACE&quot;) &amp;&amp; (this.bulletsFired &lt; this.clipSize)) {</span>
+<span class="nc" id="L389">                    Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY - 10 + airplaneHeight / 2));</span>
+<span class="nc" id="L390">                    Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());</span>
+<span class="nc" id="L391">                    bullet.addFixture(bulletShape);</span>
+<span class="nc" id="L392">                    bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);</span>
+<span class="nc" id="L393">                    bullet.translate(bullet.getLocation());</span>
+<span class="nc" id="L394">                    this.world.addBody(bullet);</span>
+<span class="nc" id="L395">                    this.bulletsFired++;</span>
+                }
+
+<span class="nc" id="L398">                Object o = airplane.getUserData();</span>
+
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                if (o != null) {</span>
+<span class="nc" id="L401">                    airplane.setUserData(null);</span>
+
+<span class="nc bnc" id="L403" title="All 2 branches missed.">                    if (o instanceof Obstacle) {</span>
+<span class="nc" id="L404">                        this.world.removeBody((Obstacle) o);</span>
+<span class="nc" id="L405">                        this.lives--;</span>
+<span class="nc" id="L406">                        GUIController.playCollisionBird();</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">                    } else if (o instanceof Kerosine) {</span>
+<span class="nc" id="L408">                        Kerosine kerosine = (Kerosine) o;</span>
+<span class="nc" id="L409">                        this.world.removeBody(kerosine);</span>
+<span class="nc" id="L410">                        airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());</span>
+<span class="nc" id="L411">                        GUIController.playOilPickUp();</span>
+                    }
+                }
+
+<span class="nc bnc" id="L415" title="All 4 branches missed.">                if (this.lives &lt;= 0 || airplaneY &gt;= this.screenHeight) {</span>
+<span class="nc" id="L416">                    this.world.removeBody(airplane);</span>
+                }
+
+<span class="nc" id="L419">                this.fuelLabel.setText(&quot;Fuel: &quot; + airplane.getFuelAmount());</span>
+<span class="nc" id="L420">                this.altLabel.setText(&quot;Alt: &quot; + airplane.getAltitude());</span>
+<span class="nc" id="L421">                this.backgroundX -= elapsedTime * (this.zebraForce / 2);</span>
+
+<span class="nc bnc" id="L423" title="All 2 branches missed.">                if (!this.world.containsBody(airplane)) {</span>
+<span class="nc" id="L424">                    this.stop();</span>
+<span class="nc" id="L425">                    this.gameOver();</span>
+                }
+            }
+        }
+<span class="nc" id="L429">    }</span>
+
+    /**
+     * Spawn an object.
+     *
+     * @param type object type to spawn
+     */
+    public void spawnObject(String type) {
+<span class="nc" id="L437">        GameObject go = null;</span>
+
+<span class="nc bnc" id="L439" title="All 10 branches missed.">        switch (type) {</span>
+            case &quot;O&quot;: {
+<span class="nc" id="L441">                go = new Obstacle(this.obstacleImage1);</span>
+<span class="nc" id="L442">                break;</span>
+            }
+            case &quot;P&quot;: {
+<span class="nc" id="L445">                go = new Kerosine(this.kerosineImage, this.rnd.nextInt(100) + 1);</span>
+                break;
+            }
+        }
+
+<span class="nc bnc" id="L450" title="All 2 branches missed.">        if (go != null) {</span>
+<span class="nc" id="L451">            int randomY = this.rnd.nextInt(this.screenHeight - this.scoreLabel.getHeight() - (int) go.getHeight());</span>
+
+<span class="nc bnc" id="L453" title="All 2 branches missed.">            if (randomY &gt; this.screenHeight - go.getHeight()) {</span>
+<span class="nc" id="L454">                randomY = this.screenHeight - (int) go.getHeight();</span>
+<span class="nc bnc" id="L455" title="All 2 branches missed.">            } else if (randomY &lt; this.scoreLabel.getHeight()) {</span>
+<span class="nc" id="L456">                randomY = this.scoreLabel.getHeight();</span>
+            }
+
+<span class="nc" id="L459">            Rectangle objShape = new Rectangle(go.getWidth(), go.getHeight());</span>
+<span class="nc" id="L460">            go.addFixture(objShape);</span>
+<span class="nc" id="L461">            go.setMass(MassType.FIXED_LINEAR_VELOCITY);</span>
+<span class="nc" id="L462">            go.translate(</span>
+<span class="nc" id="L463">                    this.rnd.nextInt(this.screenWidth / 2) + this.screenWidth,</span>
+                    randomY
+            );
+
+<span class="nc" id="L467">            this.world.addBody(go);</span>
+        }
+<span class="nc" id="L469">    }</span>
+
+    /**
+     * End the current game and show the game over screen.
+     */
+    private void gameOver() {
+<span class="nc" id="L475">        GUIController.playGameOver();</span>
+<span class="nc" id="L476">        GUIController.stopAirplaneSound();</span>
+<span class="nc" id="L477">        GUIController.stopGameSound();</span>
+<span class="nc" id="L478">        AllCopilotGUI.setPanel(&quot;gameover&quot;, null, this.score);</span>
+<span class="nc" id="L479">    }</span>
+
+    /**
+     * Renders the gameobjects.
+     *
+     * @param g the graphics object to render to
+     */
+    protected void render(Graphics2D g) {
+<span class="nc" id="L487">        g.drawImage(this.backgroundImage, this.backgroundX, 0, null);</span>
+
+<span class="nc bnc" id="L489" title="All 2 branches missed.">        if (this.backgroundX &lt;= 0) {</span>
+<span class="nc" id="L490">            g.drawImage(this.backgroundImage, this.backgroundX + this.backgroundImage.getWidth(null), 0, null);</span>
+
+<span class="nc bnc" id="L492" title="All 2 branches missed.">            if (this.backgroundX &lt;= -this.backgroundImage.getWidth(null)) {</span>
+<span class="nc" id="L493">                this.backgroundX = 0;</span>
+            }
+        }
+
+<span class="nc bnc" id="L497" title="All 2 branches missed.">        for (int i = 0; i &lt; this.world.getBodyCount(); i++) {</span>
+<span class="nc" id="L498">            GameObject go = (GameObject) this.world.getBody(i);</span>
+<span class="nc" id="L499">            go.render(g);</span>
+
+            if (DEBUG_MODE) {
+                Vector2 gameObjectLocation = go.getTransform().getTranslation();
+                Double gameObjectWidth = go.getWidth();
+                Double gameObjectHeight = go.getHeight();
+                Double gameObjectX = gameObjectLocation.x;
+                Double gameObjectY = gameObjectLocation.y;
+                g.setColor(Color.MAGENTA);
+                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth.intValue(), gameObjectHeight.intValue());
+            }
+        }
+
+<span class="nc bnc" id="L512" title="All 2 branches missed.">        if (this.bulletsFired &gt;= this.clipSize) {</span>
+<span class="nc" id="L513">            g.setColor(Color.DARK_GRAY);</span>
+<span class="nc" id="L514">            g.fillRect(50, this.screenHeight - 100, 400, 50);</span>
+
+<span class="nc" id="L516">            g.setColor(Color.LIGHT_GRAY);</span>
+<span class="nc" id="L517">            g.fillRect(50, this.screenHeight - 100, 4 * this.reloadProgress, 50);</span>
+
+<span class="nc" id="L519">            g.setColor(Color.BLACK);</span>
+<span class="nc" id="L520">            g.setStroke(new BasicStroke(10));</span>
+<span class="nc" id="L521">            g.drawRect(50, this.screenHeight - 100, 400, 50);</span>
+
+<span class="nc" id="L523">            g.setColor(Color.WHITE);</span>
+<span class="nc" id="L524">            g.setFont(this.font);</span>
+<span class="nc" id="L525">            g.drawString(&quot;Reloading...&quot;, 195, this.screenHeight - 55);</span>
+        }
+
+<span class="nc" id="L528">        this.scoreLabel.setText(&quot;Score: &quot; + this.score);</span>
+<span class="nc" id="L529">        this.livesLabel.setText(&quot;Lives: &quot; + this.lives);</span>
+<span class="nc" id="L530">        this.bulletsLabel.setText(&quot;Bullets: &quot; + (this.clipSize - this.bulletsFired));</span>
+<span class="nc" id="L531">        this.speedLabel.setText(&quot;Speed: &quot; + this.zebraForce);</span>
+<span class="nc" id="L532">    }</span>
+
+    /**
+     * Stops the game.
+     */
+    public synchronized void stop() {
+<span class="nc" id="L538">        this.stopped = true;</span>
+<span class="nc" id="L539">    }</span>
+
+    /**
+     * Returns true if the game is stopped.
+     *
+     * @return boolean true if stopped
+     */
+    public synchronized boolean isStopped() {
+<span class="nc" id="L547">        return this.stopped;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

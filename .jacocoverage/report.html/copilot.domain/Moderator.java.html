@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Moderator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Moderator.java</span></div><h1>Moderator.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package copilot.domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Moderator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoPilot&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">copilot.domain</a> &gt; <span class="el_source">Moderator.java</span></div><h1>Moderator.java</h1><pre class="source lang-java linenums">package copilot.domain;
 
 import java.util.Calendar;
 
@@ -15,29 +10,28 @@ public class Moderator extends User {
 
     /**
      * Initialize an instance of the Moderator class which implements User
+     *
      * @param username the username, may not be null or empty
      * @param password the password, may not be null or empty
+     * @param displayName the displayName, may be null
      * @param dateOfBirth the date of birth, may not be null or empty
      */
-    public Moderator(String username, String password, Calendar dateOfBirth) {
-<span class="fc" id="L23">        super(username, password, dateOfBirth);</span>
-<span class="fc" id="L24">    }</span>
-    
-    /**
-    * Method to ban a user
-    * @param user the user must not be null
-    */
-    public void banUser(User user) {
-<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (user == null) {</span>
-<span class="fc" id="L32">            throw new IllegalArgumentException(&quot;The user must not be null&quot;);</span>
-        }
+    public Moderator(String username, String password, String displayName, Calendar dateOfBirth) {
         
-<span class="fc" id="L35">        user.setIsBanned(true);</span>
-<span class="fc" id="L36">    }</span>
-    
-//    @Override
-//    public String toString() {
-//        return &quot;&quot;;
-//    }
+<span class="nc" id="L21">        super(username, password, displayName, dateOfBirth);</span>
+<span class="nc" id="L22">    }</span>
+
+    /**
+     * Method to ban a user
+     *
+     * @param user the user must not be null
+     */
+    public void banUser(User user) {
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L31">            throw new IllegalArgumentException(&quot;The user must not be null&quot;);</span>
+        }
+
+<span class="nc" id="L34">        user.setIsBanned(true);</span>
+<span class="nc" id="L35">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

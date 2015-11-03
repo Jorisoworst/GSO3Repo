@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.domain;
 
 /**
@@ -13,8 +8,17 @@ public class Score {
     private int scoreId, score, user1id, user2id, user3id, user4id;
     private User user1, user2, user3, user4;
     
+    /**
+     * Initializes an instance of the Score
+     * @param score the score 
+     * @param user1 the number of user 1
+     * @param user2 the number of user 2
+     * @param user3 the number of user 3
+     * @param user4 the number of user 4
+     */
     public Score(int score, int user1, int user2, int user3, int user4)
     {
+        
         this.score = score;
         this.user1id = user1;
         this.user2id = user2;
@@ -22,83 +26,59 @@ public class Score {
         this.user4id = user4;
     }
 
+    /**
+     * set the score ID
+     * @param scoreId the id to set the scoreID to
+     */
     public void setScoreId(int scoreId) {
         this.scoreId = scoreId;
     }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setUser1id(int user1id) {
-        this.user1id = user1id;
-    }
-
-    public void setUser2id(int user2id) {
-        this.user2id = user2id;
-    }
-
-    public void setUser3id(int user3id) {
-        this.user3id = user3id;
-    }
-
-    public void setUser4id(int user4id) {
-        this.user4id = user4id;
-    }
-
-    public void setUser1(User user1) {
-        this.user1 = user1;
-    }
-
-    public void setUser2(User user2) {
-        this.user2 = user2;
-    }
-
-    public void setUser3(User user3) {
-        this.user3 = user3;
-    }
-
-    public void setUser4(User user4) {
-        this.user4 = user4;
+    
+    /**
+     * get the score ID
+     * @return the scoreId
+     */
+    public int getScoreId() {
+        return this.scoreId;
     }
     
-    public int getScoreId() {
-        return scoreId;
-    }
-
+    /**
+     * get the score
+     * @return the score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * get the user id of user1
+     * @return the userID of user 1
+     */
     public int getUser1id() {
         return user1id;
     }
 
+    /**
+     * get the user id of user2
+     * @return the userID of user 2
+     */
     public int getUser2id() {
         return user2id;
     }
 
+    /**
+     * get the user id of user3
+     * @return the userID of user 3
+     */
     public int getUser3id() {
         return user3id;
     }
 
+    /**
+     * get the user id of user4
+     * @return the userID of user 4
+     */
     public int getUser4id() {
         return user4id;
-    }
-
-    public User getUser1() {
-        return user1;
-    }
-
-    public User getUser2() {
-        return user2;
-    }
-
-    public User getUser3() {
-        return user3;
-    }
-
-    public User getUser4() {
-        return user4;
     }
 }

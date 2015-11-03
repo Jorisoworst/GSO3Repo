@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package copilot.view.gui;
 
 import copilot.view.frame.CopilotGUI;
@@ -32,7 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author NielsPrasing
+ * @author IndyGames
  */
 public class AllCopilotGUI {
 
@@ -43,11 +38,19 @@ public class AllCopilotGUI {
     private static Font font, sizedFont, sizedFont2, sizedFont3, sizedFont4, sizedFont5, fontExtraSmall;
     private static CardLayout layout;
 
+    /**
+     * Is called when the game is started, will create a frame and its first panel will be added
+     * @param args 
+     */
     public static void main(String[] args) {
         AllCopilotGUI gui = new AllCopilotGUI();
     }
 
+    /**
+     * Initializes an instance of the AllCopilotGUI
+     */
     public AllCopilotGUI() {
+        
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -57,6 +60,8 @@ public class AllCopilotGUI {
         GUIController.playBackgroundMusic();
 
         layout = new CardLayout();
+        
+        // set the dimensions of the screens to fullscreen
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = size.width;
         screenHeight = size.height;
@@ -75,6 +80,7 @@ public class AllCopilotGUI {
             GUIController.showExceptionError(ex.toString());
         }
 
+        // load all the used fontsizes
         font = GUIController.loadFont(10);
         sizedFont = GUIController.loadFont(12);
         sizedFont2 = GUIController.loadFont(30);
@@ -83,11 +89,13 @@ public class AllCopilotGUI {
         sizedFont5 = GUIController.loadFont(20);
         fontExtraSmall = GUIController.loadFont(5);
 
+        // create the launch panel and add it to the layout
         JPanel panelLaunch = new LaunchGUI(sizedFont2, fontExtraSmall, LaunchScreen);
         panelLaunch.setPreferredSize(new Dimension(screenWidthLaunch, screenHeightLaunch));
         panel = new JPanel(layout);
         panel.add(panelLaunch, "launch");
         
+        // set the frame settings
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -95,15 +103,25 @@ public class AllCopilotGUI {
         frame.pack();
         frame.setLocationRelativeTo(null);
         
+        // show the launch panel
         layout.show(frame.getContentPane(), "launch");
     }
 
+    /**
+     * Method to set the right panel for the frame
+     * @param name the name of the panel you want to call
+     * @param extraInformation an object, is a User
+     * @param extraInformation2 an object, is a Session or an int for scores
+     */
     public static void setPanel(String name, Object extraInformation, Object extraInformation2) {
+        
+        // a switch to check the name of the panel
         switch (name) {
             case "login":
                 LoginGUI panelLogin = new LoginGUI(screenHeight, screenWidth, font, sizedFont, sizedFont2, screen, logo);
                 panel.add(panelLogin, "login");
                 
+                // set the frame to fullscreen now if it is not fullscreen yet
                 if (!(frame.getExtendedState() == JFrame.MAXIMIZED_BOTH)) {
                     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     frame.dispose();
