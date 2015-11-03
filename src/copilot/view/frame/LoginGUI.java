@@ -154,27 +154,31 @@ public class LoginGUI extends JPanel {
                         || passwordText.getPassword().length == 0) {
                     JOptionPane.showMessageDialog(null, "please fill in your username and/or password to register");
                 } else {
-                    String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
-                    if (dateAsString != null) {
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        format.setLenient(false);
-                        Date date = format.parse(dateAsString);
-                        Calendar birthday = Calendar.getInstance();
-                        birthday.setTime(date);
+                    if (passwordText.getPassword().length < 7) {
+                        JOptionPane.showMessageDialog(null, "please use a password with at least 7 characters");
+                    } else {
+                        String dateAsString = JOptionPane.showInputDialog("please insert your birthday with the following format: yyyy-mm-dd");
+                        if (dateAsString != null) {
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            format.setLenient(false);
+                            Date date = format.parse(dateAsString);
+                            Calendar birthday = Calendar.getInstance();
+                            birthday.setTime(date);
 
-                        // try to create a new player object and add it to the database and the admin
-                        try {
-                            Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), "" /*DisplayName*/, birthday); // TODO add DisplayName textfield in the gui
-                            GameAdministration admin = GameAdministration.getInstance();
+                            // try to create a new player object and add it to the database and the admin
+                            try {
+                                Player user = new Player(userText.getText(), Arrays.toString(passwordText.getPassword()), "" /*DisplayName*/, birthday); // TODO add DisplayName textfield in the gui
+                                GameAdministration admin = GameAdministration.getInstance();
 
-                            if (admin.getDatabaseState()) {
-                                admin.addUser(user);
-                                JOptionPane.showMessageDialog(null, "Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                                if (admin.getDatabaseState()) {
+                                    admin.addUser(user);
+                                    JOptionPane.showMessageDialog(null, "Your account has been created, you can now log in with your information", "USER CREATED", JOptionPane.INFORMATION_MESSAGE);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "The Database connection could not be initialized, please check your network connection", "ALERT", JOptionPane.ERROR_MESSAGE);
+                                }
+                            } catch (Exception ex) {
+                                GUIController.showExceptionError(ex.toString());
                             }
-                        } catch (Exception ex) {
-                            GUIController.showExceptionError(ex.toString());
                         }
                     }
                 }
