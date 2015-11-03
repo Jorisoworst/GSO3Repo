@@ -1,4 +1,4 @@
-package copilot.view;
+package copilot.view.frame;
 
 import copilot.controller.GUIController;
 import copilot.controller.GameController;
@@ -7,6 +7,7 @@ import copilot.domain.Bullet;
 import copilot.domain.GameObject;
 import copilot.domain.Kerosine;
 import copilot.domain.Obstacle;
+import copilot.view.gui.AllCopilotGUI;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -14,26 +15,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -44,10 +38,9 @@ import org.dyn4j.geometry.Vector2;
  *
  * @author IndyGames
  */
-public class CopilotGUI {
+public class CopilotGUI extends JPanel {
 
     public static final boolean DEBUG_MODE = false;
-    public static final boolean FULLSCREEN = true;
     public static final long NANO_TO_BASE = 1000000000;
     public static final int BULLET_FORCE = 25;
     public static final int FORCE = 7;
@@ -63,8 +56,7 @@ public class CopilotGUI {
     private Canvas canvas;
     private World world;
     private Random rnd;
-    private JFrame frame;
-    private JPanel contentPane, labelPanel;
+    private JPanel labelPanel;
     private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
             fuelLabel, fpsLabel;
     private Image airplaneImage, backgroundImage, bulletImage, obstacleImage1,
@@ -74,39 +66,16 @@ public class CopilotGUI {
     /**
      * Constructor for this gui.
      */
-    public CopilotGUI() {
-        this.frame = new JFrame("CoPilot");
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
-        }
-
+    public CopilotGUI(int screenWidth, int screenHeight, Font font) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.font = font;
+        
         this.initializeVariables();
         this.loadResources();
-
-        this.frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                stop();
-                super.windowClosing(e);
-            }
-        });
-
-        if (FULLSCREEN) {
-            this.frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            this.frame.setUndecorated(true);
-        }
-
+        
         this.createGUI();
-        this.gameController = new GameController(this.contentPane);
-        this.frame.setContentPane(this.contentPane);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setResizable(false);
-        this.frame.setVisible(true);
-        this.frame.pack();
+        this.gameController = new GameController(this);
         this.initializeWorld();
     }
 
@@ -157,10 +126,7 @@ public class CopilotGUI {
             this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource("fuel.png"));
             this.kerosineImage = this.kerosineImage.getScaledInstance(80, 80, 1);
 
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
-            this.font = Font.createFont(Font.TRUETYPE_FONT, is);
-            this.font = this.font.deriveFont(Font.PLAIN, 20);
-        } catch (IOException | FontFormatException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -169,8 +135,7 @@ public class CopilotGUI {
      * Create the gui components.
      */
     private void createGUI() {
-        this.contentPane = new JPanel();
-        this.contentPane.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         this.labelPanel = new JPanel();
         this.labelPanel.setLayout(new GridLayout(0, 7));
@@ -204,25 +169,16 @@ public class CopilotGUI {
             lbl.setHorizontalAlignment(SwingConstants.CENTER);
         }
 
-        this.contentPane.add(this.labelPanel, BorderLayout.PAGE_START);
+        this.add(this.labelPanel, BorderLayout.PAGE_START);
 
-        Dimension size;
-
-        if (FULLSCREEN) {
-            size = Toolkit.getDefaultToolkit().getScreenSize();
-        } else {
-            size = new Dimension(800, 600);
-        }
-
-        this.screenWidth = size.width;
-        this.screenHeight = size.height;
-
+        Dimension size = new Dimension(this.screenWidth, this.screenHeight);
+        
         this.canvas = new Canvas();
         this.canvas.setPreferredSize(size);
         this.canvas.setMinimumSize(size);
         this.canvas.setMaximumSize(size);
 
-        this.contentPane.add(this.canvas, BorderLayout.PAGE_END);
+        this.add(this.canvas, BorderLayout.PAGE_END);
     }
 
     /**
@@ -514,8 +470,7 @@ public class CopilotGUI {
         GUIController.playGameOver();
         GUIController.stopAirplaneSound();
         GUIController.stopGameSound();
-        GameOverGUI goGUI = new GameOverGUI(this.score);
-        this.frame.dispose();
+        AllCopilotGUI.setPanel("gameover", null, this.score);
     }
 
     /**

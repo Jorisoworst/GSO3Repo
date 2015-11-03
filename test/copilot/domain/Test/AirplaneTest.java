@@ -11,7 +11,7 @@ import copilot.domain.Elevator;
 import copilot.domain.Fuel;
 import copilot.domain.Gun;
 import copilot.domain.Propellor;
-import copilot.view.CopilotGUI;
+import copilot.view.frame.CopilotGUI;
 import java.util.ArrayList;
 import java.awt.Image;
 import java.io.File;
