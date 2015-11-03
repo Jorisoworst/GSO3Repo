@@ -21,13 +21,11 @@ import org.dyn4j.dynamics.contact.ContactConstraint;
  */
 public class GameController implements CollisionListener {
 
-    private final JPanel panel;
     private final String[] keyIdentifiers;
     private final Integer[] keyValues;
     private String keyPressed;
 
     public GameController(JPanel panel) {
-        this.panel = panel;
         this.keyIdentifiers = new String[]{
             "UP",
             "DOWN",
@@ -122,7 +120,7 @@ public class GameController implements CollisionListener {
                     if (getKeyPressed().equals("SPACE")) {
                         setKeyPressed(inputKey + "_" + getKeyPressed());
                     } else if (getKeyPressed().endsWith("_SPACE")) {
-                        setKeyPressed(getKeyPressed());
+                        setKeyPressed(inputKey + "_SPACE");
                     } else {
                         setKeyPressed(inputKey);
                     }
@@ -132,9 +130,7 @@ public class GameController implements CollisionListener {
                     if (getKeyPressed().equals("UP")
                             || getKeyPressed().equals("DOWN")) {
                         setKeyPressed(getKeyPressed() + "_" + inputKey);
-                    } else if (getKeyPressed().endsWith("_SPACE")) {
-                        setKeyPressed(getKeyPressed());
-                    } else {
+                    } else if (!getKeyPressed().endsWith("_SPACE")) {
                         setKeyPressed(inputKey);
                     }
                     break;

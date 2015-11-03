@@ -28,7 +28,7 @@ public final class GUIController {
     private static final int min = 1;
     private static final int max = 5;
     private static int countKill, countHit = 0;
-
+    
     public static Font loadFont(int size) {
         try {
             InputStream is = GUIController.class.getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
@@ -219,22 +219,4 @@ public final class GUIController {
         }
     }
 
-//    public void startBackground() {
-//        GUIController.stopped = false;
-//        Thread thread = new Thread() {
-//            @Override
-//            public void run() {
-//                while (!isStopped()) {
-//                    
-//                }
-//            }
-//        };
-//
-//        thread.setDaemon(true);
-//        thread.start();
-//    }
-//
-//    public static synchronized boolean isStopped() {
-//        return GUIController.stopped;
-//    }
 }
