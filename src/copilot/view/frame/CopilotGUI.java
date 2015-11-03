@@ -268,7 +268,10 @@ public class CopilotGUI extends JPanel {
         String key = this.gameController.getKeyPressed();
 
         if (key.equals("ESCAPE")) {
-            System.exit(0);
+            this.gameController.setKeyPressed("NONE");
+            this.stop();
+            AllCopilotGUI.setPanel("menu", null, null);
+//            System.exit(0);
         }
 
         this.spawnTimer += (elapsedTime * this.zebraForce) / 2;
