@@ -17,8 +17,8 @@ public class Obstacle extends GameObject {
      * @param image the image, may not be null
      */
     public Obstacle(Image image) {
-
         super(image);
+
         this.isDestructable = false;
     }
 
@@ -47,6 +47,10 @@ public class Obstacle extends GameObject {
      * @param animation the animation to set
      */
     public void setAnimation(Animation animation) {
+        if (animation == null) {
+            throw new IllegalArgumentException("No animation set!");
+        }
+
         this.animation = animation;
     }
 }

@@ -10,15 +10,15 @@ import org.dyn4j.dynamics.Body;
  */
 public abstract class GameObject extends Body {
 
-    private double height, width;
     private Image image;
+    private int height, width;
 
     /**
      * Initialize an instance of the GameObject class which is abstract
+     *
      * @param image the image, may not be null
      */
     public GameObject(Image image) {
-        
         if (image == null) {
             throw new IllegalArgumentException("No image set!");
         }
@@ -31,14 +31,14 @@ public abstract class GameObject extends Body {
     /**
      * @return the height
      */
-    public double getHeight() {
+    public int getHeight() {
         return this.height;
     }
 
     /**
      * @return the width
      */
-    public double getWidth() {
+    public int getWidth() {
         return this.width;
     }
 
@@ -53,15 +53,32 @@ public abstract class GameObject extends Body {
      * @param image the image
      */
     public void setImage(Image image) {
+        if (image == null) {
+            throw new IllegalArgumentException("No image set!");
+        }
+
         this.image = image;
+        this.height = image.getHeight(null);
+        this.width = image.getWidth(null);
     }
 
     /**
-     * Render the object
+     * Update the GameObject.
+     */
+    public void update() {
+        // TODO
+    }
+
+    /**
+     * Render the GameObject.
      *
      * @param g the 2D graphics object
      */
     public void render(Graphics2D g) {
+        if (g == null) {
+            throw new IllegalArgumentException("No graphics set!");
+        }
+
         AffineTransform ot = g.getTransform();
         AffineTransform lt = new AffineTransform();
         lt.translate(this.transform.getTranslationX(), this.transform.getTranslationY());

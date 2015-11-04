@@ -11,6 +11,14 @@ public class AnimationFrame {
     private int duration;
 
     public AnimationFrame(Image frame, int duration) {
+        if (frame == null) {
+            throw new IllegalArgumentException("No frame set!");
+        }
+
+        if (duration <= 0) {
+            duration = 1;
+        }
+
         this.frame = frame;
         this.duration = duration;
     }
@@ -20,6 +28,10 @@ public class AnimationFrame {
     }
 
     public void setAnimationFrame(Image frame) {
+        if (frame == null) {
+            throw new IllegalArgumentException("No frame set!");
+        }
+
         this.frame = frame;
     }
 
@@ -28,6 +40,10 @@ public class AnimationFrame {
     }
 
     public void setDuration(int duration) {
+        if (duration <= 0) {
+            duration = 1;
+        }
+
         this.duration = duration;
     }
 }

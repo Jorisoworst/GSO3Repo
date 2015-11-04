@@ -1,4 +1,4 @@
-package copilot.view.frame;
+package copilot.view.panel;
 
 import copilot.controller.GUIController;
 import copilot.domain.GameAdministration;
@@ -11,6 +11,8 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,11 +31,11 @@ import javax.swing.SwingConstants;
 /**
  * @author IndyGames
  */
-public class LoginGUI extends JPanel {
+public class LoginPanel extends JPanel {
 
-    private final int screenHeight, screenWidth;
     private final Font font, sizedFont, sizedFont2;
     private final Image screen, logo;
+    private final int screenWidth, screenHeight;
 
     /**
      * Initializes an instance of the LoginGUI Panel
@@ -46,8 +48,7 @@ public class LoginGUI extends JPanel {
      * @param screen the background image
      * @param logo the logo image
      */
-    public LoginGUI(int screenHeight, int screenWidth, Font font, Font sizedFont, Font sizedFont2, Image screen, Image logo) {
-
+    public LoginPanel(int screenHeight, int screenWidth, Font font, Font sizedFont, Font sizedFont2, Image screen, Image logo) {
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.font = font;
@@ -56,7 +57,7 @@ public class LoginGUI extends JPanel {
         this.screen = screen;
         this.logo = logo;
 
-        placeComponents();
+        this.placeComponents();
     }
 
     /**
@@ -98,19 +99,18 @@ public class LoginGUI extends JPanel {
         this.add(loginButton);
 
         loginButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIController.playClick();
                 GameAdministration admin = GameAdministration.getInstance();
 
                 // check the database connection
-                if (admin.getDatabaseState()) {
+                if (/*admin.getDatabaseState()*/true) { // TODO
 
                     // check the login and login or give a message
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
-                    if (login) {
+                    if (/*login*/true) { // TODO
                         User user = admin.getUser(userText.getText());
                         AllCopilotGUI.setPanel("menu", user, null);
                     } else {
@@ -123,16 +123,15 @@ public class LoginGUI extends JPanel {
             }
         });
 
-        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-
+        loginButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 loginButton.setText(">login");
                 GUIController.playHover();
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 loginButton.setText("login");
             }
         });
@@ -187,15 +186,15 @@ public class LoginGUI extends JPanel {
             }
         });
 
-        registerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        registerButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 registerButton.setText(">register");
                 GUIController.playHover();
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 registerButton.setText("register");
             }
         });
@@ -215,15 +214,15 @@ public class LoginGUI extends JPanel {
             }
         });
 
-        quitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        quitButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+            public void mouseEntered(MouseEvent evt) {
                 quitButton.setText(">QUIT");
                 GUIController.playHover();
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 quitButton.setText("QUIT");
             }
         });

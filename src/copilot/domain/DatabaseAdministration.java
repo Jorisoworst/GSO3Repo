@@ -25,18 +25,20 @@ public class DatabaseAdministration {
 
     /**
      * Initializes an instance of the DatabseAdministration
+     *
      * @throws Exception
      */
     public DatabaseAdministration() throws Exception {
-        
         if (!initConnection()) {
-            throw new Exception("initializing database failed.");
+            throw new Exception("Initializing connection with database failed!");
         }
+
         closeConnection();
     }
 
     /**
      * Initilialize the connection to the database
+     *
      * @return True if the connection was succesfully established, false if not
      * @throws FileNotFoundException
      * @throws IOException
@@ -50,6 +52,7 @@ public class DatabaseAdministration {
             }
 
             Class.forName(props.getProperty("driver")).newInstance();
+
             this.conn = DriverManager.getConnection(
                     props.getProperty("url"),
                     props.getProperty("username"),
@@ -58,6 +61,7 @@ public class DatabaseAdministration {
             return true;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
             System.out.println(ex.getMessage());
+
             return false;
         }
     }
@@ -76,16 +80,17 @@ public class DatabaseAdministration {
 
     /**
      * Get all the user from the database
+     *
      * @return All the users from the databas
      * @throws IOException
      */
     public ArrayList<User> GetUsers() throws IOException {
         ArrayList<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user";
 
         try {
             if (initConnection()) {
-                Statement st = conn.createStatement();
+                String query = "SELECT * FROM user";
+                Statement st = this.conn.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
@@ -134,7 +139,7 @@ public class DatabaseAdministration {
                         user.setExperiencePoints(experiencePoint);
                         user.setId(accountId);
                         user.setLevel(level);
-                        user.setIsBanned(isBanned);
+                        user.setBanned(isBanned);
                         user.setPassword(password);
                         user.setPersonalBestScore(personalBest);
                         user.setRegistrationDate(calRegistrationDate);
@@ -154,20 +159,21 @@ public class DatabaseAdministration {
 
     /**
      * Add a new user to the database
+     *
      * @param user The user to be added
      * @return The user that was added
      * @throws IOException
      */
     public User AddUser(User user) throws IOException {
-        String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiencePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Report, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-
         try {
             if (initConnection()) {
-                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "INSERT INTO user (DateOfBirth, DisplayName, ExperiencePoint, IsBanned, Level, Password, PersonalBest, RegistrationDate, Report, Username, UserType) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                PreparedStatement st = this.conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
                 st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
                 st.setString(2, user.getDisplayName());
                 st.setInt(3, user.getExperiencePoints());
-                st.setBoolean(4, user.getIsBanned());
+                st.setBoolean(4, user.isBanned());
                 st.setInt(5, user.getLevel());
                 st.setString(6, user.getPassword());
                 st.setInt(7, user.getPersonalBestScore());
@@ -205,20 +211,22 @@ public class DatabaseAdministration {
 
     /**
      * Update an existing user from the database
+     *
      * @param user The user to be updated
      * @return True if the update was succesful, false if not
      * @throws IOException
      */
     public boolean UpdateUser(User user) throws IOException {
-        String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiencePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
-                + " RegistrationDate = ?, Report = ?, Username = ?, UserType = ? WHERE Id = ?";
         try {
             if (initConnection()) {
-                PreparedStatement st = conn.prepareStatement(query);
+                String query = "UPDATE user SET DateOfBirth = ?, DisplayName = ?, ExperiencePoint = ?, IsBanned = ?, Level = ?, Password = ?, PersonalBest = ?,"
+                        + " RegistrationDate = ?, Report = ?, Username = ?, UserType = ? WHERE Id = ?";
+                PreparedStatement st = this.conn.prepareStatement(query);
+
                 st.setDate(1, new java.sql.Date(user.getDateOfBirth().getTimeInMillis()));
                 st.setString(2, user.getDisplayName());
                 st.setInt(3, user.getExperiencePoints());
-                st.setBoolean(4, user.getIsBanned());
+                st.setBoolean(4, user.isBanned());
                 st.setInt(5, user.getLevel());
                 st.setString(6, user.getPassword());
                 st.setInt(7, user.getPersonalBestScore());
@@ -250,6 +258,7 @@ public class DatabaseAdministration {
 
     /**
      * Delete an existing user from the database
+     *
      * @param userId The user id of the user to be deleted
      * @return True if the deletion was succesful, false if not
      * @throws IOException
@@ -258,7 +267,8 @@ public class DatabaseAdministration {
         try {
             if (initConnection()) {
                 String query = "DELETE FROM user WHERE Id = ?";
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = this.conn.prepareStatement(query);
+
                 st.setInt(1, userId);
                 st.executeUpdate();
 
@@ -275,16 +285,17 @@ public class DatabaseAdministration {
 
     /**
      * Get a highscore from the database
+     *
      * @return The score
      * @throws IOException
      */
     public ArrayList<Score> SelectScore() throws IOException {
         ArrayList<Score> scores = new ArrayList<>();
-        String query = "SELECT * FROM score";
 
         try {
             if (initConnection()) {
-                try (Statement st = conn.createStatement()) {
+                try (Statement st = this.conn.createStatement()) {
+                    String query = "SELECT * FROM score";
                     ResultSet rs = st.executeQuery(query);
 
                     while (rs.next()) {
@@ -313,16 +324,17 @@ public class DatabaseAdministration {
 
     /**
      * Add a highscore from the database
+     *
      * @param score The score to be added
      * @return The score that was added
      * @throws IOException
      */
     public Score AddScore(Score score) throws IOException {
-        String query = "INSERT INTO score (Score, User_1, User_2, User_3, User_4) VALUES(?,?,?,?,?)";
-
         try {
             if (initConnection()) {
-                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "INSERT INTO score (Score, User_1, User_2, User_3, User_4) VALUES(?,?,?,?,?)";
+                PreparedStatement st = this.conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
                 st.setInt(1, score.getScore());
                 st.setInt(2, score.getUser1id());
                 st.setInt(3, score.getUser2id());
@@ -350,16 +362,17 @@ public class DatabaseAdministration {
 
     /**
      * Update a highscore from the database
+     *
      * @param score The score to be updated
      * @return True if the update was succesful, false if not
      * @throws IOException
      */
     public boolean UpdateScore(Score score) throws IOException {
-        String query = "UPDATE score SET Score = ?, User_1 =?, User_2 = ?, User_3 = ?, User_4 = ?";
-
         try {
             if (initConnection()) {
-                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "UPDATE score SET Score = ?, User_1 =?, User_2 = ?, User_3 = ?, User_4 = ?";
+                PreparedStatement st = this.conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
                 st.setInt(1, score.getScore());
                 st.setInt(2, score.getUser1id());
                 st.setInt(3, score.getUser2id());
@@ -380,6 +393,7 @@ public class DatabaseAdministration {
 
     /**
      * Delete a highscore from the database
+     *
      * @param scoreId The score id of the score to be deleted
      * @return True if the deletion was succesful, false if not
      * @throws IOException
@@ -388,7 +402,8 @@ public class DatabaseAdministration {
         try {
             if (initConnection()) {
                 String query = "DELETE FROM score WHERE Id = ?";
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = this.conn.prepareStatement(query);
+
                 st.setInt(1, scoreId);
                 st.executeUpdate();
 
@@ -405,16 +420,17 @@ public class DatabaseAdministration {
 
     /**
      * Get a game setting from the database
+     *
      * @return The game setting
      * @throws IOException
      */
     public GameSetting GetGameSetting() throws IOException {
         GameSetting gameSettings = null;
-        String query = "SELECT * FROM gameSetting";
 
         try {
             if (initConnection()) {
-                try (Statement st = conn.createStatement()) {
+                try (Statement st = this.conn.createStatement()) {
+                    String query = "SELECT * FROM gameSetting";
                     ResultSet rs = st.executeQuery(query);
 
                     while (rs.next()) {
@@ -442,26 +458,28 @@ public class DatabaseAdministration {
 
     /**
      * Save a game setting to the database
+     *
      * @param gameSetting The game setting to be added
      * @return True if the insert was succesful, false if not
      * @throws IOException
      */
     public boolean SaveGameSetting(GameSetting gameSetting) throws IOException {
-        String trunQuery = "TRUNCATE TABLE gamesetting";
-        String query = "INSERT INTO gamesetting VALUES(?,?,?,?)";
-
         try {
             if (initConnection()) {
-                Statement s = conn.createStatement();
+                String trunQuery = "TRUNCATE TABLE gamesetting";
+                String query = "INSERT INTO gamesetting VALUES(?,?,?,?)";
+                Statement s = this.conn.createStatement();
+
                 s.executeUpdate(trunQuery);
-                
-                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+                PreparedStatement st = this.conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
                 st.setDouble(1, gameSetting.getLevelUp());
                 st.setInt(2, gameSetting.getMaxFuelCapacity());
                 st.setInt(3, gameSetting.getMaxUser());
                 st.setInt(4, gameSetting.getRequiredExperiencePoints());
                 st.executeUpdate();
-                
+
                 return true;
             }
         } catch (SQLException ex) {

@@ -12,16 +12,23 @@ public class Sprite {
     private final int tileSize;
 
     public Sprite(BufferedImage spriteSheet, int tileSize) {
+        if (spriteSheet == null) {
+            throw new IllegalArgumentException("No sprite sheet set!");
+        }
+
+        if (tileSize <= 0) {
+            throw new IllegalArgumentException("Value of tile size too low!");
+        }
+
         this.spriteSheet = spriteSheet;
         this.tileSize = tileSize;
     }
 
     public Image getSprite(int xGrid, int yGrid) {
         if (this.spriteSheet == null) {
-            System.err.println("Invalid spriteSheet");
-            throw new RuntimeException("Invalid spriteSheet");
+            throw new IllegalArgumentException("No sprite sheet set!");
         }
 
-        return this.spriteSheet.getSubimage(xGrid * tileSize, yGrid * tileSize, tileSize, tileSize);
+        return this.spriteSheet.getSubimage(xGrid * this.tileSize, yGrid * this.tileSize, this.tileSize, this.tileSize);
     }
 }

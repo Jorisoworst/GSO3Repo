@@ -7,11 +7,16 @@ import org.dyn4j.geometry.Vector2;
  * @author IndyGames
  */
 public class Bullet extends GameObject {
+
     private final Vector2 location;
 
     public Bullet(Image image, Vector2 location) {
-       
         super(image);
+
+        if (location == null) {
+            throw new IllegalArgumentException("No location set!");
+        }
+
         this.location = location;
     }
 

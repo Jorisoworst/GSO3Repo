@@ -206,7 +206,7 @@ public class DatabaseAdministrationTest {
         // Add a user and make changes to it
         User testUser = addTestUser();
         testUser.setDisplayName("testUserUpdated");
-        testUser.setIsBanned(true);
+        testUser.setBanned(true);
         testUser.setLevel(1);
         testUser.setExperiencePoints(500);
         boolean result = dbAdmin.UpdateUser(testUser);
@@ -225,7 +225,7 @@ public class DatabaseAdministrationTest {
 
         assertNotNull(getUser);
         assertEquals("display name check", testUser.getDisplayName(), getUser.getDisplayName());
-        assertEquals("banned check", testUser.getIsBanned(), getUser.getIsBanned());
+        assertEquals("banned check", testUser.isBanned(), getUser.isBanned());
         assertEquals("level check", testUser.getLevel(), getUser.getLevel());
         assertEquals("exp check", testUser.getExperiencePoints(), getUser.getExperiencePoints());
         deleteTestUser();

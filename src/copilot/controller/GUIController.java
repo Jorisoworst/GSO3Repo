@@ -16,20 +16,22 @@ import javax.swing.JOptionPane;
  * @author IndyGames
  */
 public final class GUIController {
+
     private static Clip backgroundClip, airplaneSound, gameSound;
     private static final Random random = new Random();
     private static final int min = 1;
     private static final int max = 5;
-    private static int countKill, countHit = 0;
-    
+    private static int killCount, hitCount = 0;
+
     /**
      * Load the font for the game.
+     *
      * @param size the size for the new font
      * @return the loaded font
      */
     public static Font loadFont(int size) {
         try {
-            InputStream is = GUIController.class.getClassLoader().getResourceAsStream("Minecraftia-Regular.ttf");
+            InputStream is = GUIController.class.getClassLoader().getResourceAsStream("fonts/Minecraftia-Regular.ttf");
             Font font;
             font = Font.createFont(Font.TRUETYPE_FONT, is);
             return font.deriveFont(Font.PLAIN, size);
@@ -67,6 +69,7 @@ public final class GUIController {
 
     /**
      * Show an error message with the given error.
+     *
      * @param error the error that needs to be shown
      */
     public static void showExceptionError(String error) {
@@ -122,15 +125,15 @@ public final class GUIController {
                     click.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Asshole 2.wav")));
                     break;
             }
-            countKill++;
+            killCount++;
             click.start();
-            
+
             // If the player(s) killed 5 enemy's the kill frenzy sound is going to play //TODO  
-//            if (countKill >= 5) {
+//            if (killCount >= 5) {
 //                Clip kill = AudioSystem.getClip();
 //                kill.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/Kill frenzy.wav")));
 //                kill.start();
-//                countKill = 0;
+//                killCount = 0;
 //            }
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
             GUIController.showExceptionError(ex.toString());
@@ -144,8 +147,8 @@ public final class GUIController {
         try {
             Clip hit = AudioSystem.getClip();
             FloatControl volume;
-            countHit++;
-            switch (countHit) {
+            hitCount++;
+            switch (hitCount) {
                 case 1:
                     hit.open(AudioSystem.getAudioInputStream(GUIController.class.getResource("/sounds/SFX_SML_EXPLOSION.wav")));
                     volume = (FloatControl) hit.getControl(FloatControl.Type.MASTER_GAIN);

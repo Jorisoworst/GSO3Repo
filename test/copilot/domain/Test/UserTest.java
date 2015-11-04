@@ -228,15 +228,15 @@ public class UserTest {
     public void testBanUser() {
         // Check if it is possible to ban a player
         this.moderator.banUser(player);
-        Assert.assertTrue("Player is not banned", player.getIsBanned());
+        Assert.assertTrue("Player is not banned", player.isBanned());
         
         // Check if it is possible to ban a moderator
         this.moderator.banUser(moderator);
-        Assert.assertTrue("Moderator is not banned", moderator.getIsBanned());
+        Assert.assertTrue("Moderator is not banned", moderator.isBanned());
         
         // Check if it is possible to ban an administrator
         this.moderator.banUser(administrator);
-        Assert.assertTrue("Administrator is not banned", administrator.getIsBanned());
+        Assert.assertTrue("Administrator is not banned", administrator.isBanned());
         
         //* @param user the user must not be null
         // Check if it is possible to use null as a user

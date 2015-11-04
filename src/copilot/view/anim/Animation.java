@@ -21,6 +21,15 @@ public class Animation {
     private int y;
 
     public Animation(Image[] frames, int frameDelay) {
+        if (frames == null
+                || frames.length == 0) {
+            throw new IllegalArgumentException("No frames set!");
+        }
+
+        if (frameDelay <= 0) {
+            frameDelay = 1;
+        }
+
         this.frames = new ArrayList<>();
         this.animationDirection = 1;
         this.frameDelay = frameDelay;
@@ -62,9 +71,12 @@ public class Animation {
     }
 
     private void addFrame(Image frame, int duration) {
+        if (frame == null) {
+            throw new IllegalArgumentException("No frame set!");
+        }
+
         if (duration <= 0) {
-            System.err.println("Invalid duration: " + duration);
-            throw new RuntimeException("Invalid duration: " + duration);
+            duration = 1;
         }
 
         this.frames.add(new AnimationFrame(frame, duration));

@@ -1,4 +1,4 @@
-package copilot.view.frame;
+package copilot.view.panel;
 
 import copilot.controller.GUIController;
 import copilot.controller.GameController;
@@ -46,7 +46,7 @@ import org.dyn4j.geometry.Vector2;
 /**
  * @author IndyGames
  */
-public class CopilotGUI extends JPanel {
+public class GamePanel extends JPanel {
 
     private static final boolean DEBUG_MODE = false;
     private static final long NANO_TO_BASE = 1000000000;
@@ -91,7 +91,7 @@ public class CopilotGUI extends JPanel {
      * @param screenHeight the screenheight
      * @param font the font
      */
-    public CopilotGUI(int screenWidth, int screenHeight, Font font) {
+    public GamePanel(int screenWidth, int screenHeight, Font font) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
@@ -137,40 +137,40 @@ public class CopilotGUI extends JPanel {
      */
     private void loadResources() {
         try {
-            this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("airplane.png"));
+            this.airplaneImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/airplane.png"));
             this.airplaneImage = this.airplaneImage.getScaledInstance(103, 60, 1);
 
-            this.backgroundImage = ImageIO.read(this.getClass().getClassLoader().getResource("background.png"));
-            this.bulletImage = ImageIO.read(this.getClass().getClassLoader().getResource("bullet.png"));
+            this.backgroundImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/background.png"));
+            this.bulletImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/bullet.png"));
 
-            this.obstacleImage1 = ImageIO.read(this.getClass().getClassLoader().getResource("goose_wing_down.png"));
+            this.obstacleImage1 = ImageIO.read(this.getClass().getClassLoader().getResource("images/goose_wing_down.png"));
             this.obstacleImage1 = this.obstacleImage1.getScaledInstance(103, 60, 1);
 
-            this.obstacleImage2 = ImageIO.read(this.getClass().getClassLoader().getResource("goose_wing_up.png"));
+            this.obstacleImage2 = ImageIO.read(this.getClass().getClassLoader().getResource("images/goose_wing_up.png"));
             this.obstacleImage2 = this.obstacleImage2.getScaledInstance(103, 60, 1);
 
-            this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource("fuel.png"));
+            this.kerosineImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/fuel.png"));
             this.kerosineImage = this.kerosineImage.getScaledInstance(80, 80, 1);
 
-            this.explosionImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/explosion-sprite.png"));
-            this.bloodImage = ImageIO.read(this.getClass().getClassLoader().getResource("spritesheets/blood.png"));
+            this.explosionImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/spritesheets/explosion-sprite.png"));
+            this.bloodImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/spritesheets/blood.png"));
 
-            this.killSpreeImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/03.png"));
+            this.killSpreeImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/03.png"));
             this.killSpreeImage = this.killSpreeImage.getScaledInstance(100, 100, 1);
 
-            this.killFrenzyImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/04.png"));
+            this.killFrenzyImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/04.png"));
             this.killFrenzyImage = this.killFrenzyImage.getScaledInstance(100, 100, 1);
 
-            this.runningRiotImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/05.png"));
+            this.runningRiotImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/05.png"));
             this.runningRiotImage = this.runningRiotImage.getScaledInstance(100, 100, 1);
 
-            this.rampageImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/06.png"));
+            this.rampageImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/06.png"));
             this.rampageImage = this.rampageImage.getScaledInstance(100, 100, 1);
 
-            this.untouchableImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/07.png"));
+            this.untouchableImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/07.png"));
             this.untouchableImage = this.untouchableImage.getScaledInstance(100, 100, 1);
 
-            this.invincibleImage = ImageIO.read(this.getClass().getClassLoader().getResource("medals/08.png"));
+            this.invincibleImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/medals/08.png"));
             this.invincibleImage = this.invincibleImage.getScaledInstance(100, 100, 1);
 
             this.explosionFrames = this.setupAnimation(this.explosionImage, 96);
@@ -192,25 +192,25 @@ public class CopilotGUI extends JPanel {
 
             // Sounds
             this.killing_Spree = AudioSystem.getClip();
-            this.killing_Spree.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Killing_Spree!.wav")));
+            this.killing_Spree.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Killing_Spree!.wav")));
 
             this.killing_Frenzy = AudioSystem.getClip();
-            this.killing_Frenzy.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Killing_Frenzy!.wav")));
+            this.killing_Frenzy.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Killing_Frenzy!.wav")));
 
             this.running_Riot = AudioSystem.getClip();
-            this.running_Riot.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Running_Riot!.wav")));
+            this.running_Riot.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Running_Riot!.wav")));
 
             this.rampage = AudioSystem.getClip();
-            this.rampage.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Rampage!.wav")));
+            this.rampage.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Rampage!.wav")));
 
             this.untouchable = AudioSystem.getClip();
-            this.untouchable.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Untouchable!.wav")));
+            this.untouchable.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Untouchable!.wav")));
 
             this.perfection = AudioSystem.getClip();
-            this.perfection.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medalSounds/Perfection!.wav")));
+            this.perfection.open(AudioSystem.getAudioInputStream(GUIController.class.getClass().getResource("/sounds/medals/Perfection!.wav")));
 
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
-            Logger.getLogger(CopilotGUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -773,16 +773,29 @@ public class CopilotGUI extends JPanel {
             // Draw the hit boxes in Debug Mode
             if (DEBUG_MODE) {
                 Vector2 gameObjectLocation = go.getTransform().getTranslation();
-                Double gameObjectWidth = go.getWidth();
-                Double gameObjectHeight = go.getHeight();
+                int gameObjectWidth = go.getWidth();
+                int gameObjectHeight = go.getHeight();
                 Double gameObjectX = gameObjectLocation.x;
                 Double gameObjectY = gameObjectLocation.y;
                 g.setColor(Color.MAGENTA);
-                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth.intValue(), gameObjectHeight.intValue());
+                g.fillRect(gameObjectX.intValue(), gameObjectY.intValue(), gameObjectWidth, gameObjectHeight);
             }
         }
 
-        // Draw the reloading porgress bar
+        // Update all the JLabels with the corresponding text
+        this.scoreLabel.setText("Score: " + this.score);
+        this.livesLabel.setText("Lives: " + this.lives);
+        this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
+        this.speedLabel.setText("Speed: " + this.zebraForce);
+
+        // Animations
+        for (Animation a : this.animations) {
+            if (!a.isStopped()) {
+                g.drawImage(a.getSprite(), a.getX(), a.getY(), null);
+            }
+        }
+
+        // Draw the reloading progress bar
         if (this.bulletsFired >= this.clipSize) {
             g.setColor(Color.DARK_GRAY);
             g.fillRect(50, this.screenHeight - 100, 400, 50);
@@ -797,19 +810,6 @@ public class CopilotGUI extends JPanel {
             g.setColor(Color.WHITE);
             g.setFont(this.font);
             g.drawString("Reloading...", 195, this.screenHeight - 55);
-        }
-
-        // Update all the JLabels with the corresponding text
-        this.scoreLabel.setText("Score: " + this.score);
-        this.livesLabel.setText("Lives: " + this.lives);
-        this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
-        this.speedLabel.setText("Speed: " + this.zebraForce);
-
-        // Animations
-        for (Animation a : this.animations) {
-            if (!a.isStopped()) {
-                g.drawImage(a.getSprite(), a.getX(), a.getY(), null);
-            }
         }
 
         Image medal = null;

@@ -20,27 +20,35 @@ import org.dyn4j.dynamics.contact.ContactConstraint;
  */
 public class GameController implements CollisionListener {
 
+    private static final String NO_KEY = "NONE";
+    private static final String UP_KEY = "UP";
+    private static final String DOWN_KEY = "DOWN";
+    private static final String LEFT_KEY = "LEFT";
+    private static final String RIGHT_KEY = "RIGHT";
+    private static final String SPACE_KEY = "SPACE";
+    private static final String ESCAPE_KEY = "ESCAPE";
+    private static final String RELEASED_KEY = "_RELEASED";
+    private static final String SPACE_RELEASED_KEY = "_" + SPACE_KEY;
     private final String[] keyIdentifiers;
     private final Integer[] keyValues;
     private String keyPressed;
-    
+
     /**
      * Initialize an instance of the GameController class
+     *
      * @param panel the panel to set
      */
     public GameController(JPanel panel) {
-        
         //Add keys to the Dictionary.
         this.keyIdentifiers = new String[]{
-            "UP",
-            "DOWN",
-            "LEFT",
-            "RIGHT",
-            "SPACE",
-            "ESCAPE"
+            UP_KEY,
+            DOWN_KEY,
+            LEFT_KEY,
+            RIGHT_KEY,
+            SPACE_KEY,
+            ESCAPE_KEY
         };
-        
-        
+
         //Add the corresponding values to the Dictionary keys.
         this.keyValues = new Integer[]{
             KeyEvent.VK_W/*VK_UP*/,
@@ -50,8 +58,7 @@ public class GameController implements CollisionListener {
             KeyEvent.VK_SPACE,
             KeyEvent.VK_ESCAPE
         };
-        
-        
+
         //Create the inputmap and get the actionmap.
         InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = panel.getActionMap();
@@ -62,21 +69,20 @@ public class GameController implements CollisionListener {
             im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0), this.keyIdentifiers[i]);
             am.put(this.keyIdentifiers[i], new KeyAction(this.keyIdentifiers[i]));
         }
-        
+
         //Identify key with a releaseIdentifier (this means this key becomes a 
         //temporary release key and then gets added to the actionmap and inputmap below).
         String releasedIdentifier = "";
-        
-        
+
         //Set all the released keys in the dictionary.
         for (int i = 0; i < limit - 1; i++) {
-            releasedIdentifier = this.keyIdentifiers[i] + "_RELEASED";
+            releasedIdentifier = this.keyIdentifiers[i] + RELEASED_KEY;
             im.put(KeyStroke.getKeyStroke(this.keyValues[i], 0, true), releasedIdentifier);
             am.put(releasedIdentifier, new KeyAction(releasedIdentifier));
         }
 
         //The standard keyPressed value is NONE (so no unwanted movement occurs).
-        this.keyPressed = "NONE";
+        this.keyPressed = NO_KEY;
     }
 
     //Check if one body collides with the other body and then return if the 
@@ -129,41 +135,41 @@ public class GameController implements CollisionListener {
             putValue(Action.NAME, name);
             putValue(ACTION_COMMAND_KEY, "Command: " + name);
         }
-        
+
         //If a key is pressed then perform a certain action based on that key.
         @Override
         public void actionPerformed(ActionEvent e) {
             String inputKey = getValue(Action.NAME).toString();
-            
+
             //Check if the key corresponds to the wanted result and then set 
             //the pressed key to that designated value.
             switch (inputKey) {
-                case "UP":
-                case "DOWN": {
-                    if (getKeyPressed().equals("SPACE")) {
+                case UP_KEY:
+                case DOWN_KEY: {
+                    if (getKeyPressed().equals(SPACE_KEY)) {
                         setKeyPressed(inputKey + "_" + getKeyPressed());
-                    } else if (getKeyPressed().endsWith("_SPACE")) {
-                        setKeyPressed(inputKey + "_SPACE");
+                    } else if (getKeyPressed().endsWith(SPACE_RELEASED_KEY)) {
+                        setKeyPressed(inputKey + SPACE_RELEASED_KEY);
                     } else {
                         setKeyPressed(inputKey);
                     }
                     break;
                 }
-                case "SPACE": {
-                    if (getKeyPressed().equals("UP")
-                            || getKeyPressed().equals("DOWN")) {
+                case SPACE_KEY: {
+                    if (getKeyPressed().equals(UP_KEY)
+                            || getKeyPressed().equals(DOWN_KEY)) {
                         setKeyPressed(getKeyPressed() + "_" + inputKey);
-                    } else if (!getKeyPressed().endsWith("_SPACE")) {
+                    } else if (!getKeyPressed().endsWith(SPACE_RELEASED_KEY)) {
                         setKeyPressed(inputKey);
                     }
                     break;
                 }
-                case "ESCAPE": {
+                case ESCAPE_KEY: {
                     setKeyPressed(inputKey);
                     break;
                 }
                 default: {
-                    setKeyPressed("NONE");
+                    setKeyPressed(NO_KEY);
                     break;
                 }
             }

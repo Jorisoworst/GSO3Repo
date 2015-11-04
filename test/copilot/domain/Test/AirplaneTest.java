@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
  * @author IndyGames
  */
 public class AirplaneTest {
+
     private static final double DELTA = 1e-15;
     Airplane airplane;
     Elevator elevator;
@@ -46,11 +47,11 @@ public class AirplaneTest {
     @Before
     public void setUp() {
         try {
-            this.image = ImageIO.read(this.getClass().getResource("Plane.png"));
+            this.image = ImageIO.read(this.getClass().getResource("images/Plane.png"));
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
-        
+
         airplane = new Airplane(image);
         elevator = new Elevator(image, airplane, null);
         propellor = new Propellor(image, airplane, null);
@@ -68,7 +69,7 @@ public class AirplaneTest {
 
     @After
     public void tearDown() {
-        
+
     }
 
     /**
@@ -147,15 +148,17 @@ public class AirplaneTest {
             //calculate expected speed
             double airplanePitch = this.airplane.getPitch();
             double knotsSpeed = rpm * airplanePitch * 0.00822894;
-            if (knotsSpeed < 0) 
+            if (knotsSpeed < 0) {
                 knotsSpeed = 0;
+            }
 
             int currentSpeed = airplane.getSpeed();
             double increasementSpeed = knotsSpeed - currentSpeed;
             int expectedAPspeed = currentSpeed + ((int) increasementSpeed);
 
-            if (expectedAPspeed < 0) 
+            if (expectedAPspeed < 0) {
                 expectedAPspeed = 0;
+            }
 
             propellor.setRpm(rpm);
             int actualSpeed = airplane.getSpeed();
