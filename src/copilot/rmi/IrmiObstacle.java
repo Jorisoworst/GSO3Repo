@@ -9,6 +9,6 @@ package copilot.rmi;
  *
  * @author Ruud
  */
-public interface IrmiObstacle {
+public interface IrmiObstacle extends IrmiObject  {
     public String type();
 }

@@ -11,6 +11,6 @@ package copilot.rmi;
  */
 public interface IrmiObject {
     
-    public int X();
-    public int Y();
+    public int getX();
+    public int getY();
 }

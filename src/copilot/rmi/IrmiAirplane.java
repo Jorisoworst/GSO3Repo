@@ -9,7 +9,7 @@ package copilot.rmi;
  *
  * @author Ruud
  */
-public interface IrmiAirplane {
+public interface IrmiAirplane extends IrmiObject {
     public int getSpeed();
     public double getPitch();
     public int getFuelAmount();

@@ -9,7 +9,7 @@ package copilot.rmi;
  *
  * @author Ruud
  */
-public interface IrmiBullet {
+public interface IrmiBullet extends IrmiObject  {
     public int AimX();
     public int AimY();
 }
