@@ -21,20 +21,23 @@ import java.util.logging.Logger;
  */
 public class HostService  extends UnicastRemoteObject implements RemotePublisher 
 {        
-    private RMIAirplane RMIAirplane;
     private BasicPublisher publisher;
     private Registry registry = null;
     public static final String registryKey = "hostServ";
     public static final String airplaneProperty = "airplaneProp";
-    public static final String objectProperty = "objectProp";
+    public static final String obstacleProperty = "obstacleProp";
+    //public static final String objectProperty = "objectProp";
+    public static final String bulletProperty = "bulletProp";
     
     public static void main(String[] args) throws InterruptedException {
         
-         
+         //This is just for testing, a little how-to-use
         try {
             System.out.println("TESTING RUN - Host starting");
+            //create host on a port.
             HostService service = new HostService(1099);
             System.out.println("Host starting");
+            //create an airplane object. (You send an interface, but you have to create an object to set properties)
             RMIAirplane airplane = new RMIAirplane();
             airplane.setAltitude(1000);
             for (int i = 0; i < 10; i++) {
@@ -53,26 +56,22 @@ public class HostService  extends UnicastRemoteObject implements RemotePublisher
     
     public HostService(int portNumber) throws RemoteException//default 1099?
     {
-        //create remote objects
-        this.RMIAirplane = new RMIAirplane();
-        publisher = new BasicPublisher(new String[]{airplaneProperty, objectProperty}); //add bullet and obstacle
-        //create registry with binding name.
+        //instantiate publisher, set properties that can be used to listen to.
+        publisher = new BasicPublisher(new String[]{airplaneProperty, obstacleProperty, bulletProperty}); //add bullet and obstacle
+        //create registry with a port.
         registry = LocateRegistry.createRegistry(portNumber);
-        //bind this host to a registry key.
+        //bind this host to a registry key, this can be looked up on the client.
         registry.rebind(registryKey, this);
         System.out.println("Server/Host: Registry created on port number " + portNumber);
         System.out.println("Server/Host: Registry binded");
 
-        //TODO: we now have a push system made, the host should (not tested) be able to push objects.
+        //TODO: we now have a push system made, the host is able to push objects.
         //but now the host should be able to receive objects as well.
-
-
     }   
     
-    
-    public void UpdateAirplaneToClients(RMIAirplane airplane)
+    //UPDATE METHODS: Sends interfaces to clients that are listening to this host.
+    public void UpdateAirplaneToClients(IrmiAirplane airplane)
     {
-        this.RMIAirplane = airplane;
         if(publisher != null)
         {
             System.out.println("inform airplane to clients");
@@ -80,15 +79,26 @@ public class HostService  extends UnicastRemoteObject implements RemotePublisher
         }
     }
     
-    public void SendObstacleToClients(RMIAirplane airplane)
+    public void SendObstacleToClients(IrmiObstacle obstacle)
     {
         if(publisher != null)
         {
             System.out.println("inform obstacle clients");
-            publisher.inform(this, airplaneProperty, null, airplane); //property, oldValue,newValue. Like sending RMIAirplane
+            publisher.inform(this, obstacleProperty, null, obstacle); //property, oldValue,newValue. Like sending RMIAirplane
         }
     }
+    
+    public void SendBulletToClients(IrmiBullet bullet)
+    {
+        if(publisher != null)
+        {
+            System.out.println("inform obstacle clients");
+            publisher.inform(this, bulletProperty, null, bullet); //property, oldValue,newValue. Like sending RMIAirplane
+        }
+        
+    }
 
+    //AddListeners (RemotePublisher implementation): Client is able to add itself as a listener on a specific property, listener is added to BasicPublisher.
    @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
         this.publisher.addListener(listener, property);

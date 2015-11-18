@@ -5,9 +5,6 @@
  */
 package copilot.rmi;
 
-import fontys.observer.BasicPublisher;
-import fontys.observer.RemotePropertyListener;
-import fontys.observer.RemotePublisher;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -15,12 +12,12 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Ruud
  */
-public class RMIAirplane extends UnicastRemoteObject implements IrmiAirplane {
+public class RMIAirplane implements IrmiAirplane {
     
     private int speed, fuel, altitude, x , y;
     private double pitch;
     
-    public RMIAirplane() throws RemoteException
+    public RMIAirplane()
     {
       
     }
