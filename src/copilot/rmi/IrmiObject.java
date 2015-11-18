@@ -5,11 +5,13 @@
  */
 package copilot.rmi;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Ruud
  */
-public interface IrmiObject {
+public interface IrmiObject extends Serializable {
     
     public int getX();
     public int getY();

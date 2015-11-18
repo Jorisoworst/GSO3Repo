@@ -15,6 +15,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,13 +23,19 @@ import java.util.logging.Logger;
  *
  * @author Ruud
  */
-public class ClientService implements Remote, RemotePropertyListener { //maybe extend unicast remote
+public class ClientService extends UnicastRemoteObject implements Remote, RemotePropertyListener { //maybe extend unicast remote
 
     private RemotePublisher publisher;
     private Registry registry;
     
     
-    public ClientService(String serverAddress, int port)
+    public static void main(String[] args) throws RemoteException {
+         System.out.println("TESTING RUN - Client starting");
+        ClientService service = new ClientService("localhost",1099);
+         System.out.println("Client started");
+    }
+    
+    public ClientService(String serverAddress, int port) throws RemoteException
     {
         try {
             //look for a host on a given server address (localhost or ip address) and a given port.
