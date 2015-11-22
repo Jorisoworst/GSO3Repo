@@ -28,22 +28,17 @@ import java.util.logging.Logger;
 public class ClientService extends UnicastRemoteObject implements Remote, RemotePropertyListener { //maybe extend unicast remote
 
     private RemotePublisher publisher;
+    private IHostTaskReceiver hostListener;
     private Registry registry;
     
     private List<IClientListener> listeners;
     
     //received remote objects.
     private IrmiAirplane airplane;
-    
-    public static void main(String[] args) throws RemoteException {
-         System.out.println("TESTING RUN - Client starting");
-        ClientService service = new ClientService("localhost",1099);
-         System.out.println("Client started");
-    }
-    
-    public ClientService(String serverAddress, int port) throws RemoteException
+       
+    public ClientService(String serverAddress, int port) throws RemoteException, NotBoundException
     {
-        try {
+        listeners = new ArrayList<>();
             //look for a host on a given server address (localhost or ip address) and a given port.
             //RemoteException is thrown when no host is found on this address and port.
             registry = LocateRegistry.getRegistry(serverAddress,port);
@@ -51,24 +46,50 @@ public class ClientService extends UnicastRemoteObject implements Remote, Remote
             this.publisher = (RemotePublisher) registry.lookup(HostService.registryKey);
             //add listeners for properties.
             this.publisher.addListener(this, HostService.airplaneProperty);
-            this.publisher.addListener(this, HostService.obstacleProperty);
-            this.publisher.addListener(this, HostService.bulletProperty);
+            this.publisher.addListener(this, HostService.obstacleAddProperty);
+            this.publisher.addListener(this, HostService.bulletAddProperty);
+            this.publisher.addListener(this, HostService.obstacleDeleteProperty);
+            this.publisher.addListener(this, HostService.bulletDeleteProperty);
             System.out.println("Client: registry looked up, added listeners.");
-        } catch (RemoteException ex) {
-            System.out.println("Client: probably server not found.");
-            Logger.getLogger(ClientService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-             System.out.println("Client: probably the publisher is not in the registry.");
-            Logger.getLogger(ClientService.class.getName()).log(Level.SEVERE, null, ex);
+            
+            this.hostListener = (IHostTaskReceiver) registry.lookup(HostService.hostListenerKey);
+            System.out.println("host listener lookup.");
+    }
+    
+    public void FireBullet(IrmiBullet bullet) throws RemoteException
+    {
+        if(bullet != null && this.hostListener != null)
+        {
+            this.hostListener.BulletFire(bullet);
         }
-         
+    }
+    
+    public void AirplaneAltitudeKeyPress(boolean upKey) throws RemoteException {
+        if(this.hostListener != null)
+        {
+            this.hostListener.AirplaneAltitudeKeyPress(upKey);
+        }
+    }
+
+    public void SpeedChanged(int newRPM) throws RemoteException {
+        if(this.hostListener != null)
+        {
+            this.hostListener.SpeedChanged(newRPM);
+        }
+    }
+
+    public void FuelTupePositionChanged(int oldX, int oldY, int newX, int newY) throws RemoteException {
+        if(this.hostListener != null)
+        {
+            this.hostListener.FuelTupePositionChanged(oldX, oldY, newX, newY);
+        }
     }
     
     public void AddClientListener(IClientListener listener)
     {
         if(listeners == null)
         {
-            listeners = new ArrayList<IClientListener>();
+            listeners = new ArrayList<>();
         }
         listeners.add(listener);
     }
@@ -77,7 +98,7 @@ public class ClientService extends UnicastRemoteObject implements Remote, Remote
     {
         if(listener != null)
         {
-            listeners.remove(listener);//if it exit, it will be removed.
+            listeners.remove(listener);//if it exist, it will be removed.
         }
     }
     
@@ -96,15 +117,49 @@ public class ClientService extends UnicastRemoteObject implements Remote, Remote
                 ReceivedAirplane(ap);
             }
         }
-        else if(evt.getPropertyName().endsWith(HostService.obstacleProperty))
+        else if(evt.getPropertyName().endsWith(HostService.obstacleAddProperty))
         {
             //received an obstacle.
-            System.out.println("Client: propertyChange. is a object");
+            System.out.println("Client: propertyChange. is an obstacle, add");
+            
+            if(evt.getNewValue() instanceof IrmiObstacle)
+            {
+                IrmiObstacle obs = (IrmiObstacle) evt.getNewValue();
+                ReceivedObstacle(obs, true);
+            }
         }
-        else if(evt.getPropertyName().endsWith(HostService.bulletProperty))
+        else if(evt.getPropertyName().endsWith(HostService.obstacleDeleteProperty))
+        {
+            //received an obstacle.
+            System.out.println("Client: propertyChange. is an obstacle, delete");
+            
+            if(evt.getNewValue() instanceof IrmiObstacle)
+            {
+                IrmiObstacle obs = (IrmiObstacle) evt.getNewValue();
+                ReceivedObstacle(obs, false);
+            }
+        }
+        else if(evt.getPropertyName().endsWith(HostService.bulletAddProperty))
         {
             //received an bullet.
-            System.out.println("Client: propertyChange. is a object");
+            System.out.println("Client: propertyChange. is a bullet, add");
+            
+            if(evt.getNewValue() instanceof IrmiBullet)
+            {
+                IrmiBullet bullet = (IrmiBullet) evt.getNewValue();
+                ReceivedBullet(bullet, true);
+            }
+        }
+        else if(evt.getPropertyName().endsWith(HostService.bulletDeleteProperty))
+        {
+            //received an bullet.
+            System.out.println("Client: propertyChange. is a bullet, delete");
+            
+             if(evt.getNewValue() instanceof IrmiBullet)
+            {
+                IrmiBullet bullet = (IrmiBullet) evt.getNewValue();
+                ReceivedBullet(bullet, false);
+            }
         }
     }
     
@@ -148,6 +203,42 @@ public class ClientService extends UnicastRemoteObject implements Remote, Remote
             }
         }
          this.airplane = receivedAirplane;
+    }
+    
+    private void ReceivedObstacle(IrmiObstacle obstacle, boolean added) //added = true, deleted = false
+    {
+        if(added)
+        {
+            for (IClientListener listener : listeners) {
+            
+                listener.ObstacleAdded(obstacle);
+            }
+        }
+        else
+        {
+            for (IClientListener listener : listeners) {
+            
+                listener.ObstacleRemoved(obstacle);
+            }
+        }
+    }
+    
+    private void ReceivedBullet(IrmiBullet bullet, boolean added) //added = true, deleted = false
+    {
+        if(added)
+        {
+            for (IClientListener listener : listeners) {
+            
+                listener.BulletAdded(bullet);
+            }
+        }
+        else
+        {
+            for (IClientListener listener : listeners) {
+            
+                listener.BulletRemoved(bullet);
+            }
+        }
     }
    
     

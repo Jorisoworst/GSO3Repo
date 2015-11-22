@@ -14,12 +14,17 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class RMIAirplane implements IrmiAirplane {
     
-    private int speed, fuel, altitude, x , y;
+    private int id, speed, fuel, altitude, x , y;
     private double pitch;
     
     public RMIAirplane()
     {
       
+    }
+    
+    public void setId(int id)
+    {
+        this.id = id;
     }
     
     public void setSpeed(int speed) {
@@ -47,6 +52,11 @@ public class RMIAirplane implements IrmiAirplane {
         this.pitch = pitch;
     }
   
+      @Override
+    public int getId() {
+        return id;
+    }
+    
     @Override
     public int getSpeed() {
         return speed;
@@ -76,4 +86,5 @@ public class RMIAirplane implements IrmiAirplane {
     public int getY() {
         return y;
     }
+
 }

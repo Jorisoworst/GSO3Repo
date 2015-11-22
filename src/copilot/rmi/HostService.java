@@ -19,55 +19,44 @@ import java.util.logging.Logger;
  *
  * @author Ruud
  */
-public class HostService  extends UnicastRemoteObject implements RemotePublisher 
+public class HostService  extends UnicastRemoteObject implements RemotePublisher , IHostTaskReceiver
 {        
+    public static final String registryKey = "hostServ";
+    public static final String hostListenerKey = "hostListener";
+    public static final String airplaneProperty = "airplaneProp";
+    public static final String obstacleAddProperty = "obstacleAddProp";
+    public static final String bulletAddProperty = "bulletAddProp";
+    public static final String obstacleDeleteProperty = "obstacleDeleteProp";
+    public static final String bulletDeleteProperty = "bulletDeleteProp";
+    
     private BasicPublisher publisher;
     private Registry registry = null;
-    public static final String registryKey = "hostServ";
-    public static final String airplaneProperty = "airplaneProp";
-    public static final String obstacleProperty = "obstacleProp";
-    //public static final String objectProperty = "objectProp";
-    public static final String bulletProperty = "bulletProp";
     
-    public static void main(String[] args) throws InterruptedException {
-        
-         //This is just for testing, a little how-to-use
-        try {
-            System.out.println("TESTING RUN - Host starting");
-            //create host on a port.
-            HostService service = new HostService(1099);
-            System.out.println("Host starting");
-            //create an airplane object. (You send an interface, but you have to create an object to set properties)
-            RMIAirplane airplane = new RMIAirplane();
-            airplane.setAltitude(1000);
-            for (int i = 0; i < 10; i++) {
-                Thread.sleep(2000);
-                airplane.setAltitude(airplane.getAltitude()+500);
-                System.out.println("Host send airplane.");
-                service.UpdateAirplaneToClients(airplane);
-            }
-        } catch (RemoteException ex) {
-            System.out.println("HOST ERROR: RemoteException creating RMIAairplane");
-            Logger.getLogger(HostService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
-    }
-    
-    
+    private IHostListener listener;
+      
     public HostService(int portNumber) throws RemoteException//default 1099?
     {
         //instantiate publisher, set properties that can be used to listen to.
-        publisher = new BasicPublisher(new String[]{airplaneProperty, obstacleProperty, bulletProperty}); //add bullet and obstacle
+        publisher = new BasicPublisher(new String[]{airplaneProperty, obstacleAddProperty, bulletAddProperty, obstacleDeleteProperty, bulletDeleteProperty}); 
         //create registry with a port.
         registry = LocateRegistry.createRegistry(portNumber);
+        System.out.println("Server/Host: Registry created on port number " + portNumber);
         //bind this host to a registry key, this can be looked up on the client.
         registry.rebind(registryKey, this);
-        System.out.println("Server/Host: Registry created on port number " + portNumber);
-        System.out.println("Server/Host: Registry binded");
+         System.out.println("Server/Host: Registry binded");
+        registry.rebind(hostListenerKey, this);
+        System.out.println("Server/Host: binded IHostTaskReceiver");
+        
+       
 
         //TODO: we now have a push system made, the host is able to push objects.
         //but now the host should be able to receive objects as well.
     }   
+    
+    public void SetHostListener(IHostListener listener)
+    {
+        this.listener = listener;
+    }
     
     //UPDATE METHODS: Sends interfaces to clients that are listening to this host.
     public void UpdateAirplaneToClients(IrmiAirplane airplane)
@@ -84,7 +73,7 @@ public class HostService  extends UnicastRemoteObject implements RemotePublisher
         if(publisher != null)
         {
             System.out.println("inform obstacle clients");
-            publisher.inform(this, obstacleProperty, null, obstacle); //property, oldValue,newValue. Like sending RMIAirplane
+            publisher.inform(this, obstacleAddProperty, null, obstacle); //property, oldValue,newValue. Like sending RMIAirplane
         }
     }
     
@@ -93,7 +82,7 @@ public class HostService  extends UnicastRemoteObject implements RemotePublisher
         if(publisher != null)
         {
             System.out.println("inform obstacle clients");
-            publisher.inform(this, bulletProperty, null, bullet); //property, oldValue,newValue. Like sending RMIAirplane
+            publisher.inform(this, bulletAddProperty, null, bullet); //property, oldValue,newValue. Like sending RMIAirplane
         }
         
     }
@@ -107,6 +96,38 @@ public class HostService  extends UnicastRemoteObject implements RemotePublisher
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
        this.publisher.removeListener(listener, property);
+    }
+
+    @Override
+    public void BulletFire(IrmiBullet bullet) throws RemoteException {
+        if(listener != null)
+        {
+            listener.BulletFire(bullet);
+        }
+    }
+
+    @Override
+    public void AirplaneAltitudeKeyPress(boolean upKey) throws RemoteException {
+        if(listener != null)
+        {
+            listener.AirplaneAltitudeKeyPress(upKey);
+        }
+    }
+
+    @Override
+    public void SpeedChanged(int newRPM) throws RemoteException {
+        if(listener != null)
+        {
+            listener.SpeedChanged(newRPM);
+        }
+    }
+
+    @Override
+    public void FuelTupePositionChanged(int oldX, int oldY, int newX, int newY) throws RemoteException {
+        if(listener != null)
+        {
+            listener.FuelTupePositionChanged(oldX, oldY, newX, newY);
+        }
     }
 
 }

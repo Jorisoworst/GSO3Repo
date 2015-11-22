@@ -10,5 +10,6 @@ package copilot.rmi;
  * @author Ruud
  */
 public interface IrmiObstacle extends IrmiObject  {
-    public String type();
+    public int GetObstacleId();
+    public String ObsType();
 }

@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public interface IrmiObject extends Serializable {
     
+    public int getId();
     public int getX();
     public int getY();
 }
