@@ -7,7 +7,12 @@ import copilot.rmi.IHostListener;
 import copilot.rmi.IrmiBullet;
 import copilot.rmi.IrmiObstacle;
 import copilot.view.panel.GamePanel;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
 /**
@@ -28,21 +33,10 @@ public class Game extends World implements IHostListener, IClientListener {
      * @param hostService the hostService
      * @param clientService the clientService
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public Game(Session session, HostService hostService, ClientService clientService) {
         if (session == null) {
             throw new IllegalArgumentException("No session set!");
-        }
-
-        if (hostService != null) {
-            this.hostService = hostService;
-            this.hostService.SetHostListener(this);
-            System.out.println("Host started");
-        } else if (clientService != null) {
-            this.clientService = clientService;
-            this.clientService.AddClientListener(this);
-            System.out.println("Client started");
-        } else {
-            throw new IllegalArgumentException("No service set!");
         }
 
         this.setGravity(new Vector2(0.0, 9.81));
@@ -52,6 +46,18 @@ public class Game extends World implements IHostListener, IClientListener {
         this.score = 0;
         this.difficulty = 0;
         this.changeInterval = 10;
+
+        if (hostService != null) {
+            this.hostService = hostService;
+            this.hostService.SetHostListener(this);
+            System.out.println("Host started");
+//        } else if (clientService != null) { TODO
+            this.clientService = clientService;
+            this.clientService.AddClientListener(this);
+            System.out.println("Client started");
+        } else {
+            throw new IllegalArgumentException("No service set!");
+        }
     }
 
     /**
@@ -189,11 +195,23 @@ public class Game extends World implements IHostListener, IClientListener {
         return false;
     }
 
-    //----------OST-------------
+    public void fireBullet(IrmiBullet bullet) {
+        try {
+            this.clientService.FireBullet(bullet);
+            System.out.println("CLIENT - fired bullet");
+        } catch (RemoteException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //-------------HOST-------------
     @Override
     public void BulletFire(IrmiBullet bullet) {
         this.addBody(new Bullet(GamePanel.bulletImage, new Vector2(bullet.getX(), bullet.getY()))); // TODO
 
+        System.out.println("HOST - " + this.getBodyCount());
+
+        this.hostService.SendBulletToClients(bullet);
     }
 
     @Override
@@ -208,7 +226,7 @@ public class Game extends World implements IHostListener, IClientListener {
     public void FuelTupePositionChanged(int oldX, int oldY, int newX, int newY) {
     }
 
-    //----------CLIET-------------
+    //-------------CLIENT-------------
     @Override
     public void AirplaneAltitudeChanged(int oldAltitude, int newAltitude) {
     }
@@ -231,12 +249,28 @@ public class Game extends World implements IHostListener, IClientListener {
 
     @Override
     public void BulletAdded(IrmiBullet bullet) {
+        Bullet b = new Bullet(GamePanel.bulletImage, new Vector2(bullet.getX(), bullet.getY()));
+        Rectangle bulletShape = new Rectangle(b.getWidth(), b.getHeight());
+        b.addFixture(bulletShape);
+        b.setMass(MassType.FIXED_LINEAR_VELOCITY);
+        b.translate(b.getLocation());
 
+        this.addBody(b); // TODO
+
+        System.out.println("CLIENT - " + this.getBodyCount());
     }
 
     @Override
     public void BulletRemoved(IrmiBullet bullet) {
+        Bullet b = new Bullet(GamePanel.bulletImage, new Vector2(bullet.getX(), bullet.getY()));
+        Rectangle bulletShape = new Rectangle(b.getWidth(), b.getHeight());
+        b.addFixture(bulletShape);
+        b.setMass(MassType.FIXED_LINEAR_VELOCITY);
+        b.translate(b.getLocation());
 
+        this.removeBody(b); // TODO
+
+        System.out.println("CLIENT - " + this.getBodyCount());
     }
 
     @Override

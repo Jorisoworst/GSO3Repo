@@ -12,6 +12,7 @@ import copilot.domain.Session;
 import copilot.domain.User;
 import copilot.rmi.ClientService;
 import copilot.rmi.HostService;
+import copilot.rmi.RMIBullet;
 import copilot.view.anim.Animation;
 import copilot.view.anim.Sprite;
 import copilot.view.gui.AllCopilotGUI;
@@ -306,7 +307,7 @@ public class GamePanel extends JPanel {
      */
     private void initializeWorld() {
         try {
-            this.game = new Game(new Session(this.user), /*new HostService(1099)*/null, new ClientService("84.86.180.220", 1099));
+            this.game = new Game(new Session(this.user), new HostService(1099), new ClientService("localhost", 1099));
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -520,8 +521,8 @@ public class GamePanel extends JPanel {
                 // If the Body is an Airplane object, get the Translation
                 // (position) and the Width and Height
                 Airplane airplane = (Airplane) go;
-                double airplaneWidth = airplane.getWidth();
-                double airplaneHeight = airplane.getHeight();
+                int airplaneWidth = airplane.getWidth();
+                int airplaneHeight = airplane.getHeight();
 
                 Transform airplaneTransform = airplane.getTransform();
                 double airplaneX = airplaneTransform.getTranslationX();
@@ -608,16 +609,26 @@ public class GamePanel extends JPanel {
                 // has ammo left, create a new Bullet object and set it's default values
                 // such as Mass, Translation (position) and it's Fixture (hit detection box)
                 if (key.endsWith("SPACE") && (this.bulletsFired < this.clipSize)) {
-                    Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY - 10 + airplaneHeight / 2));
-                    Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());
-                    bullet.addFixture(bulletShape);
-                    bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
-                    bullet.translate(bullet.getLocation());
+//                    Bullet bullet = new Bullet(this.bulletImage, new Vector2(airplaneX + (airplaneWidth - 20), airplaneY - 10 + airplaneHeight / 2));
+//                    Rectangle bulletShape = new Rectangle(bullet.getWidth(), bullet.getHeight());
+//                    bullet.addFixture(bulletShape);
+//                    bullet.setMass(MassType.FIXED_LINEAR_VELOCITY);
+//                    bullet.translate(bullet.getLocation());
+//
+//                    // Add the Bullet to the World
+//                    this.game.addBody(bullet);
+//
+//                    // Increase the amount of Bullets fired
+//                    this.bulletsFired++;
 
-                    // Add the Bullet to the World
-                    this.game.addBody(bullet);
-
-                    // Increase the amount of Bullets fired
+                    RMIBullet bullet = new RMIBullet();
+                    bullet.setAimX(5);
+                    bullet.setAimY(6);
+                    bullet.setxPos((int) airplaneX + (airplaneWidth - 20));
+                    bullet.setyPos((int) airplaneY - 10 + airplaneHeight / 2);
+                    
+                    this.game.fireBullet(bullet);
+                            
                     this.bulletsFired++;
                 }
 
