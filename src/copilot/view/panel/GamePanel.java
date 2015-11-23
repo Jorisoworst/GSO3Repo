@@ -306,8 +306,8 @@ public class GamePanel extends JPanel {
      */
     private void initializeWorld() {
         try {
-            this.game = new Game(new Session(this.user), new HostService(1099), /*new ClientService("localhost", 1099)*/ null);
-        } catch (RemoteException /*| NotBoundException*/ ex) { // TODO:
+            this.game = new Game(new Session(this.user), /*new HostService(1099)*/null, new ClientService("84.86.180.220", 1099));
+        } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
