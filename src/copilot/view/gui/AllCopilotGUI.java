@@ -161,7 +161,7 @@ public class AllCopilotGUI {
                 break;
 
             case "game":
-                GamePanel panelGame = new GamePanel(screenWidth, screenHeight, sizedFont5);
+                GamePanel panelGame = new GamePanel((User) extraInformation, screenWidth, screenHeight, sizedFont5);
                 panel.add(panelGame, "game");
                 layout.show(frame.getContentPane(), "game");
                 panelGame.start();

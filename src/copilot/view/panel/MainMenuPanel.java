@@ -218,7 +218,7 @@ public class MainMenuPanel extends JPanel {
         singleplayerButton.addActionListener((ActionEvent e) -> {
             GUIController.playClick();
             GUIController.stopBackgroundMusic();
-            AllCopilotGUI.setPanel("game", null, null);
+            AllCopilotGUI.setPanel("game", user, null);
         });
 
         singleplayerButton.addMouseListener(new MouseAdapter() {

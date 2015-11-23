@@ -1,13 +1,22 @@
 package copilot.domain;
 
-import java.util.ArrayList;
+import copilot.rmi.ClientService;
+import copilot.rmi.HostService;
+import copilot.rmi.IClientListener;
+import copilot.rmi.IHostListener;
+import copilot.rmi.IrmiBullet;
+import copilot.rmi.IrmiObstacle;
+import copilot.view.panel.GamePanel;
+import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.Vector2;
 
 /**
  * @author IndyGames
  */
-public class Game {
+public class Game extends World implements IHostListener, IClientListener {
 
-    private ArrayList<GameObject> objects;
+    private HostService hostService;
+    private ClientService clientService;
     private Session session;
     private boolean isStarted;
     private int score, difficulty, changeInterval;
@@ -16,13 +25,28 @@ public class Game {
      * Initialize an instance of the Session class
      *
      * @param session the session, may not be null
+     * @param hostService the hostService
+     * @param clientService the clientService
      */
-    public Game(Session session) {
+    public Game(Session session, HostService hostService, ClientService clientService) {
         if (session == null) {
             throw new IllegalArgumentException("No session set!");
         }
 
-        this.objects = new ArrayList<>();
+        if (hostService != null) {
+            this.hostService = hostService;
+            this.hostService.SetHostListener(this);
+            System.out.println("Host started");
+        } else if (clientService != null) {
+            this.clientService = clientService;
+            this.clientService.AddClientListener(this);
+            System.out.println("Client started");
+        } else {
+            throw new IllegalArgumentException("No service set!");
+        }
+
+        this.setGravity(new Vector2(0.0, 9.81));
+
         this.session = session;
         this.isStarted = false;
         this.score = 0;
@@ -33,14 +57,14 @@ public class Game {
     /**
      * @return the isStarted
      */
-    public boolean isIsStarted() {
+    public boolean isStarted() {
         return this.isStarted;
     }
 
     /**
      * @param isStarted the isStarted to set
      */
-    public void setIsStarted(boolean isStarted) {
+    public void setStarted(boolean isStarted) {
         this.isStarted = isStarted;
     }
 
@@ -59,6 +83,15 @@ public class Game {
             this.score = 0;
         } else {
             this.score = score;
+        }
+    }
+
+    /**
+     * @param score the score to set
+     */
+    public void increaseScore(int score) {
+        if (score > 0) {
+            this.score += score;
         }
     }
 
@@ -117,25 +150,6 @@ public class Game {
     }
 
     /**
-     * @return the objects
-     */
-    public ArrayList<GameObject> getObjects() {
-        return this.objects;
-    }
-
-    /**
-     * @param objects the objects to set
-     */
-    public void setObjects(ArrayList<GameObject> objects) {
-        if (objects == null
-                || objects.isEmpty()) {
-            throw new IllegalArgumentException("No objects set!");
-        }
-
-        this.objects = objects;
-    }
-
-    /**
      * Method to start the game
      *
      * @return a boolean whether starting the game went well or not
@@ -173,5 +187,63 @@ public class Game {
     public boolean generateLevel() {
         // TODO
         return false;
+    }
+
+    //----------OST-------------
+    @Override
+    public void BulletFire(IrmiBullet bullet) {
+        this.addBody(new Bullet(GamePanel.bulletImage, new Vector2(bullet.getX(), bullet.getY()))); // TODO
+
+    }
+
+    @Override
+    public void AirplaneAltitudeKeyPress(boolean upKey) {
+    }
+
+    @Override
+    public void SpeedChanged(int newRPM) {
+    }
+
+    @Override
+    public void FuelTupePositionChanged(int oldX, int oldY, int newX, int newY) {
+    }
+
+    //----------CLIET-------------
+    @Override
+    public void AirplaneAltitudeChanged(int oldAltitude, int newAltitude) {
+    }
+
+    @Override
+    public void AirplaneSpeedChanged(int oldSpeed, int newSpeed) {
+    }
+
+    @Override
+    public void AirplanePitchChanged(double oldPitch, double newPitch) {
+    }
+
+    @Override
+    public void AirplaneFuelChanged(int oldValue, int newValue) {
+    }
+
+    @Override
+    public void AirplanePositionUpdate(int oldX, int oldY, int newX, int newY) {
+    }
+
+    @Override
+    public void BulletAdded(IrmiBullet bullet) {
+
+    }
+
+    @Override
+    public void BulletRemoved(IrmiBullet bullet) {
+
+    }
+
+    @Override
+    public void ObstacleAdded(IrmiObstacle obstacle) {
+    }
+
+    @Override
+    public void ObstacleRemoved(IrmiObstacle obstacle) {
     }
 }

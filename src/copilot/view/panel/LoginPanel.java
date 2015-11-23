@@ -105,12 +105,12 @@ public class LoginPanel extends JPanel {
                 GameAdministration admin = GameAdministration.getInstance();
 
                 // check the database connection
-                if (/*admin.getDatabaseState()*/true) { // TODO
+                if (admin.getDatabaseState()) { // TODO
 
                     // check the login and login or give a message
                     boolean login = admin.login(userText.getText(), Arrays.toString(passwordText.getPassword()));
 
-                    if (/*login*/true) { // TODO
+                    if (login) { // TODO
                         User user = admin.getUser(userText.getText());
                         AllCopilotGUI.setPanel("menu", user, null);
                     } else {

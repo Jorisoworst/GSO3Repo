@@ -4,9 +4,14 @@ import copilot.controller.GUIController;
 import copilot.controller.GameController;
 import copilot.domain.Airplane;
 import copilot.domain.Bullet;
+import copilot.domain.Game;
 import copilot.domain.GameObject;
 import copilot.domain.Kerosine;
 import copilot.domain.Obstacle;
+import copilot.domain.Session;
+import copilot.domain.User;
+import copilot.rmi.ClientService;
+import copilot.rmi.HostService;
 import copilot.view.anim.Animation;
 import copilot.view.anim.Sprite;
 import copilot.view.gui.AllCopilotGUI;
@@ -24,6 +29,8 @@ import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +44,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Transform;
@@ -54,24 +60,24 @@ public class GamePanel extends JPanel {
     private static final int FORCE = 7;
     private static final int TARGET_FPS = 60;
     private final GameController gameController;
+    private final User user;
     private final Font font;
     private final int screenWidth, screenHeight;
-    private boolean stopped;
     private double elapsedTime, targetInterval, diff, actualInterval;
     private long last, lastTime, time;
-    private int zebraForce, fps, lives, score, backgroundX, spawnTimer,
+    private int zebraForce, fps, lives, backgroundX, spawnTimer,
             fpsTimer, fuelTimer, speedTimer, bulletsFired, clipSize,
             reloadTimer, reloadProgress, reloadCooldown, totalKillCount;
+    private Game game;
     private Canvas canvas;
-    private World world;
     private Random rnd;
     private JPanel labelPanel;
     private JLabel scoreLabel, livesLabel, bulletsLabel, altLabel, speedLabel,
             fuelLabel, fpsLabel;
-    private Image airplaneImage, backgroundImage, bulletImage,
+    public static Image airplaneImage, backgroundImage, bulletImage,
             kerosineImage, obstacleImage1, obstacleImage2, killSpreeImage,
             killFrenzyImage, runningRiotImage, rampageImage, untouchableImage,
-            invincibleImage;
+            invincibleImage; // TODO
 
     // Animations
     private BufferedImage explosionImage, bloodImage;
@@ -87,11 +93,13 @@ public class GamePanel extends JPanel {
     /**
      * Initializes an instance of the CopilotGUI
      *
+     * @param user the user
      * @param screenWidth the screenwidth
      * @param screenHeight the screenheight
      * @param font the font
      */
-    public GamePanel(int screenWidth, int screenHeight, Font font) {
+    public GamePanel(User user, int screenWidth, int screenHeight, Font font) {
+        this.user = user;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.font = font;
@@ -107,7 +115,6 @@ public class GamePanel extends JPanel {
      */
     private void initializeVariables() {
         this.rnd = new Random();
-        this.stopped = false;
         this.zebraForce = FORCE;
         this.lives = 3;
         this.actualInterval = 0;
@@ -115,7 +122,6 @@ public class GamePanel extends JPanel {
         this.time = 0;
         this.targetInterval = 0;
         this.elapsedTime = 0;
-        this.score = 0;
         this.totalKillCount = 0;
         this.backgroundX = 0;
         this.spawnTimer = 0;
@@ -299,15 +305,14 @@ public class GamePanel extends JPanel {
      * Creates game objects and adds them to the world.
      */
     private void initializeWorld() {
-        // Create the world
-        this.world = new World();
-
-        // Set the gravity to positive
-        // since (0, 0) is the top left instead of bottom left
-        this.world.setGravity(new Vector2(0.0, 9.81));
+        try {
+            this.game = new Game(new Session(this.user), new HostService(1099), /*new ClientService("localhost", 1099)*/ null);
+        } catch (RemoteException /*| NotBoundException*/ ex) { // TODO:
+            Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Add the game controller as the collision listener
-        this.world.addListener(this.gameController);
+        this.game.addListener(this.gameController);
 
         // Create the Airplane GameObject and set it's default values
         // such as Mass, Translation (position) and it's Fixture (hit detection box)
@@ -317,7 +322,7 @@ public class GamePanel extends JPanel {
         airplane.setMass(MassType.NORMAL);
         airplane.translate(this.screenWidth / 4 - airplane.getWidth() / 2, this.screenHeight / 2 - airplane.getHeight());
 
-        this.world.addBody(airplane);
+        this.game.addBody(airplane);
     }
 
     /**
@@ -378,7 +383,7 @@ public class GamePanel extends JPanel {
 
         // Update the world with the actual interval
         if (this.elapsedTime >= this.targetInterval) {
-            this.world.update(this.actualInterval);
+            this.game.update(this.actualInterval);
             this.update(this.actualInterval);
             this.elapsedTime = 0;
         }
@@ -449,8 +454,8 @@ public class GamePanel extends JPanel {
         }
 
         // Update every Body (GameObject) in the World
-        for (int i = 0; i < this.world.getBodyCount(); i++) {
-            GameObject go = (GameObject) this.world.getBody(i);
+        for (int i = 0; i < this.game.getBodyCount(); i++) {
+            GameObject go = (GameObject) this.game.getBody(i);
 
             // If the Body is an Obstacle or a Kerosine object,
             // move them left with the speed of zebra force multiplied by
@@ -459,7 +464,7 @@ public class GamePanel extends JPanel {
 
                 // Check if the GameObject is within bounds
                 if (go.getTransform().getTranslationX() + go.getWidth() < 0) {
-                    this.world.removeBody(go);
+                    this.game.removeBody(go);
                 } else {
                     go.translate(new Vector2(-this.zebraForce * elapsedTime, 0));
                 }
@@ -479,7 +484,7 @@ public class GamePanel extends JPanel {
 
                 // Check if the Bullet is within bounds
                 if (bullet.getTransform().getTranslationX() - bullet.getWidth() > this.screenWidth) {
-                    this.world.removeBody(bullet);
+                    this.game.removeBody(bullet);
                 } else {
                     bullet.translate(new Vector2(BULLET_FORCE * elapsedTime, 0));
 
@@ -503,9 +508,9 @@ public class GamePanel extends JPanel {
 
                             this.animations.add(blood);
 
-                            this.world.removeBody(bullet);
-                            this.world.removeBody(obstacle);
-                            this.score++;
+                            this.game.removeBody(bullet);
+                            this.game.removeBody(obstacle);
+                            this.game.increaseScore(1);
                             this.totalKillCount++;
                             GUIController.playCollisionBullet();
                         }
@@ -543,7 +548,7 @@ public class GamePanel extends JPanel {
                 // the zebra force divided by 7
                 if (this.speedTimer >= 500) {
                     this.zebraForce++;
-                    this.score += elapsedTime * (this.zebraForce / 7);
+                    this.game.increaseScore((int) elapsedTime * (this.zebraForce / 7));
 
                     // Reset the speed timer
                     this.speedTimer = 0;
@@ -610,7 +615,7 @@ public class GamePanel extends JPanel {
                     bullet.translate(bullet.getLocation());
 
                     // Add the Bullet to the World
-                    this.world.addBody(bullet);
+                    this.game.addBody(bullet);
 
                     // Increase the amount of Bullets fired
                     this.bulletsFired++;
@@ -639,7 +644,7 @@ public class GamePanel extends JPanel {
 
                         this.animations.add(explosion);
 
-                        this.world.removeBody(obstacle);
+                        this.game.removeBody(obstacle);
                         this.lives--;
                         this.totalKillCount = 0;
                         GUIController.playCollisionBird();
@@ -648,7 +653,7 @@ public class GamePanel extends JPanel {
                         // amount, remove the Kerosine from the World and reset the User Data
                         // of the Airplane
                         Kerosine kerosine = (Kerosine) o;
-                        this.world.removeBody(kerosine);
+                        this.game.removeBody(kerosine);
                         airplane.setFuelAmount(airplane.getFuelAmount() + kerosine.getAmount());
                         GUIController.playOilPickUp();
                     }
@@ -657,7 +662,7 @@ public class GamePanel extends JPanel {
                 // Check if the Airplane crashed or if the player is out of lives
                 // and remove the Airplane from the World
                 if (this.lives <= 0 || airplaneY >= this.screenHeight) {
-                    this.world.removeBody(airplane);
+                    this.game.removeBody(airplane);
                 }
 
                 // Update the JLabels with the corresponding text
@@ -669,7 +674,7 @@ public class GamePanel extends JPanel {
 
                 // If the World doesn't have an Airplane object, the player
                 // is game over
-                if (!this.world.containsBody(airplane)) {
+                if (!this.game.containsBody(airplane)) {
                     this.gameOver();
                 }
             }
@@ -729,7 +734,7 @@ public class GamePanel extends JPanel {
             );
 
             // Add it to the World
-            this.world.addBody(go);
+            this.game.addBody(go);
         }
     }
 
@@ -739,7 +744,7 @@ public class GamePanel extends JPanel {
     private void gameOver() {
         this.stop();
         GUIController.playGameOver();
-        AllCopilotGUI.setPanel("gameover", null, this.score);
+        AllCopilotGUI.setPanel("gameover", null, this.game.getScore());
     }
 
     /**
@@ -763,8 +768,8 @@ public class GamePanel extends JPanel {
         }
 
         // Draw every Body (GameObject) in the World
-        for (int i = 0; i < this.world.getBodyCount(); i++) {
-            GameObject go = (GameObject) this.world.getBody(i);
+        for (int i = 0; i < this.game.getBodyCount(); i++) {
+            GameObject go = (GameObject) this.game.getBody(i);
 
             if (!(go instanceof Obstacle)) {
                 go.render(g);
@@ -783,7 +788,7 @@ public class GamePanel extends JPanel {
         }
 
         // Update all the JLabels with the corresponding text
-        this.scoreLabel.setText("Score: " + this.score);
+        this.scoreLabel.setText("Score: " + this.game.getScore());
         this.livesLabel.setText("Lives: " + this.lives);
         this.bulletsLabel.setText("Bullets: " + (this.clipSize - this.bulletsFired));
         this.speedLabel.setText("Speed: " + this.zebraForce);
@@ -856,7 +861,7 @@ public class GamePanel extends JPanel {
      * Stops the game.
      */
     public synchronized void stop() {
-        this.stopped = true;
+        this.game.setStarted(true);
         GUIController.stopAirplaneSound();
         GUIController.stopGameSound();
         GUIController.playBackgroundMusic();
@@ -868,6 +873,6 @@ public class GamePanel extends JPanel {
      * @return boolean true if stopped
      */
     public synchronized boolean isStopped() {
-        return this.stopped;
+        return this.game.isStarted();
     }
 }

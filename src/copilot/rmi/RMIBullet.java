@@ -5,8 +5,6 @@
  */
 package copilot.rmi;
 
-import sun.security.x509.X400Address;
-
 /**
  *
  * @author Ruud
